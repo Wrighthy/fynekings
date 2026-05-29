@@ -1,40 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart, fmt } from "@/lib/store";
 
-const PRODUCTS = [
-  {
-    name: "Sovereign I", series: "Midnight Series", price: 485000, tag: "Auto · 40mm", badge: "No. 01 Best Seller",
-    strapColor: "#141414", strapStroke: "#2a2a2a", caseColor: "#0d0d0d", caseStroke: "#C4A962",
-    markerColor: "#C4A962", handColor: "#F4EFE4", secColor: "#C4A962", textColor: "#C4A962",
-    innerCaseColor: "#080808", innerStroke: "#1a1a1a", caseStrokeWidth: "1.4",
-  },
-  {
-    name: "Lagos Prestige", series: "Gold Edition", price: 620000, tag: "Auto · 42mm", badge: "Hot",
-    strapColor: "#2a1f0a", strapStroke: "#5A4010", caseColor: "#1a1200", caseStroke: "#C4A962",
-    markerColor: "#C4A962", handColor: "#C4A962", secColor: "#D9C080", textColor: "#C4A962",
-    innerCaseColor: "#0e0900", innerStroke: "#2a1e00", caseStrokeWidth: "2.2",
-  },
-  {
-    name: "Continent", series: "Steel Series", price: 310000, tag: "Quartz · 38mm", badgeNew: "New",
-    strapColor: "#1a1a2a", strapStroke: "#2a2a4a", caseColor: "#10101a", caseStroke: "#6070C4",
-    markerColor: "#8090D4", handColor: "#F4EFE4", secColor: "#8090D4", textColor: "#8090D4",
-    innerCaseColor: "#0c0c14", innerStroke: "#1e1e30", caseStrokeWidth: "1.4",
-  },
-  {
-    name: "Sahara Rose", series: "Rose Gold", price: 540000, tag: "Auto · 40mm",
-    strapColor: "#2a1515", strapStroke: "#4a2020", caseColor: "#1a0c0c", caseStroke: "#C47070",
-    markerColor: "#C47070", handColor: "#F4EFE4", secColor: "#C47070", textColor: "#C47070",
-    innerCaseColor: "#0e0808", innerStroke: "#2a1212", caseStrokeWidth: "1.6",
-  },
-];
+type Product = {
+  id: string;
+  name: string;
+  series: string;
+  price: number;
+  tag: string;
+  badge: string | null;
+  badgeNew: string | null;
+  strapColor: string;
+  strapStroke: string;
+  caseColor: string;
+  caseStroke: string;
+  markerColor: string;
+  handColor: string;
+  secColor: string;
+  textColor: string;
+  innerCase: string;
+  innerStroke: string;
+  strokeWidth: string;
+};
 
 const FILTERS = ["All", "Midnight", "Gold", "Steel", "Limited"];
 
 export default function BestSellers() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("All");
   const addToCart = useCart(s => s.addToCart);
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then(r => r.json())
+      .then(data => { setProducts(data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
 
   return (
     <section id="bestsellers" style={{ background: "var(--black)" }}>
@@ -53,39 +56,52 @@ export default function BestSellers() {
         </div>
 
         <div className="products-grid reveal" style={{ transitionDelay: ".2s" }}>
-          {PRODUCTS.map(p => (
-            <div key={p.name} className="product-card" onClick={() => addToCart(p.name, p.series, p.price)}>
-              {p.badge && <div className="badge-sold">{p.badge}</div>}
-              {p.badgeNew && <div className="badge-new">{p.badgeNew}</div>}
-              <div className="prod-img">
-                <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8"/>
-                  <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8"/>
-                  <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.caseStrokeWidth}/>
-                  <circle cx="80" cy="80" r="44" fill={p.innerCaseColor} stroke={p.innerStroke} strokeWidth=".5"/>
-                  <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6"/>
-                  <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6"/>
-                  <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6"/>
-                  <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6"/>
-                  <text x="80" y="68" textAnchor="middle" fill={p.textColor} fontFamily="Playfair Display,serif" fontSize="6" letterSpacing="2">FYNEKINGS</text>
-                  <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round"/>
-                  <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round"/>
-                  <circle cx="80" cy="80" r="3" fill={p.markerColor}/>
-                </svg>
-              </div>
-              <div className="prod-overlay"><div className="prod-overlay-inner"><span>+ Add to Cart</span></div></div>
-              <div className="prod-info">
-                <p className="prod-tag">{p.tag}</p>
-                <p className="prod-name">{p.name}</p>
-                <p className="prod-series">{p.series}</p>
-                <div className="prod-bottom">
-                  <p className="prod-price">{fmt(p.price)} <small>+ fees</small></p>
-                  <p className="prod-cta">Add →</p>
+          {loading ? (
+            // Loading skeleton — 4 placeholder cards
+            [...Array(4)].map((_, i) => (
+              <div key={i} className="product-card" style={{ opacity: 0.4 }}>
+                <div className="prod-img" style={{ background: "var(--dark3)" }}></div>
+                <div className="prod-info">
+                  <div style={{ height: "8px", width: "60%", background: "var(--dark4)", borderRadius: "2px", marginBottom: "12px" }}></div>
+                  <div style={{ height: "20px", width: "80%", background: "var(--dark4)", borderRadius: "2px" }}></div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            products.map(p => (
+              <div key={p.id} className="product-card" onClick={() => addToCart(p.name, p.series, p.price)}>
+                {p.badge && <div className="badge-sold">{p.badge}</div>}
+                {p.badgeNew && <div className="badge-new">{p.badgeNew}</div>}
+                <div className="prod-img">
+                  <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8"/>
+                    <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8"/>
+                    <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth}/>
+                    <circle cx="80" cy="80" r="44" fill={p.innerCase} stroke={p.innerStroke} strokeWidth=".5"/>
+                    <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6"/>
+                    <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6"/>
+                    <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6"/>
+                    <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6"/>
+                    <text x="80" y="68" textAnchor="middle" fill={p.textColor} fontFamily="Playfair Display,serif" fontSize="6" letterSpacing="2">FYNEKINGS</text>
+                    <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round"/>
+                    <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round"/>
+                    <circle cx="80" cy="80" r="3" fill={p.markerColor}/>
+                  </svg>
+                </div>
+                <div className="prod-overlay"><div className="prod-overlay-inner"><span>+ Add to Cart</span></div></div>
+                <div className="prod-info">
+                  <p className="prod-tag">{p.tag}</p>
+                  <p className="prod-name">{p.name}</p>
+                  <p className="prod-series">{p.series}</p>
+                  <div className="prod-bottom">
+                    <p className="prod-price">{fmt(p.price)} <small>+ fees</small></p>
+                    <p className="prod-cta">Add →</p>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         <div className="products-footer reveal">

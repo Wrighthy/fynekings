@@ -3,17 +3,36 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/store";
 
+type Edition = {
+  id: string;
+  name: string;
+  reference: string;
+  price: number;
+  totalStock: number;
+  soldCount: number;
+  dropEndsAt: string;
+};
+
 export default function Countdown() {
   const [timer, setTimer] = useState({ d: "14", h: "00", m: "00", s: "00" });
+  const [edition, setEdition] = useState<Edition | null>(null);
   const addToCart = useCart(s => s.addToCart);
 
+  // Fetch edition from database
+  useEffect(() => {
+    fetch("/api/edition")
+      .then(r => r.json())
+      .then(data => setEdition(data))
+      .catch(console.error);
+  }, []);
+
+  // Countdown timer — uses real drop date from database
   useEffect(() => {
     const tick = () => {
-      const now = new Date();
-      const target = new Date(now);
-      target.setDate(target.getDate() + 14);
-      target.setHours(23, 59, 59, 0);
-      const diff = Math.max(0, target.getTime() - now.getTime());
+      const target = edition
+        ? new Date(edition.dropEndsAt).getTime()
+        : Date.now() + 14 * 24 * 60 * 60 * 1000;
+      const diff = Math.max(0, target - Date.now());
       setTimer({
         d: String(Math.floor(diff / 86400000)).padStart(2, "0"),
         h: String(Math.floor((diff % 86400000) / 3600000)).padStart(2, "0"),
@@ -24,19 +43,27 @@ export default function Countdown() {
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [edition]);
+
+  const remaining = edition ? edition.totalStock - edition.soldCount : 12;
+  const total = edition ? edition.totalStock : 50;
+  const stockPercent = Math.round((remaining / total) * 100);
+  const claimedPercent = 100 - stockPercent;
+  const price = edition ? edition.price : 850000;
+  const editionName = edition ? edition.name : "Obsidian King";
+  const reference = edition ? edition.reference : "F-OBK/24";
 
   return (
     <section id="countdown">
       <div className="countdown-inner reveal">
         <div className="edition-wrap">
           <div className="edition-dot"></div>
-          <span className="edition-label">Live Drop · Limited to 50 Units</span>
+          <span className="edition-label">Live Drop · Limited to {total} Units</span>
           <div className="edition-dot"></div>
         </div>
-        <h2 className="sec-title">The <em>Obsidian King</em><br/>Limited Edition</h2>
+        <h2 className="sec-title">The <em>{editionName}</em><br/>Limited Edition</h2>
         <div className="edition-mini-meta">
-          <span><span className="dot"></span>Reference F-OBK/24</span>
+          <span><span className="dot"></span>Reference {reference}</span>
           <span><span className="dot"></span>Each piece numbered & signed</span>
           <span><span className="dot"></span>Ships in October</span>
         </div>
@@ -57,8 +84,8 @@ export default function Countdown() {
             <line x1="120" y1="172" x2="120" y2="182" stroke="#C4A962" strokeWidth="1.8"/>
             <line x1="58" y1="120" x2="68" y2="120" stroke="#C4A962" strokeWidth="1.8"/>
             <line x1="172" y1="120" x2="182" y2="120" stroke="#C4A962" strokeWidth="1.8"/>
-            <text x="120" y="100" textAnchor="middle" fill="#C4A962" fontFamily="Playfair Display,serif" fontSize="7.5" letterSpacing="3" fontStyle="italic">Obsidian King</text>
-            <text x="120" y="112" textAnchor="middle" fill="#5A5550" fontFamily="Raleway,sans-serif" fontSize="4.5" letterSpacing="2">No. 38 / 50</text>
+            <text x="120" y="100" textAnchor="middle" fill="#C4A962" fontFamily="Playfair Display,serif" fontSize="7.5" letterSpacing="3" fontStyle="italic">{editionName}</text>
+            <text x="120" y="112" textAnchor="middle" fill="#5A5550" fontFamily="Raleway,sans-serif" fontSize="4.5" letterSpacing="2">No. {edition?.soldCount ?? 38} / {total}</text>
             <line x1="120" y1="120" x2="120" y2="80" stroke="#F4EFE4" strokeWidth="2.5" strokeLinecap="round"/>
             <line x1="120" y1="120" x2="146" y2="100" stroke="#F4EFE4" strokeWidth="2" strokeLinecap="round"/>
             <line x1="120" y1="120" x2="100" y2="142" stroke="#C4A962" strokeWidth="1.2" strokeLinecap="round"/>
@@ -79,19 +106,22 @@ export default function Countdown() {
         </div>
 
         <div className="stock-bar-wrap">
-          <div className="stock-label"><span>Stock Remaining</span><span>12 of 50 left</span></div>
-          <div className="stock-bar"><div className="stock-fill"></div></div>
+          <div className="stock-label">
+            <span>Stock Remaining</span>
+            <span>{remaining} of {total} left</span>
+          </div>
+          <div className="stock-bar"><div className="stock-fill" style={{ width: `${stockPercent}%` }}></div></div>
           <div className="stock-tick">
             <span>0</span>
-            <span style={{ color: "var(--gold)" }}>76% Claimed · Going Fast</span>
-            <span>50</span>
+            <span style={{ color: "var(--gold)" }}>{claimedPercent}% Claimed · Going Fast</span>
+            <span>{total}</span>
           </div>
         </div>
 
         <div className="limited-price-wrap">
-          <p className="limited-price">₦850,000 <em>+ ₦12,850 fee</em></p>
+          <p className="limited-price">₦{price.toLocaleString("en-NG")} <em>+ ₦{Math.min(Math.round(price * 0.015 + 100), 2000).toLocaleString("en-NG")} fee</em></p>
           <p className="limited-price-meta">Paystack processing fee (1.5% + ₦100) · shown transparently</p>
-          <button className="btn-primary" onClick={() => addToCart("Obsidian King", `Limited Edition · No. ${Math.floor(Math.random() * 38 + 1)}/50`, 850000)}>
+          <button className="btn-primary" onClick={() => addToCart(editionName, `Limited Edition · No. ${(edition?.soldCount ?? 38) + 1}/${total}`, price)}>
             <span>Reserve Yours Now</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
           </button>
