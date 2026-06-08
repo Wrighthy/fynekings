@@ -28,7 +28,7 @@ export default function Education() {
               </svg>
               <h3>{e.title}</h3>
               <p>{e.body}</p>
-              <a href="#" className="edu-link">Read Article →</a>
+              <a href="#" className="edu-link" onClick={e => e.preventDefault()}>Read Article →</a>
             </div>
           ))}
         </div>

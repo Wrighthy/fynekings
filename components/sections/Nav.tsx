@@ -16,7 +16,7 @@ export default function Nav() {
 
   return (
     <nav className={scrolled ? "scrolled" : ""}>
-      <a href="#" className="logo">
+      <a href="/" className="logo">
         <span className="logo-mark">F</span>
         FYNE<span>KINGS</span>
       </a>
