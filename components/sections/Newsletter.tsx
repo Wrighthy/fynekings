@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useCart } from "@/lib/store";
 
 const PERKS = [
@@ -13,12 +13,38 @@ const PERKS = [
 export default function Newsletter() {
   const emailRef = useRef<HTMLInputElement>(null);
   const showToast = useCart(s => s.showToast);
+  const [loading, setLoading] = useState(false);
 
-  const subscribe = () => {
-    const v = emailRef.current?.value || "";
-    if (!v.includes("@")) { showToast("Please enter a valid email"); return; }
-    showToast("Welcome to the Collector Club!");
-    if (emailRef.current) emailRef.current.value = "";
+  const subscribe = async () => {
+    const email = emailRef.current?.value || "";
+
+    if (!email.includes("@")) {
+      showToast("Please enter a valid email");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        showToast("Welcome to the Collector Club!");
+        if (emailRef.current) emailRef.current.value = "";
+      } else {
+        showToast(data.error || "Something went wrong");
+      }
+    } catch {
+      showToast("Connection error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,8 +72,21 @@ export default function Newsletter() {
           ))}
         </div>
         <div className="email-form">
-          <input ref={emailRef} type="email" className="email-input" placeholder="Your email address"/>
-          <button className="email-btn" onClick={subscribe}>Join Club →</button>
+          <input
+            ref={emailRef}
+            type="email"
+            className="email-input"
+            placeholder="Your email address"
+            onKeyDown={e => e.key === "Enter" && subscribe()}
+          />
+          <button
+            className="email-btn"
+            onClick={subscribe}
+            disabled={loading}
+            style={{ opacity: loading ? 0.7 : 1 }}
+          >
+            {loading ? "Joining..." : "Join Club →"}
+          </button>
         </div>
         <p className="newsletter-fineprint">No spam · One email per fortnight · Unsubscribe anytime</p>
       </div>
