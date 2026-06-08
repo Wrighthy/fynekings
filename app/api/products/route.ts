@@ -7,7 +7,11 @@ export async function GET() {
       where: { inStock: true },
       orderBy: { createdAt: "asc" },
     });
-    return NextResponse.json(products);
+    return NextResponse.json(products, {
+      headers: {
+        "Cache-Control": "s-maxage=60, stale-while-revalidate=300",
+      },
+    });
   } catch (error) {
     console.error("Products fetch error:", error);
     return NextResponse.json(
@@ -15,5 +19,4 @@ export async function GET() {
       { status: 500 }
     );
   }
-  
 }

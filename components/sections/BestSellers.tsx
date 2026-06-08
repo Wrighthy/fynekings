@@ -29,14 +29,28 @@ const FILTERS = ["All", "Midnight", "Gold", "Steel", "Limited"];
 export default function BestSellers() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
   const addToCart = useCart(s => s.addToCart);
 
   useEffect(() => {
-    fetch("/api/products")
-      .then(r => r.json())
-      .then(data => { setProducts(data); setLoading(false); })
-      .catch(() => setLoading(false));
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/products", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed");
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setProducts(data);
+        } else {
+          setError(true);
+        }
+      } catch {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
   }, []);
 
   return (
@@ -50,26 +64,39 @@ export default function BestSellers() {
           </div>
           <div className="products-filter">
             {FILTERS.map(f => (
-              <button key={f} className={`filter-btn ${activeFilter === f ? "active" : ""}`} onClick={() => setActiveFilter(f)}>{f}</button>
+              <button
+                key={f}
+                className={`filter-btn ${activeFilter === f ? "active" : ""}`}
+                onClick={() => setActiveFilter(f)}
+              >
+                {f}
+              </button>
             ))}
           </div>
         </div>
 
         <div className="products-grid reveal" style={{ transitionDelay: ".2s" }}>
           {loading ? (
-            // Loading skeleton — 4 placeholder cards
             [...Array(4)].map((_, i) => (
               <div key={i} className="product-card" style={{ opacity: 0.4 }}>
-                <div className="prod-img" style={{ background: "var(--dark3)" }}></div>
+                <div className="prod-img" style={{ background: "var(--dark3)", minHeight: "200px" }}></div>
                 <div className="prod-info">
                   <div style={{ height: "8px", width: "60%", background: "var(--dark4)", borderRadius: "2px", marginBottom: "12px" }}></div>
                   <div style={{ height: "20px", width: "80%", background: "var(--dark4)", borderRadius: "2px" }}></div>
                 </div>
               </div>
             ))
+          ) : error ? (
+            <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "60px", color: "var(--muted)", fontSize: ".6rem", letterSpacing: ".2em", textTransform: "uppercase" }}>
+              Unable to load collection. Please refresh.
+            </div>
           ) : (
             products.map(p => (
-              <div key={p.id} className="product-card" onClick={() => addToCart(p.name, p.series, p.price)}>
+              <div
+                key={p.id}
+                className="product-card"
+                onClick={() => addToCart(p.name, p.series, p.price)}
+              >
                 {p.badge && <div className="badge-sold">{p.badge}</div>}
                 {p.badgeNew && <div className="badge-new">{p.badgeNew}</div>}
                 <div className="prod-img">
@@ -89,7 +116,11 @@ export default function BestSellers() {
                     <circle cx="80" cy="80" r="3" fill={p.markerColor}/>
                   </svg>
                 </div>
-                <div className="prod-overlay"><div className="prod-overlay-inner"><span>+ Add to Cart</span></div></div>
+                <div className="prod-overlay">
+                  <div className="prod-overlay-inner">
+                    <span>+ Add to Cart</span>
+                  </div>
+                </div>
                 <div className="prod-info">
                   <p className="prod-tag">{p.tag}</p>
                   <p className="prod-name">{p.name}</p>
@@ -107,7 +138,9 @@ export default function BestSellers() {
         <div className="products-footer reveal">
           <a href="#" className="view-all">
             View Full Collection (24 pieces)
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
           </a>
         </div>
       </div>

@@ -7,7 +7,11 @@ export async function GET() {
       where: { active: true },
       orderBy: { createdAt: "desc" },
     });
-    return NextResponse.json(edition);
+    return NextResponse.json(edition, {
+      headers: {
+        "Cache-Control": "s-maxage=60, stale-while-revalidate=300",
+      },
+    });
   } catch (error) {
     console.error("Edition fetch error:", error);
     return NextResponse.json(
