@@ -455,4 +455,6 @@ footer{background:var(--black);border-top:1px solid var(--dark3);padding:100px 6
   .timer-block{padding:0 14px}
   .timer-block:not(:last-child)::after{font-size:2rem;right:-2px}
   .timer-num-wrap{min-width:70px;padding:14px 4px}
+  .footer-link-btn{font-size:.6rem;letter-spacing:.12em;color:var(--text);transition:color .3s,padding-left .3s;font-family:'Raleway',sans-serif;font-weight:300;width:100%}
+.footer-link-btn:hover{color:var(--gold);padding-left:6px}
 }

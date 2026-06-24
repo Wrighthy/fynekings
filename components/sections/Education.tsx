@@ -21,14 +21,16 @@ export default function Education() {
             <div key={e.vol} className="edu-card">
               <p className="edu-num">Vol. {e.vol}</p>
               <svg className="edu-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1">
-                <circle cx="24" cy="24" r="20"/>
-                <circle cx="24" cy="24" r="3" fill="currentColor"/>
-                <line x1="24" y1="24" x2="24" y2="9" strokeLinecap="round" strokeWidth="1.4"/>
-                <line x1="24" y1="24" x2="34" y2="17" strokeLinecap="round" strokeWidth="1.2"/>
+                <circle cx="24" cy="24" r="20" />
+                <circle cx="24" cy="24" r="3" fill="currentColor" />
+                <line x1="24" y1="24" x2="24" y2="9" strokeLinecap="round" strokeWidth="1.4" />
+                <line x1="24" y1="24" x2="34" y2="17" strokeLinecap="round" strokeWidth="1.2" />
               </svg>
               <h3>{e.title}</h3>
               <p>{e.body}</p>
-              <a href="#" className="edu-link" onClick={e => e.preventDefault()}>Read Article →</a>
+              <button className="edu-link" style={{ background: "none", border: "none", cursor: "none" }}>
+                Read Article →
+              </button>
             </div>
           ))}
         </div>

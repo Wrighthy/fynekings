@@ -101,19 +101,19 @@ export default function BestSellers() {
                 {p.badgeNew && <div className="badge-new">{p.badgeNew}</div>}
                 <div className="prod-img">
                   <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8"/>
-                    <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8"/>
-                    <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth}/>
-                    <circle cx="80" cy="80" r="44" fill={p.innerCase} stroke={p.innerStroke} strokeWidth=".5"/>
-                    <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6"/>
-                    <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6"/>
-                    <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6"/>
-                    <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6"/>
+                    <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
+                    <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
+                    <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth} />
+                    <circle cx="80" cy="80" r="44" fill={p.innerCase} stroke={p.innerStroke} strokeWidth=".5" />
+                    <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6" />
+                    <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6" />
+                    <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
+                    <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
                     <text x="80" y="68" textAnchor="middle" fill={p.textColor} fontFamily="Playfair Display,serif" fontSize="6" letterSpacing="2">FYNEKINGS</text>
-                    <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round"/>
-                    <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round"/>
-                    <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round"/>
-                    <circle cx="80" cy="80" r="3" fill={p.markerColor}/>
+                    <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round" />
+                    <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round" />
+                    <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round" />
+                    <circle cx="80" cy="80" r="3" fill={p.markerColor} />
                   </svg>
                 </div>
                 <div className="prod-overlay">
@@ -136,12 +136,10 @@ export default function BestSellers() {
         </div>
 
         <div className="products-footer reveal">
-          <a href="#" className="view-all" onClick={e => e.preventDefault()}>
+          <button className="view-all" style={{ background: "none", border: "none", cursor: "none" }}>
             View Full Collection (24 pieces)
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M5 12h14M13 5l7 7-7 7"/>
-            </svg>
-          </a>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+          </button>
         </div>
       </div>
     </section>
