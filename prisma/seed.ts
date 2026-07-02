@@ -4,11 +4,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding database...");
-
-  // Clear existing products
   await prisma.product.deleteMany();
 
-  // Seed products
   await prisma.product.createMany({
     data: [
       {
@@ -18,8 +15,19 @@ async function main() {
         price: 485000,
         tag: "Auto · 40mm",
         badge: "No. 01 Best Seller",
-        description: "The Sovereign I is the flagship of the Midnight Series. Hand-finished in our Victoria Island atelier, every component speaks to an obsession with precision.",
-        specs: { movement: "Automatic · Cal. F-2401", caseDiameter: "40mm", caseThickness: "10.8mm", caseMaterial: "316L Surgical Steel", crystal: "Sapphire · Anti-reflective", waterResistance: "100m", powerReserve: "72 hours", jewels: "25", frequency: "28,800 vph", strap: "Black Alligator · Hand-stitched" },
+        description: "The Sovereign I is the flagship of the Midnight Series. Hand-finished in our Victoria Island atelier, every component speaks to an obsession with precision. The deep black dial absorbs light like a Lagos night sky.",
+        specs: {
+          movement: "Automatic · Cal. F-2401",
+          caseDiameter: "40mm",
+          caseThickness: "10.8mm",
+          caseMaterial: "316L Surgical Steel",
+          crystal: "Sapphire · Anti-reflective",
+          waterResistance: "100m",
+          powerReserve: "72 hours",
+          jewels: "25",
+          frequency: "28,800 vph",
+          strap: "Black Alligator · Hand-stitched",
+        },
         images: [],
         strapColor: "#141414",
         strapStroke: "#2a2a2a",
@@ -42,8 +50,19 @@ async function main() {
         price: 620000,
         tag: "Auto · 42mm",
         badge: "Hot",
-        description: "The Lagos Prestige is a statement of pure luxury. Its full gold PVD case catches Lagos sunlight in ways that demand attention.",
-        specs: { movement: "Automatic · Cal. F-2401", caseDiameter: "42mm", caseThickness: "11.2mm", caseMaterial: "316L Steel · Gold PVD", crystal: "Sapphire · Anti-reflective", waterResistance: "50m", powerReserve: "72 hours", jewels: "25", frequency: "28,800 vph", strap: "Cognac Alligator · Hand-stitched" },
+        description: "The Lagos Prestige is a statement of pure luxury. Its full gold PVD case catches Lagos sunlight in ways that demand attention. For the collector who needs no introduction.",
+        specs: {
+          movement: "Automatic · Cal. F-2401",
+          caseDiameter: "42mm",
+          caseThickness: "11.2mm",
+          caseMaterial: "316L Steel · Gold PVD",
+          crystal: "Sapphire · Anti-reflective",
+          waterResistance: "50m",
+          powerReserve: "72 hours",
+          jewels: "25",
+          frequency: "28,800 vph",
+          strap: "Cognac Alligator · Hand-stitched",
+        },
         images: [],
         strapColor: "#2a1f0a",
         strapStroke: "#5A4010",
@@ -66,8 +85,19 @@ async function main() {
         price: 310000,
         tag: "Quartz · 38mm",
         badgeNew: "New",
-        description: "The Continent bridges continents and cultures. A clean steel case and precise quartz movement for the modern African professional.",
-        specs: { movement: "Quartz · Swiss ETA 956.032", caseDiameter: "38mm", caseThickness: "9.4mm", caseMaterial: "316L Brushed Steel", crystal: "Sapphire · Anti-reflective", waterResistance: "100m", powerReserve: "Battery · 3 years", jewels: "7", frequency: "32,768 Hz", strap: "Navy Leather · Hand-stitched" },
+        description: "The Continent bridges continents and cultures. A clean steel case, blue-tinted indices, and precise quartz movement make this the everyday companion for the modern African professional.",
+        specs: {
+          movement: "Quartz · Swiss ETA 956.032",
+          caseDiameter: "38mm",
+          caseThickness: "9.4mm",
+          caseMaterial: "316L Brushed Steel",
+          crystal: "Sapphire · Anti-reflective",
+          waterResistance: "100m",
+          powerReserve: "Battery · 3 years",
+          jewels: "7",
+          frequency: "32,768 Hz",
+          strap: "Navy Leather · Hand-stitched",
+        },
         images: [],
         strapColor: "#1a1a2a",
         strapStroke: "#2a2a4a",
@@ -89,8 +119,19 @@ async function main() {
         series: "Rose Gold",
         price: 540000,
         tag: "Auto · 40mm",
-        description: "Inspired by the warm hues of the Saharan sunset. Rose gold case paired with a deep crimson strap.",
-        specs: { movement: "Automatic · Cal. F-2401", caseDiameter: "40mm", caseThickness: "10.8mm", caseMaterial: "316L Steel · Rose Gold PVD", crystal: "Sapphire · Anti-reflective", waterResistance: "50m", powerReserve: "72 hours", jewels: "25", frequency: "28,800 vph", strap: "Oxblood Alligator · Hand-stitched" },
+        description: "Inspired by the warm hues of the Saharan sunset. The rose gold case paired with a deep crimson strap creates an aesthetic that is unmistakably African, unmistakably luxurious.",
+        specs: {
+          movement: "Automatic · Cal. F-2401",
+          caseDiameter: "40mm",
+          caseThickness: "10.8mm",
+          caseMaterial: "316L Steel · Rose Gold PVD",
+          crystal: "Sapphire · Anti-reflective",
+          waterResistance: "50m",
+          powerReserve: "72 hours",
+          jewels: "25",
+          frequency: "28,800 vph",
+          strap: "Oxblood Alligator · Hand-stitched",
+        },
         images: [],
         strapColor: "#2a1515",
         strapStroke: "#4a2020",
@@ -106,10 +147,147 @@ async function main() {
         featured: true,
         inStock: true,
       },
+      {
+        name: "Victoria Crown",
+        slug: "victoria-crown",
+        series: "Platinum Series",
+        price: 980000,
+        description: "Named after Victoria Island, the Crown is our most ambitious piece. Brushed platinum case, skeletonised dial revealing the movement, and a hand-stitched ivory strap.",
+        specs: {
+          movement: "Automatic · Cal. F-2401 Skeleton",
+          caseDiameter: "41mm",
+          caseThickness: "12.4mm",
+          caseMaterial: "316L Steel · Platinum PVD",
+          crystal: "Sapphire · Double anti-reflective",
+          waterResistance: "30m",
+          powerReserve: "72 hours",
+          jewels: "25",
+          frequency: "28,800 vph",
+          strap: "Ivory Croc · Hand-stitched",
+        },
+        tag: "Auto · 41mm",
+        badge: "New Arrival",
+        images: [],
+        strapColor: "#E8E4DC",
+        strapStroke: "#C4A962",
+        caseColor: "#d4d4d4",
+        caseStroke: "#888888",
+        markerColor: "#888888",
+        handColor: "#1a1a1a",
+        secColor: "#C4A962",
+        textColor: "#888888",
+        innerCase: "#c8c8c8",
+        innerStroke: "#999999",
+        strokeWidth: "1.4",
+        featured: true,
+        inStock: true,
+      },
+      {
+        name: "Abuja Classic",
+        slug: "abuja-classic",
+        series: "Dress Collection",
+        price: 395000,
+        description: "Slim, elegant, and understated. The Abuja Classic is built for the boardroom and the black-tie event. A 36mm dress watch that whispers rather than shouts.",
+        specs: {
+          movement: "Automatic · Cal. F-2401 Slim",
+          caseDiameter: "36mm",
+          caseThickness: "7.8mm",
+          caseMaterial: "316L Polished Steel",
+          crystal: "Sapphire · Anti-reflective",
+          waterResistance: "30m",
+          powerReserve: "48 hours",
+          jewels: "21",
+          frequency: "21,600 vph",
+          strap: "Black Calfskin · Deployant clasp",
+        },
+        tag: "Auto · 36mm",
+        images: [],
+        strapColor: "#1a1a1a",
+        strapStroke: "#3a3a3a",
+        caseColor: "#e8e8e8",
+        caseStroke: "#aaaaaa",
+        markerColor: "#aaaaaa",
+        handColor: "#1a1a1a",
+        secColor: "#C4A962",
+        textColor: "#aaaaaa",
+        innerCase: "#f0f0f0",
+        innerStroke: "#cccccc",
+        strokeWidth: "1.2",
+        featured: false,
+        inStock: true,
+      },
+      {
+        name: "Niger Delta",
+        slug: "niger-delta",
+        series: "Sport Collection",
+        price: 445000,
+        description: "Built for the adventurous collector. 200m water resistance, a rotating bezel, and a bold green dial inspired by the lush Niger Delta mangroves. Toughness wrapped in luxury.",
+        specs: {
+          movement: "Automatic · Cal. F-2401 Sport",
+          caseDiameter: "42mm",
+          caseThickness: "13.2mm",
+          caseMaterial: "316L Steel · Brushed & Polished",
+          crystal: "Sapphire · 6× anti-reflective",
+          waterResistance: "200m",
+          powerReserve: "72 hours",
+          jewels: "25",
+          frequency: "28,800 vph",
+          strap: "Black Rubber · Steel clasp",
+        },
+        tag: "Auto · 42mm",
+        badge: "New",
+        images: [],
+        strapColor: "#1a2a1a",
+        strapStroke: "#2a4a2a",
+        caseColor: "#0a1a0a",
+        caseStroke: "#4a8a4a",
+        markerColor: "#6aaa6a",
+        handColor: "#F4EFE4",
+        secColor: "#C4A962",
+        textColor: "#6aaa6a",
+        innerCase: "#081408",
+        innerStroke: "#1a3a1a",
+        strokeWidth: "1.6",
+        featured: false,
+        inStock: true,
+      },
+      {
+        name: "Eko Atlantic",
+        slug: "eko-atlantic",
+        series: "Blue Water Series",
+        price: 520000,
+        description: "Inspired by Lagos's newest landmark rising from the Atlantic. A deep ocean blue dial, steel case, and luminous hands make this the defining piece of the Blue Water Series.",
+        specs: {
+          movement: "Automatic · Cal. F-2401",
+          caseDiameter: "40mm",
+          caseThickness: "11mm",
+          caseMaterial: "316L Steel · Sandblasted",
+          crystal: "Sapphire · Anti-reflective",
+          waterResistance: "150m",
+          powerReserve: "72 hours",
+          jewels: "25",
+          frequency: "28,800 vph",
+          strap: "Navy Blue Rubber · Folding clasp",
+        },
+        tag: "Auto · 40mm",
+        images: [],
+        strapColor: "#0a0a2a",
+        strapStroke: "#1a1a4a",
+        caseColor: "#080818",
+        caseStroke: "#4060C4",
+        markerColor: "#6080D4",
+        handColor: "#F4EFE4",
+        secColor: "#C4A962",
+        textColor: "#6080D4",
+        innerCase: "#060612",
+        innerStroke: "#141430",
+        strokeWidth: "1.4",
+        featured: false,
+        inStock: true,
+      },
     ],
   });
 
-  // Seed limited edition
   await prisma.limitedEdition.deleteMany();
   await prisma.limitedEdition.create({
     data: {
@@ -124,15 +302,10 @@ async function main() {
   });
 
   console.log("✅ Database seeded successfully");
-  console.log("   → 4 products created");
+  console.log("   → 8 products created");
   console.log("   → 1 limited edition created");
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .catch(e => { console.error(e); process.exit(1); })
+  .finally(async () => { await prisma.$disconnect(); });
