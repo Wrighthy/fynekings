@@ -24,21 +24,34 @@ export default function AdminPage() {
         if (!files || files.length === 0) return;
         setUploading(productId);
 
-        for (let i = 0; i < files.length; i++) {
-            const formData = new FormData();
-            formData.append("file", files[i]);
-            formData.append("productId", productId);
+        try {
+            for (let i = 0; i < files.length; i++) {
+                const formData = new FormData();
+                formData.append("file", files[i]);
+                formData.append("productId", productId);
 
-            await fetch("/api/upload", { method: "POST", body: formData });
+                const res = await fetch("/api/upload", { method: "POST", body: formData });
+                if (!res.ok) {
+                    const err = await res.json();
+                    console.error("Upload failed:", err);
+                }
+            }
+
+            // Force fresh fetch — bypass any cache
+            const updated = await fetch("/api/products?t=" + Date.now(), {
+                cache: "no-store"
+            }).then(r => r.json());
+
+            setProducts(updated);
+            setMessage(`✓ ${files.length} image${files.length > 1 ? "s" : ""} uploaded successfully`);
+            setTimeout(() => setMessage(""), 4000);
+        } catch (err) {
+            console.error("Upload error:", err);
+            setMessage("Upload failed — please try again");
+        } finally {
+            setUploading(null);
         }
-
-        const updated = await fetch("/api/products").then(r => r.json());
-        setProducts(updated);
-        setUploading(null);
-        setMessage("Images uploaded successfully!");
-        setTimeout(() => setMessage(""), 3000);
     };
-
     const removeImage = async (productId: string, imageUrl: string) => {
         await fetch("/api/products/images", {
             method: "DELETE",
