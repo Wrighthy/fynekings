@@ -11,15 +11,11 @@ datasource db {
 model Product {
   id          String   @id @default(cuid())
   name        String
-  slug        String   @unique
   series      String
   price       Int
   tag         String
   badge       String?
   badgeNew    String?
-  description String?
-  specs       Json?
-  images      String[]
   strapColor  String
   strapStroke String
   caseColor   String
@@ -35,20 +31,24 @@ model Product {
   featured    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  description String?
+  images      String[]
+  slug        String   @unique
+  specs       Json?
   orders      Order[]
 }
 
 model LimitedEdition {
-  id          String   @id @default(cuid())
-  name        String
-  reference   String
-  price       Int
-  totalStock  Int
-  soldCount   Int      @default(0)
-  dropEndsAt  DateTime
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(cuid())
+  name       String
+  reference  String
+  price      Int
+  totalStock Int
+  soldCount  Int      @default(0)
+  dropEndsAt DateTime
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Order {
@@ -63,10 +63,10 @@ model Order {
   totalAmount     Int
   paystackRef     String?     @unique
   productId       String?
-  product         Product?    @relation(fields: [productId], references: [id])
   customConfig    Json?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  product         Product?    @relation(fields: [productId], references: [id])
 }
 
 model NewsletterSubscriber {

@@ -53,10 +53,11 @@ export async function POST(req: NextRequest) {
         }
 
         return NextResponse.json({ url: result.secure_url });
-    } catch (error) {
-        console.error("Upload error:", error);
+    } catch (error: unknown) {
+        const errMsg = error instanceof Error ? error.message : JSON.stringify(error);
+        console.error("Upload error:", errMsg);
         return NextResponse.json(
-            { error: "Upload failed", details: String(error) },
+            { error: "Upload failed", details: errMsg },
             { status: 500 }
         );
     }
