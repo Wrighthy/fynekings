@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useCart, fmt } from "@/lib/store";
+import Link from "next/link";
 
 type Product = {
   id: string;
@@ -152,10 +153,10 @@ export default function BestSellers() {
         </div>
 
         <div className="products-footer reveal">
-          <button className="view-all" style={{ background: "none", border: "none", cursor: "none" }}>
-            View Full Collection (24 pieces)
+          <Link href="/collection" className="view-all" style={{ textDecoration: "none" }}>
+            View Full Collection ({products.length} pieces)
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
-          </button>
+          </Link>
         </div>
       </div>
     </section>
