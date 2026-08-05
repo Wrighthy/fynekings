@@ -1,9 +1,41 @@
 "use client";
+import Link from "next/link";
 const FOOTER_COLS = [
-  { h: "Collection", l: ["Best Sellers", "New Arrivals", "Limited Editions", "Custom Build", "Archive"] },
-  { h: "Experience", l: ["AR Try-On", "3D Customizer", "Watch Education", "Collector Club", "Lagos Atelier"] },
-  { h: "Service", l: ["Shipping & Returns", "Warranty", "Watch Servicing", "Authentication", "Contact"] },
-  { h: "Legal", l: ["Privacy Policy", "Terms of Sale", "Cookies", "Accessibility"] },
+  {
+    h: "Collection", l: [
+      { label: "Best Sellers", href: "/collection" },
+      { label: "New Arrivals", href: "/collection" },
+      { label: "Limited Editions", href: "/#countdown" },
+      { label: "Custom Build", href: "/#customizer" },
+      { label: "Archive", href: "/collection" },
+    ]
+  },
+  {
+    h: "Experience", l: [
+      { label: "AR Try-On", href: "/#tryon" },
+      { label: "3D Customizer", href: "/#customizer" },
+      { label: "Watch Education", href: "/#education" },
+      { label: "Collector Club", href: "/#newsletter" },
+      { label: "Lagos Atelier", href: "/#heritage" },
+    ]
+  },
+  {
+    h: "Service", l: [
+      { label: "Shipping & Returns", href: "#" },
+      { label: "Warranty", href: "#" },
+      { label: "Watch Servicing", href: "#" },
+      { label: "Authentication", href: "#" },
+      { label: "Contact", href: "#" },
+    ]
+  },
+  {
+    h: "Legal", l: [
+      { label: "Privacy Policy", href: "#" },
+      { label: "Terms of Sale", href: "#" },
+      { label: "Cookies", href: "#" },
+      { label: "Accessibility", href: "#" },
+    ]
+  },
 ];
 
 export default function Footer() {
@@ -26,14 +58,12 @@ export default function Footer() {
             <h5>{c.h}</h5>
             <ul>
               {c.l.map(li => (
-                <li key={li}>
-                  <button
-                    key={li}
-                    style={{ background: "none", border: "none", cursor: "none", padding: 0, textAlign: "left" }}
-                    className="footer-link-btn"
-                  >
-                    {li}
-                  </button>
+                <li key={li.label}>
+                  <Link href={li.href} style={{ fontSize: ".6rem", letterSpacing: ".12em", color: "var(--text)", textDecoration: "none", transition: "color .3s, padding-left .3s", display: "block" }}
+                    onMouseEnter={e => { e.currentTarget.style.color = "var(--gold)"; e.currentTarget.style.paddingLeft = "6px"; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.paddingLeft = "0"; }}>
+                    {li.label}
+                  </Link>
                 </li>
               ))}
             </ul>

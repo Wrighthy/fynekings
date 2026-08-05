@@ -7,6 +7,7 @@ import Link from "next/link";
 type Product = {
   id: string;
   name: string;
+  slug: string;
   series: string;
   price: number;
   tag: string;
@@ -94,57 +95,54 @@ export default function BestSellers() {
             </div>
           ) : (
             products.map(p => (
-              <div
-                key={p.id}
-                className="product-card"
-                onClick={() => addToCart(p.name, p.series, p.price)}
-              >
+              <div key={p.id} className="product-card">
                 {p.badge && <div className="badge-sold">{p.badge}</div>}
                 {p.badgeNew && <div className="badge-new">{p.badgeNew}</div>}
-                <div className="prod-img">
-                  {p.images && p.images.length > 0 ? (
-                    <img
-                      src={p.images[0]}
-                      alt={p.name}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        position: "absolute",
-                        inset: 0,
-                        padding: 0,
-                      }}
-                    />
-                  ) : (
-                    <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
-                      <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
-                      <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth} />
-                      <circle cx="80" cy="80" r="44" fill={p.innerCase} stroke={p.innerStroke} strokeWidth=".5" />
-                      <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6" />
-                      <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6" />
-                      <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
-                      <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
-                      <text x="80" y="68" textAnchor="middle" fill={p.textColor} fontFamily="Playfair Display,serif" fontSize="6" letterSpacing="2">FYNEKINGS</text>
-                      <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round" />
-                      <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round" />
-                      <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round" />
-                      <circle cx="80" cy="80" r="3" fill={p.markerColor} />
-                    </svg>
-                  )}
-                </div>
-                <div className="prod-overlay">
-                  <div className="prod-overlay-inner">
-                    <span>+ Add to Cart</span>
+
+                {/* Clicking the image goes to product page */}
+                <Link href={`/watches/${p.slug}`} style={{ textDecoration: "none", display: "block" }}>
+                  <div className="prod-img">
+                    {p.images && p.images.length > 0 ? (
+                      <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }} />
+                    ) : (
+                      <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
+                        <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
+                        <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth} />
+                        <circle cx="80" cy="80" r="44" fill={p.innerCase} stroke={p.innerStroke} strokeWidth=".5" />
+                        <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6" />
+                        <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6" />
+                        <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
+                        <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
+                        <text x="80" y="68" textAnchor="middle" fill={p.textColor} fontFamily="Playfair Display,serif" fontSize="6" letterSpacing="2">FYNEKINGS</text>
+                        <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round" />
+                        <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round" />
+                        <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round" />
+                        <circle cx="80" cy="80" r="3" fill={p.markerColor} />
+                      </svg>
+                    )}
+                    <div className="prod-overlay"><div className="prod-overlay-inner"><span>View Watch</span></div></div>
                   </div>
-                </div>
+                </Link>
+
+                {/* Product info */}
                 <div className="prod-info">
                   <p className="prod-tag">{p.tag}</p>
-                  <p className="prod-name">{p.name}</p>
+                  <Link href={`/watches/${p.slug}`} style={{ textDecoration: "none" }}>
+                    <p className="prod-name">{p.name}</p>
+                  </Link>
                   <p className="prod-series">{p.series}</p>
                   <div className="prod-bottom">
                     <p className="prod-price">{fmt(p.price)} <small>+ fees</small></p>
-                    <p className="prod-cta">Add →</p>
+                    <button
+                      className="prod-cta"
+                      style={{ background: "none", border: "none", cursor: "none", fontFamily: "Raleway, sans-serif", fontSize: ".48rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--muted)", transition: "color .3s" }}
+                      onClick={() => addToCart(p.name, p.series, p.price)}
+                      onMouseEnter={e => (e.currentTarget.style.color = "var(--gold)")}
+                      onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+                    >
+                      Add →
+                    </button>
                   </div>
                 </div>
               </div>
@@ -161,4 +159,4 @@ export default function BestSellers() {
       </div>
     </section>
   );
-}
+}
