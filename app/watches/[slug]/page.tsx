@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useCart, fmt } from "@/lib/store";
 import { useClockHands } from "@/lib/useClockHands";
@@ -78,7 +78,8 @@ function WatchSVG({ p }: { p: Product }) {
     );
 }
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
+export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = use(params);
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeImage, setActiveImage] = useState(0);
@@ -86,7 +87,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     const addToCart = useCart(s => s.addToCart);
 
     useEffect(() => {
-        fetch(`/api/products/${params.slug}`)
+        fetch(`/api/products/${slug}`)
             .then(r => r.json())
             .then(data => {
                 setProduct(data);
@@ -96,8 +97,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
         fetch("/api/products")
             .then(r => r.json())
-            .then(data => setRelated(data.filter((p: Product) => p.slug !== params.slug).slice(0, 4)));
-    }, [params.slug]);
+            .then(data => setRelated(data.filter((p: Product) => p.slug !== slug).slice(0, 4)));
+    }, [slug]);
 
     if (loading) return (
         <div style={{ background: "var(--black)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -131,7 +132,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
                 {/* Left — Image gallery */}
                 <div>
-                    {/* Main image */}
                     <div style={{ aspectRatio: "1", background: "linear-gradient(135deg, var(--dark2) 0%, var(--dark) 100%)", border: "1px solid var(--dark3)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", marginBottom: "16px" }}>
                         {product.images && product.images.length > 0 ? (
                             <img src={product.images[activeImage]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }} />
@@ -140,31 +140,20 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                                 <WatchSVG p={product} />
                             </div>
                         )}
-
-                        {/* Corner brackets */}
                         <div style={{ position: "absolute", top: "16px", left: "16px", width: "24px", height: "24px", borderTop: "1px solid var(--gold-dk)", borderLeft: "1px solid var(--gold-dk)" }}></div>
                         <div style={{ position: "absolute", top: "16px", right: "16px", width: "24px", height: "24px", borderTop: "1px solid var(--gold-dk)", borderRight: "1px solid var(--gold-dk)" }}></div>
                         <div style={{ position: "absolute", bottom: "16px", left: "16px", width: "24px", height: "24px", borderBottom: "1px solid var(--gold-dk)", borderLeft: "1px solid var(--gold-dk)" }}></div>
                         <div style={{ position: "absolute", bottom: "16px", right: "16px", width: "24px", height: "24px", borderBottom: "1px solid var(--gold-dk)", borderRight: "1px solid var(--gold-dk)" }}></div>
-
-                        {/* Reference */}
                         <div style={{ position: "absolute", bottom: "24px", left: "24px", fontSize: ".45rem", letterSpacing: ".3em", color: "var(--gold-dk)", textTransform: "uppercase" }}>
-                            REF. FYN-{product.slug.toUpperCase().replace(/-/g, "")}
+                            REF. FYN-{slug.toUpperCase().replace(/-/g, "")}
                         </div>
                     </div>
 
-                    {/* Thumbnail strip */}
                     {product.images && product.images.length > 1 && (
                         <div style={{ display: "flex", gap: "8px" }}>
                             {product.images.map((img, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() => setActiveImage(i)}
-                                    style={{
-                                        width: "72px", height: "72px", border: i === activeImage ? "1px solid var(--gold)" : "1px solid var(--dark3)",
-                                        background: "var(--dark2)", padding: 0, cursor: "none", overflow: "hidden", transition: "border-color .3s"
-                                    }}
-                                >
+                                <button key={i} onClick={() => setActiveImage(i)}
+                                    style={{ width: "72px", height: "72px", border: i === activeImage ? "1px solid var(--gold)" : "1px solid var(--dark3)", background: "var(--dark2)", padding: 0, cursor: "none", overflow: "hidden", transition: "border-color .3s" }}>
                                     <img src={img} alt={`${product.name} ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                 </button>
                             ))}
@@ -179,17 +168,12 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                             {product.badge || product.badgeNew}
                         </div>
                     )}
-
                     <div style={{ fontSize: ".52rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "12px" }}>{product.series}</div>
-
                     <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 300, color: "var(--white)", marginBottom: "8px", letterSpacing: "-.02em", lineHeight: 1 }}>
                         {product.name}
                     </h1>
-
                     <p style={{ fontSize: ".6rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "32px" }}>{product.tag}</p>
-
                     <div style={{ width: "48px", height: "1px", background: "linear-gradient(to right, var(--gold), transparent)", marginBottom: "32px" }}></div>
-
                     <p style={{ fontSize: ".7rem", letterSpacing: ".1em", lineHeight: 2.4, color: "var(--text)", marginBottom: "40px" }}>
                         {product.description || "A masterpiece of horological craft, hand-finished in our Victoria Island atelier."}
                     </p>
@@ -201,35 +185,31 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                             {fmt(product.price)}
                         </div>
                         <div style={{ fontSize: ".5rem", letterSpacing: ".2em", color: "var(--muted)", marginTop: "6px", textTransform: "uppercase" }}>
-                            + {fmt(Math.min(Math.round(product.price * 0.015 + 100), 2000))} Paystack fee · shown transparently
+                            + {fmt(Math.min(Math.round(product.price * 0.015 + 100), 2000))} Paystack fee
                         </div>
                     </div>
 
-                    {/* Add to cart */}
-                    <button
-                        onClick={() => addToCart(product.name, product.series, product.price)}
+                    {/* Buttons */}
+                    <button onClick={() => addToCart(product.name, product.series, product.price)}
                         style={{ width: "100%", padding: "20px", background: "var(--gold)", color: "var(--black)", border: "none", fontSize: ".6rem", letterSpacing: ".32em", textTransform: "uppercase", fontWeight: 600, fontFamily: "Raleway, sans-serif", cursor: "none", marginBottom: "16px", transition: "background .3s", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px" }}
                         onMouseEnter={e => (e.currentTarget.style.background = "var(--gold-lt)")}
-                        onMouseLeave={e => (e.currentTarget.style.background = "var(--gold)")}
-                    >
+                        onMouseLeave={e => (e.currentTarget.style.background = "var(--gold)")}>
                         Add to Cart
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
                     </button>
 
-                    <button
-                        style={{ width: "100%", padding: "20px", background: "transparent", color: "var(--gold)", border: "1px solid var(--gold-dk)", fontSize: ".6rem", letterSpacing: ".32em", textTransform: "uppercase", fontFamily: "Raleway, sans-serif", cursor: "none", transition: "all .3s", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px" }}
+                    <Link href="/customizer" style={{ width: "100%", padding: "20px", background: "transparent", color: "var(--gold)", border: "1px solid var(--gold-dk)", fontSize: ".6rem", letterSpacing: ".32em", textTransform: "uppercase", fontFamily: "Raleway, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", textDecoration: "none", transition: "all .3s" }}
                         onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--gold)"; e.currentTarget.style.background = "var(--gold-dim)"; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--gold-dk)"; e.currentTarget.style.background = "transparent"; }}
-                    >
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--gold-dk)"; e.currentTarget.style.background = "transparent"; }}>
                         Customize This Watch
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14" /></svg>
-                    </button>
+                    </Link>
 
                     {/* Specs */}
                     {product.specs && (
                         <div style={{ marginTop: "48px" }}>
                             <div style={{ fontSize: ".55rem", letterSpacing: ".35em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "24px" }}>Specifications</div>
-                            <div style={{ display: "grid", gap: "0" }}>
+                            <div>
                                 {Object.entries(product.specs).map(([key, value]) => (
                                     <div key={key} style={{ display: "flex", justifyContent: "space-between", padding: "14px 0", borderBottom: "1px solid var(--dark3)" }}>
                                         <span style={{ fontSize: ".55rem", letterSpacing: ".18em", color: "var(--muted)", textTransform: "uppercase" }}>{key.replace(/([A-Z])/g, ' $1').trim()}</span>
@@ -268,7 +248,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                         </div>
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1px", background: "var(--dark3)" }}>
                             {related.map(p => (
-                                <Link key={p.id} href={`/watches/${p.slug}`} style={{ textDecoration: "none", background: "var(--dark)", display: "block", transition: "background .4s" }}
+                                <Link key={p.id} href={`/watches/${p.slug}`} style={{ textDecoration: "none", background: "var(--dark)", display: "block" }}
                                     onMouseEnter={e => (e.currentTarget.style.background = "var(--dark2)")}
                                     onMouseLeave={e => (e.currentTarget.style.background = "var(--dark)")}>
                                     <div style={{ aspectRatio: "1", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", background: "linear-gradient(135deg, var(--dark2) 0%, var(--dark) 100%)", position: "relative", overflow: "hidden" }}>

@@ -18,7 +18,10 @@ export type CartItem = {
 };
 
 // ============ HELPERS ============
-export const fmt = (n: number) => "₦" + n.toLocaleString("en-NG");
+export const fmt = (n: number | undefined | null) => {
+  if (n === undefined || n === null) return "₦0";
+  return "₦" + n.toLocaleString("en-NG");
+};
 export const paystackFee = (a: number) => Math.min(Math.round(a * 0.015 + 100), 2000);
 export const BASE_PRICE = 420000;
 
