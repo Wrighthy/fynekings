@@ -41,7 +41,12 @@ export default function CollectionPage() {
     useEffect(() => {
         fetch("/api/products", { cache: "no-store" })
             .then(r => r.json())
-            .then(data => { setProducts(data); setLoading(false); })
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setProducts(data);
+                }
+                setLoading(false);
+            })
             .catch(() => setLoading(false));
     }, []);
 

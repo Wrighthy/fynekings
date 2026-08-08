@@ -17,7 +17,10 @@ export default function AdminPage() {
     useEffect(() => {
         fetch("/api/products")
             .then(r => r.json())
-            .then(setProducts);
+            .then(data => {
+                if (Array.isArray(data)) setProducts(data);
+            })
+            .catch(() => {});
     }, []);
 
     const handleUpload = async (productId: string, files: FileList | null) => {

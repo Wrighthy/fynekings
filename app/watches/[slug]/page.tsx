@@ -83,22 +83,48 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeImage, setActiveImage] = useState(0);
+    const [zoomed, setZoomed] = useState(false);
     const [related, setRelated] = useState<Product[]>([]);
     const addToCart = useCart(s => s.addToCart);
 
     useEffect(() => {
         fetch(`/api/products/${slug}`)
-            .then(r => r.json())
+            .then(r => {
+                if (!r.ok) return null;
+                return r.json();
+            })
             .then(data => {
-                setProduct(data);
+                if (data && !data.error && data.id) {
+                    setProduct(data);
+                } else {
+                    setProduct(null);
+                }
                 setLoading(false);
             })
-            .catch(() => setLoading(false));
+            .catch(() => {
+                setProduct(null);
+                setLoading(false);
+            });
 
         fetch("/api/products")
             .then(r => r.json())
-            .then(data => setRelated(data.filter((p: Product) => p.slug !== slug).slice(0, 4)));
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setRelated(data.filter((p: Product) => p.slug !== slug).slice(0, 4));
+                }
+            })
+            .catch(() => { });
     }, [slug]);
+    useEffect(() => {
+        if (!product) return;
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.key === "ArrowLeft") setActiveImage(i => (i - 1 + product.images.length) % product.images.length);
+            if (e.key === "ArrowRight") setActiveImage(i => (i + 1) % product.images.length);
+            if (e.key === "Escape") setZoomed(false);
+        };
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", handleKey);
+    }, [product]);
 
     if (loading) return (
         <div style={{ background: "var(--black)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -131,35 +157,117 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
             <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "0 64px 100px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "100px", alignItems: "start" }}>
 
                 {/* Left — Image gallery */}
-                <div>
-                    <div style={{ aspectRatio: "1", background: "linear-gradient(135deg, var(--dark2) 0%, var(--dark) 100%)", border: "1px solid var(--dark3)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", marginBottom: "16px" }}>
+                {/* Left — Image gallery */}
+                <div style={{ position: "sticky", top: "100px" }}>
+
+                    {/* Main image viewer */}
+                    <div
+                        style={{ aspectRatio: "3/4", background: "var(--dark2)", border: "1px solid var(--dark3)", position: "relative", overflow: "hidden", marginBottom: "12px", cursor: "zoom-in" }}
+                        onClick={() => setZoomed(true)}
+                    >
                         {product.images && product.images.length > 0 ? (
-                            <img src={product.images[activeImage]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }} />
+                            <img
+                                key={activeImage}
+                                src={product.images[activeImage]}
+                                alt={`${product.name} — view ${activeImage + 1}`}
+                                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", animation: "fadeIn .35s ease" }}
+                            />
                         ) : (
-                            <div style={{ width: "380px", height: "380px" }}>
+                            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                 <WatchSVG p={product} />
                             </div>
                         )}
-                        <div style={{ position: "absolute", top: "16px", left: "16px", width: "24px", height: "24px", borderTop: "1px solid var(--gold-dk)", borderLeft: "1px solid var(--gold-dk)" }}></div>
-                        <div style={{ position: "absolute", top: "16px", right: "16px", width: "24px", height: "24px", borderTop: "1px solid var(--gold-dk)", borderRight: "1px solid var(--gold-dk)" }}></div>
-                        <div style={{ position: "absolute", bottom: "16px", left: "16px", width: "24px", height: "24px", borderBottom: "1px solid var(--gold-dk)", borderLeft: "1px solid var(--gold-dk)" }}></div>
-                        <div style={{ position: "absolute", bottom: "16px", right: "16px", width: "24px", height: "24px", borderBottom: "1px solid var(--gold-dk)", borderRight: "1px solid var(--gold-dk)" }}></div>
-                        <div style={{ position: "absolute", bottom: "24px", left: "24px", fontSize: ".45rem", letterSpacing: ".3em", color: "var(--gold-dk)", textTransform: "uppercase" }}>
+
+                        {/* Corner brackets */}
+                        <div style={{ position: "absolute", top: "16px", left: "16px", width: "20px", height: "20px", borderTop: "1px solid var(--gold-dk)", borderLeft: "1px solid var(--gold-dk)", pointerEvents: "none" }}></div>
+                        <div style={{ position: "absolute", top: "16px", right: "16px", width: "20px", height: "20px", borderTop: "1px solid var(--gold-dk)", borderRight: "1px solid var(--gold-dk)", pointerEvents: "none" }}></div>
+                        <div style={{ position: "absolute", bottom: "16px", left: "16px", width: "20px", height: "20px", borderBottom: "1px solid var(--gold-dk)", borderLeft: "1px solid var(--gold-dk)", pointerEvents: "none" }}></div>
+                        <div style={{ position: "absolute", bottom: "16px", right: "16px", width: "20px", height: "20px", borderBottom: "1px solid var(--gold-dk)", borderRight: "1px solid var(--gold-dk)", pointerEvents: "none" }}></div>
+
+                        {/* Image counter */}
+                        {product.images && product.images.length > 1 && (
+                            <div style={{ position: "absolute", bottom: "16px", left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,.6)", backdropFilter: "blur(4px)", padding: "6px 14px", fontSize: ".45rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase" }}>
+                                {activeImage + 1} / {product.images.length}
+                            </div>
+                        )}
+
+                        {/* Ref number */}
+                        <div style={{ position: "absolute", top: "16px", left: "50%", transform: "translateX(-50%)", fontSize: ".42rem", letterSpacing: ".28em", color: "var(--gold-dk)", textTransform: "uppercase", pointerEvents: "none" }}>
                             REF. FYN-{slug.toUpperCase().replace(/-/g, "")}
                         </div>
+
+                        {/* Prev / Next arrows */}
+                        {product.images && product.images.length > 1 && (
+                            <>
+                                <button
+                                    onClick={e => { e.stopPropagation(); setActiveImage(i => (i - 1 + product.images.length) % product.images.length); }}
+                                    style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,.5)", border: "1px solid var(--gold-dk)", color: "var(--gold)", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "none", backdropFilter: "blur(4px)", transition: "all .3s" }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = "var(--gold)"; e.currentTarget.style.color = "var(--black)"; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(0,0,0,.5)"; e.currentTarget.style.color = "var(--gold)"; }}
+                                >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
+                                </button>
+                                <button
+                                    onClick={e => { e.stopPropagation(); setActiveImage(i => (i + 1) % product.images.length); }}
+                                    style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,.5)", border: "1px solid var(--gold-dk)", color: "var(--gold)", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "none", backdropFilter: "blur(4px)", transition: "all .3s" }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = "var(--gold)"; e.currentTarget.style.color = "var(--black)"; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(0,0,0,.5)"; e.currentTarget.style.color = "var(--gold)"; }}
+                                >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg>
+                                </button>
+                            </>
+                        )}
                     </div>
 
+                    {/* Thumbnail strip */}
                     {product.images && product.images.length > 1 && (
-                        <div style={{ display: "flex", gap: "8px" }}>
+                        <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "4px" }}>
                             {product.images.map((img, i) => (
-                                <button key={i} onClick={() => setActiveImage(i)}
-                                    style={{ width: "72px", height: "72px", border: i === activeImage ? "1px solid var(--gold)" : "1px solid var(--dark3)", background: "var(--dark2)", padding: 0, cursor: "none", overflow: "hidden", transition: "border-color .3s" }}>
-                                    <img src={img} alt={`${product.name} ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                <button
+                                    key={i}
+                                    onClick={() => setActiveImage(i)}
+                                    style={{
+                                        flexShrink: 0,
+                                        width: "64px",
+                                        height: "80px",
+                                        border: i === activeImage ? "1px solid var(--gold)" : "1px solid var(--dark3)",
+                                        background: "var(--dark2)",
+                                        padding: 0,
+                                        cursor: "none",
+                                        overflow: "hidden",
+                                        transition: "border-color .3s, opacity .3s",
+                                        opacity: i === activeImage ? 1 : 0.6,
+                                    }}
+                                    onMouseEnter={e => (e.currentTarget.style.opacity = "1")}
+                                    onMouseLeave={e => (e.currentTarget.style.opacity = i === activeImage ? "1" : "0.6")}
+                                >
+                                    <img src={img} alt={`${product.name} view ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                 </button>
                             ))}
                         </div>
                     )}
                 </div>
+
+                {/* Fullscreen zoom overlay */}
+                {zoomed && (
+                    <div
+                        onClick={() => setZoomed(false)}
+                        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.95)", zIndex: 9000, display: "flex", alignItems: "center", justifyContent: "center", cursor: "zoom-out" }}
+                    >
+                        <img
+                            src={product.images[activeImage]}
+                            alt={product.name}
+                            style={{ maxWidth: "90vw", maxHeight: "90vh", objectFit: "contain" }}
+                        />
+                        <button
+                            onClick={() => setZoomed(false)}
+                            style={{ position: "absolute", top: "24px", right: "24px", background: "none", border: "1px solid var(--gold-dk)", color: "var(--gold)", width: "40px", height: "40px", fontSize: "1rem", cursor: "none" }}
+                        >✕</button>
+                        <div style={{ position: "absolute", bottom: "24px", left: "50%", transform: "translateX(-50%)", fontSize: ".45rem", letterSpacing: ".3em", color: "var(--gold-dk)", textTransform: "uppercase" }}>
+                            Click anywhere to close
+                        </div>
+                    </div>
+                )}
 
                 {/* Right — Product info */}
                 <div style={{ paddingTop: "16px" }}>
