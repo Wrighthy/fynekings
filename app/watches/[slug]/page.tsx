@@ -124,7 +124,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         };
         window.addEventListener("keydown", handleKey);
         return () => window.removeEventListener("keydown", handleKey);
-    }, [product]);
+    }, [product, zoomed]);
 
     if (loading) return (
         <div style={{ background: "var(--black)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -143,7 +143,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
 
             {/* Breadcrumb */}
-            <div style={{ padding: "140px 64px 0" }}>
+            <div style={{ padding: "100px 40px 0" }}>
                 <div style={{ maxWidth: "1300px", margin: "0 auto", display: "flex", alignItems: "center", gap: "14px", marginBottom: "48px" }}>
                     <Link href="/" style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--muted)", textDecoration: "none", textTransform: "uppercase" }}>Home</Link>
                     <span style={{ color: "var(--dark4)" }}>→</span>
@@ -154,7 +154,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
             </div>
 
             {/* Main product section */}
-            <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "0 64px 100px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "100px", alignItems: "start" }}>
+            <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "0 40px 100px", display: "grid", gridTemplateColumns: "45% 55%", gap: "40px", alignItems: "start" }}>
 
                 {/* Left — Image gallery */}
                 {/* Left — Image gallery */}
@@ -162,7 +162,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
                     {/* Main image viewer */}
                     <div
-                        style={{ aspectRatio: "3/4", background: "var(--dark2)", border: "1px solid var(--dark3)", position: "relative", overflow: "hidden", marginBottom: "12px", cursor: "zoom-in" }}
+                        style={{ height: "520px", background: "var(--dark2)", border: "1px solid var(--dark3)", position: "relative", overflow: "hidden", marginBottom: "12px", cursor: "zoom-in" }}
                         onClick={() => setZoomed(true)}
                     >
                         {product.images && product.images.length > 0 ? (
