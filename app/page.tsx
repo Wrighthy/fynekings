@@ -33,7 +33,6 @@ export default function Home() {
 
   return (
     <>
-      <CustomCursor />
       <Ticker />
       <Cart />
       <Nav />
