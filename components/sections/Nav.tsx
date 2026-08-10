@@ -22,7 +22,7 @@ export default function Nav() {
       </a>
       <ul className="nav-links">
         <li><a href="/collection">Collection</a></li>
-        <li><a href="#customizer">Customize</a></li>
+        <li><a href="/customize">Customize</a></li>
         <li><a href="#countdown">Limited</a></li>
         <li><a href="#tryon">Try On</a></li>
         <li><a href="#heritage">Atelier</a></li>
