@@ -41,6 +41,7 @@ export default function AdminPage() {
             }
 
             // Force fresh fetch — bypass any cache
+            // eslint-disable-next-line react-hooks/purity
             const updated = await fetch("/api/products?t=" + Date.now(), {
                 cache: "no-store"
             }).then(r => r.json());

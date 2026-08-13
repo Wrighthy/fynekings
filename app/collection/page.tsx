@@ -27,9 +27,70 @@ type Product = {
     strokeWidth: string;
 };
 
-const FILTERS = ["All", "Midnight Series", "Gold Edition", "Steel Series", "Rose Gold", "Platinum Series", "Dress Collection", "Sport Collection", "Blue Water Series"];
 const SORTS = ["Default", "Price: Low to High", "Price: High to Low", "Name A-Z"];
 
+function WatchCardImage({ p }: { p: Product }) {
+    const [currentImg, setCurrentImg] = useState(0);
+    const [hovered, setHovered] = useState(false);
+
+    useEffect(() => {
+        if (!hovered || p.images.length <= 1) return;
+        const id = setInterval(() => {
+            setCurrentImg(i => (i + 1) % p.images.length);
+        }, 800);
+        return () => clearInterval(id);
+    }, [hovered, p.images.length]);
+
+    if (!p.images || p.images.length === 0) return (
+        <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
+            <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
+            <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth} />
+            <circle cx="80" cy="80" r="44" fill={p.innerCase} stroke={p.innerStroke} strokeWidth=".5" />
+            <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6" />
+            <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6" />
+            <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
+            <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
+            <text x="80" y="68" textAnchor="middle" fill={p.textColor} fontFamily="Playfair Display,serif" fontSize="6" letterSpacing="2">FYNEKINGS</text>
+            <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round" />
+            <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round" />
+            <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round" />
+            <circle cx="80" cy="80" r="3" fill={p.markerColor} />
+        </svg>
+    );
+
+    return (
+        <div
+            style={{ position: "absolute", inset: 0 }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => { setHovered(false); setCurrentImg(0); }}
+        >
+            {p.images.map((img, i) => (
+                <img
+                    key={i}
+                    src={img}
+                    alt={`${p.name} ${i + 1}`}
+                    style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        opacity: i === currentImg ? 1 : 0,
+                        transition: "opacity 0.4s ease",
+                    }}
+                />
+            ))}
+            {p.images.length > 1 && hovered && (
+                <div style={{ position: "absolute", bottom: "8px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "4px" }}>
+                    {p.images.map((_, i) => (
+                        <div key={i} style={{ width: i === currentImg ? "16px" : "4px", height: "4px", background: i === currentImg ? "var(--gold)" : "rgba(255,255,255,.4)", borderRadius: "2px", transition: "all .3s" }}></div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
 export default function CollectionPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
@@ -164,7 +225,7 @@ export default function CollectionPage() {
                                 <Link href={`/watches/${p.slug}`} style={{ display: "block", textDecoration: "none" }}>
                                     <div style={{ aspectRatio: "1", display: "flex", alignItems: "center", justifyContent: "center", padding: "30px", background: "linear-gradient(135deg, var(--dark2) 0%, var(--dark) 100%)", position: "relative", overflow: "hidden" }}>
                                         {p.images && p.images.length > 0 ? (
-                                            <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }} />
+                                            <WatchCardImage p={p} />
                                         ) : (
                                             <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
                                                 <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />

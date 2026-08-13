@@ -43,10 +43,10 @@ export default function Footer() {
     <footer>
       <div className="footer-grid">
         <div className="footer-brand">
-          <a href="/" className="logo">
+          <Link href="/" className="logo">
             <span className="logo-mark">F</span>
             FYNE<span>KINGS</span>
-          </a>
+          </Link>
           <p className="footer-tag">Handcrafted timepieces for the African collector. Precision engineered. Prestige defined.</p>
           <p className="footer-locale">
             <span className="footer-locale-line"></span>

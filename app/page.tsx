@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import CustomCursor from "@/components/ui/CustomCursor";
 import Ticker from "@/components/ui/Ticker";
 import Toast from "@/components/ui/Toast";
 import Nav from "@/components/sections/Nav";
@@ -9,7 +8,6 @@ import Cart from "@/components/sections/Cart";
 import Hero from "@/components/sections/Hero";
 import BrandStrip from "@/components/sections/BrandStrip";
 import BestSellers from "@/components/sections/BestSellers";
-import Customizer from "@/components/sections/Customizer";
 import Countdown from "@/components/sections/Countdown";
 import ARTryOn from "@/components/sections/ARTryOn";
 import Heritage from "@/components/sections/Heritage";
@@ -39,7 +37,6 @@ export default function Home() {
       <Hero />
       <BrandStrip />
       <BestSellers />
-      <Customizer />
       <Countdown />
       <ARTryOn />
       <Heritage />

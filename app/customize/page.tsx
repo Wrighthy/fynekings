@@ -103,7 +103,7 @@ export default function CustomizePage() {
                 setSubmitted(true);
                 showToast("Configuration submitted successfully!");
             }
-        } catch (err) {
+        } catch {
             showToast("Something went wrong. Please try again.");
         } finally {
             setSubmitting(false);
@@ -116,7 +116,7 @@ export default function CustomizePage() {
             <div style={{ width: "64px", height: "64px", border: "1px solid var(--gold)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem" }}>✓</div>
             <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.5rem", color: "var(--white)", fontWeight: 300 }}>Configuration Submitted</h1>
             <p style={{ fontSize: ".7rem", letterSpacing: ".12em", color: "var(--text)", lineHeight: 2, maxWidth: "480px" }}>
-                Your custom watch configuration has been saved and emailed to our atelier team. We'll be in touch within 24 hours to confirm your order.
+                Your custom watch configuration has been saved and emailed to our atelier team. We&apos;ll be in touch within 24 hours to confirm your order.
             </p>
             <div style={{ display: "flex", gap: "16px", marginTop: "16px" }}>
                 <Link href="/collection" style={{ padding: "16px 32px", background: "var(--gold)", color: "var(--black)", textDecoration: "none", fontSize: ".55rem", letterSpacing: ".3em", textTransform: "uppercase", fontWeight: 600 }}>
@@ -401,7 +401,7 @@ export default function CustomizePage() {
                                 Your <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Details</em>
                             </h2>
                             <p style={{ fontSize: ".6rem", letterSpacing: ".1em", color: "var(--text)", lineHeight: 2, marginBottom: "32px" }}>
-                                We'll confirm your configuration within 24 hours and arrange payment.
+                                We&apos;ll confirm your configuration within 24 hours and arrange payment.
                             </p>
 
                             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -452,7 +452,7 @@ export default function CustomizePage() {
                                 </button>
 
                                 <p style={{ fontSize: ".5rem", letterSpacing: ".15em", color: "var(--muted)", textAlign: "center", textTransform: "uppercase" }}>
-                                    No payment required now · We'll contact you to confirm
+                                    No payment required now · We&apos;ll contact you to confirm
                                 </p>
                             </div>
                         </div>

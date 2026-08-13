@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/store";
 
@@ -16,13 +17,12 @@ export default function Nav() {
 
   return (
     <nav className={scrolled ? "scrolled" : ""}>
-      <a href="/" className="logo">
+      <Link href="/" className="logo">
         <span className="logo-mark">F</span>
         FYNE<span>KINGS</span>
-      </a>
+      </Link>
       <ul className="nav-links">
         <li><a href="/collection">Collection</a></li>
-        <li><a href="/customize">Customize</a></li>
         <li><a href="#countdown">Limited</a></li>
         <li><a href="#tryon">Try On</a></li>
         <li><a href="#heritage">Atelier</a></li>

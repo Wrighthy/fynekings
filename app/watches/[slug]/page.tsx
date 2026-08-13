@@ -86,6 +86,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
     const [zoomed, setZoomed] = useState(false);
     const [related, setRelated] = useState<Product[]>([]);
     const addToCart = useCart(s => s.addToCart);
+    const [isPaused, setIsPaused] = useState(false);
 
     useEffect(() => {
         fetch(`/api/products/${slug}`)
@@ -125,6 +126,13 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         window.addEventListener("keydown", handleKey);
         return () => window.removeEventListener("keydown", handleKey);
     }, [product, zoomed]);
+    useEffect(() => {
+        if (!product || product.images.length <= 1 || isPaused) return;
+        const interval = setInterval(() => {
+            setActiveImage(i => (i + 1) % product.images.length);
+        }, 4000);
+        return () => clearInterval(interval);
+    }, [product, isPaused]);
 
     if (loading) return (
         <div style={{ background: "var(--black)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -164,6 +172,8 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                     <div
                         style={{ height: "520px", background: "var(--dark2)", border: "1px solid var(--dark3)", position: "relative", overflow: "hidden", marginBottom: "12px", cursor: "zoom-in" }}
                         onClick={() => setZoomed(true)}
+                        onMouseEnter={() => setIsPaused(true)}
+                        onMouseLeave={() => setIsPaused(false)}
                     >
                         {product.images && product.images.length > 0 ? (
                             <img
@@ -305,13 +315,6 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                         Add to Cart
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
                     </button>
-
-                    <Link href="/customizer" style={{ width: "100%", padding: "20px", background: "transparent", color: "var(--gold)", border: "1px solid var(--gold-dk)", fontSize: ".6rem", letterSpacing: ".32em", textTransform: "uppercase", fontFamily: "Raleway, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", textDecoration: "none", transition: "all .3s" }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--gold)"; e.currentTarget.style.background = "var(--gold-dim)"; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--gold-dk)"; e.currentTarget.style.background = "transparent"; }}>
-                        Customize This Watch
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14" /></svg>
-                    </Link>
 
                     {/* Specs */}
                     {product.specs && (
