@@ -151,7 +151,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
 
             {/* Breadcrumb */}
-            <div style={{ padding: "100px 40px 0" }}>
+            <div style={{ padding: "100px 24px 0" }}>
                 <div style={{ maxWidth: "1300px", margin: "0 auto", display: "flex", alignItems: "center", gap: "14px", marginBottom: "48px" }}>
                     <Link href="/" style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--muted)", textDecoration: "none", textTransform: "uppercase" }}>Home</Link>
                     <span style={{ color: "var(--dark4)" }}>→</span>
@@ -162,7 +162,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
             </div>
 
             {/* Main product section */}
-            <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "0 40px 100px", display: "grid", gridTemplateColumns: "45% 55%", gap: "40px", alignItems: "start" }}>
+            <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "0 24px 100px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 400px), 1fr))", gap: "40px", alignItems: "start" }}>
 
                 {/* Left — Image gallery */}
                 {/* Left — Image gallery */}
