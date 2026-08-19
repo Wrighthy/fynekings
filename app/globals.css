@@ -3242,3 +3242,27 @@ footer {
     display: flex !important;
   }
 }
+
+.product-image-col {
+  position: sticky;
+  top: 80px;
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    display: block !important;
+  }
+
+  .product-image-col {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--black);
+    padding-bottom: 12px;
+    margin-bottom: 32px;
+  }
+
+  .product-image-col>div:first-child {
+    height: 420px !important;
+  }
+}

@@ -162,11 +162,11 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
             </div>
 
             {/* Main product section */}
-            <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "0 24px 100px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 400px), 1fr))", gap: "40px", alignItems: "start" }}>
+            <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "0 24px 100px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 400px), 1fr))", gap: "40px", alignItems: "start" }} className="product-grid">
 
                 {/* Left — Image gallery */}
                 {/* Left — Image gallery */}
-                <div style={{ position: "sticky", top: "100px" }}>
+                <div className="product-image-col">
 
                     {/* Main image viewer */}
                     <div
