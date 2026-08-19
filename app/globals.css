@@ -3243,9 +3243,11 @@ footer {
   }
 }
 
-.product-image-col {
-  position: sticky;
-  top: 80px;
+@media (min-width: 769px) {
+  .product-image-col {
+    position: sticky;
+    top: 80px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -3254,15 +3256,15 @@ footer {
   }
 
   .product-image-col {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: var(--black);
-    padding-bottom: 12px;
-    margin-bottom: 32px;
+    position: relative;
+    top: auto;
+    z-index: 1;
+    background: transparent;
+    padding-bottom: 0;
+    margin-bottom: 24px;
   }
 
   .product-image-col>div:first-child {
-    height: 420px !important;
+    height: min(420px, 75vw) !important;
   }
 }
