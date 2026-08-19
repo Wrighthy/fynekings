@@ -223,10 +223,10 @@ export default function CustomizePage() {
 
                 {/* STEP 2 — Configure */}
                 {step === "configure" && selectedProduct && (
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }}>
+                    <div className="customizer-step2-grid">
 
                         {/* Left — Watch preview */}
-                        <div style={{ position: "sticky", top: "100px" }}>
+                        <div className="customizer-preview-col">
                             <div style={{ aspectRatio: "1", background: "var(--dark2)", border: "1px solid var(--dark3)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", marginBottom: "16px" }}>
                                 {selectedProduct.images && selectedProduct.images.length > 0 ? (
                                     <img src={selectedProduct.images[0]} alt={selectedProduct.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
