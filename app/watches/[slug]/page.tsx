@@ -170,7 +170,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
                     {/* Main image viewer */}
                     <div
-                        style={{ height: "520px", background: "var(--dark2)", border: "1px solid var(--dark3)", position: "relative", overflow: "hidden", marginBottom: "12px", cursor: "zoom-in" }}
+                        style={{ height: "min(520px, 70vw)", background: "var(--dark2)", border: "1px solid var(--dark3)", position: "relative", overflow: "hidden", marginBottom: "12px", cursor: "zoom-in" }}
                         onClick={() => setZoomed(true)}
                         onMouseEnter={() => setIsPaused(true)}
                         onMouseLeave={() => setIsPaused(false)}
@@ -231,15 +231,15 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
                     {/* Thumbnail strip */}
                     {product.images && product.images.length > 1 && (
-                        <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "4px" }}>
+                        <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "4px", marginBottom: "8px", WebkitOverflowScrolling: "touch" }}>
                             {product.images.map((img, i) => (
                                 <button
                                     key={i}
                                     onClick={() => setActiveImage(i)}
                                     style={{
                                         flexShrink: 0,
-                                        width: "64px",
-                                        height: "80px",
+                                        width: "clamp(48px, 12vw, 64px)",
+                                        height: "clamp(60px, 15vw, 80px)",
                                         border: i === activeImage ? "1px solid var(--gold)" : "1px solid var(--dark3)",
                                         background: "var(--dark2)",
                                         padding: 0,
