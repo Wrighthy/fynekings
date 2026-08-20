@@ -180,7 +180,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                                 key={activeImage}
                                 src={product.images[activeImage]}
                                 alt={`${product.name} — view ${activeImage + 1}`}
-                                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", animation: "fadeIn .35s ease" }}
+                                style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center", animation: "fadeIn .35s ease" }}
                             />
                         ) : (
                             <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>

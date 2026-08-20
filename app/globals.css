@@ -3276,7 +3276,7 @@ footer {
   }
 
   .product-image-col>div:first-child {
-    height: min(480px, 70vw) !important;
+    height: min(520px, 85vw) !important;
   }
 
   .customizer-step2-grid {
