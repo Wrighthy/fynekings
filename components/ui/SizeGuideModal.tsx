@@ -58,7 +58,7 @@ export default function SizeGuideModal({ open, onClose }: { open: boolean; onClo
             color: "var(--gold)",
             width: "36px",
             height: "36px",
-            cursor: "none",
+            cursor: "pointer",
           }}
         >
           ✕

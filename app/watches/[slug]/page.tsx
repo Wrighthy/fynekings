@@ -211,7 +211,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                             <>
                                 <button
                                     onClick={e => { e.stopPropagation(); setActiveImage(i => (i - 1 + product.images.length) % product.images.length); }}
-                                    style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,.5)", border: "1px solid var(--gold-dk)", color: "var(--gold)", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "none", backdropFilter: "blur(4px)", transition: "all .3s" }}
+                                    style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,.5)", border: "1px solid var(--gold-dk)", color: "var(--gold)", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(4px)", transition: "all .3s" }}
                                     onMouseEnter={e => { e.currentTarget.style.background = "var(--gold)"; e.currentTarget.style.color = "var(--black)"; }}
                                     onMouseLeave={e => { e.currentTarget.style.background = "rgba(0,0,0,.5)"; e.currentTarget.style.color = "var(--gold)"; }}
                                 >
@@ -219,7 +219,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                                 </button>
                                 <button
                                     onClick={e => { e.stopPropagation(); setActiveImage(i => (i + 1) % product.images.length); }}
-                                    style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,.5)", border: "1px solid var(--gold-dk)", color: "var(--gold)", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "none", backdropFilter: "blur(4px)", transition: "all .3s" }}
+                                    style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,.5)", border: "1px solid var(--gold-dk)", color: "var(--gold)", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(4px)", transition: "all .3s" }}
                                     onMouseEnter={e => { e.currentTarget.style.background = "var(--gold)"; e.currentTarget.style.color = "var(--black)"; }}
                                     onMouseLeave={e => { e.currentTarget.style.background = "rgba(0,0,0,.5)"; e.currentTarget.style.color = "var(--gold)"; }}
                                 >
@@ -243,7 +243,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                                         border: i === activeImage ? "1px solid var(--gold)" : "1px solid var(--dark3)",
                                         background: "var(--dark2)",
                                         padding: 0,
-                                        cursor: "none",
+                                        cursor: "pointer",
                                         overflow: "hidden",
                                         transition: "border-color .3s, opacity .3s",
                                         opacity: i === activeImage ? 1 : 0.6,
@@ -271,7 +271,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                         />
                         <button
                             onClick={() => setZoomed(false)}
-                            style={{ position: "absolute", top: "24px", right: "24px", background: "none", border: "1px solid var(--gold-dk)", color: "var(--gold)", width: "40px", height: "40px", fontSize: "1rem", cursor: "none" }}
+                            style={{ position: "absolute", top: "24px", right: "24px", background: "none", border: "1px solid var(--gold-dk)", color: "var(--gold)", width: "40px", height: "40px", fontSize: "1rem", cursor: "pointer" }}
                         >✕</button>
                         <div style={{ position: "absolute", bottom: "24px", left: "50%", transform: "translateX(-50%)", fontSize: ".45rem", letterSpacing: ".3em", color: "var(--gold-dk)", textTransform: "uppercase" }}>
                             Click anywhere to close
@@ -309,7 +309,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
                     {/* Buttons */}
                     <button onClick={() => addToCart(product.name, product.series, product.price)}
-                        style={{ width: "100%", padding: "20px", background: "var(--gold)", color: "var(--black)", border: "none", fontSize: ".6rem", letterSpacing: ".32em", textTransform: "uppercase", fontWeight: 600, fontFamily: "Raleway, sans-serif", cursor: "none", marginBottom: "16px", transition: "background .3s", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px" }}
+                        style={{ width: "100%", padding: "20px", background: "var(--gold)", color: "var(--black)", border: "none", fontSize: ".6rem", letterSpacing: ".32em", textTransform: "uppercase", fontWeight: 600, fontFamily: "Raleway, sans-serif", cursor: "pointer", marginBottom: "16px", transition: "background .3s", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px" }}
                         onMouseEnter={e => (e.currentTarget.style.background = "var(--gold-lt)")}
                         onMouseLeave={e => (e.currentTarget.style.background = "var(--gold)")}>
                         Add to Cart

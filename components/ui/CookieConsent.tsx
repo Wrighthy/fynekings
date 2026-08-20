@@ -66,7 +66,7 @@ export default function CookieConsent() {
             fontSize: ".52rem",
             letterSpacing: ".25em",
             textTransform: "uppercase",
-            cursor: "none",
+            cursor: "pointer",
           }}
         >
           Decline
@@ -82,7 +82,7 @@ export default function CookieConsent() {
             letterSpacing: ".25em",
             textTransform: "uppercase",
             fontWeight: 600,
-            cursor: "none",
+            cursor: "pointer",
           }}
         >
           Accept All

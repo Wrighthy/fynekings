@@ -106,7 +106,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
               width: "36px",
               height: "36px",
               fontSize: ".9rem",
-              cursor: "none",
+              cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -159,7 +159,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
                   fontSize: ".55rem",
                   letterSpacing: ".15em",
                   textTransform: "uppercase",
-                  cursor: "none",
+                  cursor: "pointer",
                 }}
               >
                 {tag}

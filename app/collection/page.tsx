@@ -183,7 +183,7 @@ export default function CollectionPage() {
                                     background: "none",
                                     border: "none",
                                     borderBottom: activeFilter === f ? "2px solid var(--gold)" : "2px solid transparent",
-                                    cursor: "none",
+                                                cursor: "pointer",
                                     fontFamily: "Raleway, sans-serif",
                                     whiteSpace: "nowrap",
                                     transition: "all .3s",
@@ -198,7 +198,7 @@ export default function CollectionPage() {
                     <select
                         value={activeSort}
                         onChange={e => setActiveSort(e.target.value)}
-                        style={{ background: "var(--dark3)", border: "1px solid var(--dark4)", color: "var(--text)", fontFamily: "Raleway, sans-serif", fontSize: ".55rem", letterSpacing: ".15em", padding: "10px 14px", outline: "none", cursor: "none" }}
+                        style={{ background: "var(--dark3)", border: "1px solid var(--dark4)", color: "var(--text)", fontFamily: "Raleway, sans-serif", fontSize: ".55rem", letterSpacing: ".15em", padding: "10px 14px", outline: "none", cursor: "pointer" }}
                     >
                         {SORTS.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
@@ -231,7 +231,7 @@ export default function CollectionPage() {
                             const inCompare = isInCompare(p.id);
 
                             return (
-                                <div key={p.id} style={{ background: "var(--dark)", position: "relative", cursor: "none", transition: "background .4s" }}
+                                <div key={p.id} style={{ background: "var(--dark)", position: "relative", cursor: "pointer", transition: "background .4s" }}
                                     onMouseEnter={e => (e.currentTarget.style.background = "var(--dark2)")}
                                     onMouseLeave={e => (e.currentTarget.style.background = "var(--dark)")}>
                                     {p.badge && <div className="badge-sold">{p.badge}</div>}
@@ -254,7 +254,7 @@ export default function CollectionPage() {
                                                 display: "flex",
                                                 alignItems: "center",
                                                 justifyContent: "center",
-                                                cursor: "none",
+                                                            cursor: "pointer",
                                             }}
                                             title={inWishlist ? "Remove from Wishlist" : "Save to Wishlist"}
                                         >
@@ -287,7 +287,7 @@ export default function CollectionPage() {
                                                 display: "flex",
                                                 alignItems: "center",
                                                 justifyContent: "center",
-                                                cursor: "none",
+                                                            cursor: "pointer",
                                                 fontSize: ".65rem",
                                             }}
                                             title={inCompare ? "Remove from Compare Matrix" : "Add to Watch Comparison"}
@@ -342,7 +342,7 @@ export default function CollectionPage() {
                                             ) : (
                                                 <button
                                                     onClick={() => addToCart(p.name, p.series, p.price)}
-                                                    style={{ fontSize: ".48rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--muted)", background: "none", border: "none", cursor: "none", fontFamily: "Raleway, sans-serif", transition: "color .3s" }}
+                                                    style={{ fontSize: ".48rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--muted)", background: "none", border: "none", cursor: "pointer", fontFamily: "Raleway, sans-serif", transition: "color .3s" }}
                                                     onMouseEnter={e => (e.currentTarget.style.color = "var(--gold)")}
                                                     onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
                                                 >Add →</button>

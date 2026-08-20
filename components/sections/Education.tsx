@@ -28,7 +28,7 @@ export default function Education() {
               </svg>
               <h3>{e.title}</h3>
               <p>{e.body}</p>
-              <button className="edu-link" style={{ background: "none", border: "none", cursor: "none" }}>
+              <button className="edu-link" style={{ background: "none", border: "none", cursor: "pointer" }}>
                 Read Article →
               </button>
             </div>

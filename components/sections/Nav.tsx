@@ -56,7 +56,7 @@ export default function Nav() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              cursor: "none",
+              cursor: "pointer",
             }}
             title="Search Timepieces"
           >
@@ -78,7 +78,7 @@ export default function Nav() {
               fontSize: ".48rem",
               letterSpacing: ".2em",
               textTransform: "uppercase",
-              cursor: "none",
+              cursor: "pointer",
             }}
             className="nav-btn-desktop-only"
             title="Size Guide"
@@ -204,7 +204,7 @@ export default function Nav() {
                 fontSize: ".5rem",
                 letterSpacing: ".2em",
                 textTransform: "uppercase",
-                cursor: "none",
+                cursor: "pointer",
               }}
               title="Sign In / Register"
             >

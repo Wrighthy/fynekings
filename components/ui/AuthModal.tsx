@@ -87,7 +87,7 @@ export default function AuthModal() {
             color: "var(--gold)",
             width: "32px",
             height: "32px",
-            cursor: "none",
+            cursor: "pointer",
           }}
         >
           ✕
