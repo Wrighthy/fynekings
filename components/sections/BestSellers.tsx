@@ -27,6 +27,8 @@ type Product = {
   innerStroke: string;
   strokeWidth: string;
   images: string[];
+  stockCount?: number;
+  inStock?: boolean;
   specs?: Record<string, string> | null;
 };
 
@@ -258,25 +260,31 @@ export default function BestSellers() {
                       <p className="prod-price">
                         {fmt(p.price)} <small>+ fees</small>
                       </p>
-                      <button
-                        className="prod-cta"
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          fontFamily: "Raleway, sans-serif",
-                          fontSize: ".48rem",
-                          letterSpacing: ".3em",
-                          textTransform: "uppercase",
-                          color: "var(--muted)",
-                          transition: "color .3s",
-                        }}
-                        onClick={() => addToCart(p.name, p.series, p.price)}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
-                      >
-                        Add →
-                      </button>
+                      {p.stockCount === 0 || p.inStock === false ? (
+                        <span style={{ fontSize: ".48rem", letterSpacing: ".2em", color: "#ff6b6b", textTransform: "uppercase", fontWeight: 600 }}>
+                          Sold Out
+                        </span>
+                      ) : (
+                        <button
+                          className="prod-cta"
+                          style={{
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            fontFamily: "Raleway, sans-serif",
+                            fontSize: ".48rem",
+                            letterSpacing: ".3em",
+                            textTransform: "uppercase",
+                            color: "var(--muted)",
+                            transition: "color .3s",
+                          }}
+                          onClick={() => addToCart(p.name, p.series, p.price)}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+                        >
+                          Add →
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

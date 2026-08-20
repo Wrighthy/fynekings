@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { items, customerName, customerEmail, customerPhone, shippingAddress, city, country } = body;
+    const { items, customerName, customerEmail, customerPhone, shippingAddress, city, country, promoCode, discountAmount } = body;
 
     if (!items || !items.length || !customerName || !customerEmail || !shippingAddress || !city) {
       return NextResponse.json({ error: "Missing required checkout fields." }, { status: 400 });
@@ -27,7 +27,10 @@ export async function POST(req: Request) {
       // unauthenticated guest
     }
 
-    const totalAmount = items.reduce((acc: number, item: { amount: number; fee: number }) => acc + item.amount + item.fee, 0);
+    const calculatedSubtotal = items.reduce((acc: number, item: { amount: number; fee: number }) => acc + item.amount + item.fee, 0);
+    const appliedDiscount = discountAmount ? Math.min(discountAmount, calculatedSubtotal) : 0;
+    const finalTotal = Math.max(0, calculatedSubtotal - appliedDiscount);
+
     const paystackRef = `FYN-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
 
     // Create order record
@@ -40,12 +43,26 @@ export async function POST(req: Request) {
         city,
         country: country || "Nigeria",
         status: "PENDING",
-        totalAmount,
+        totalAmount: finalTotal,
+        discountAmount: appliedDiscount,
+        promoCode: promoCode || null,
         paystackRef,
         userId,
         customConfig: items.some((i: { custom: unknown }) => i.custom) ? items : null,
       },
     });
+
+    // If promo code was applied, increment usedCount
+    if (promoCode) {
+      try {
+        await db.promoCode.update({
+          where: { code: promoCode },
+          data: { usedCount: { increment: 1 } },
+        });
+      } catch {
+        // non-blocking if code deleted
+      }
+    }
 
     return NextResponse.json({
       orderId: order.id,

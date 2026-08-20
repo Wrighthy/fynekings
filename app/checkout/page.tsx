@@ -22,12 +22,43 @@ export default function CheckoutPage() {
     country: "Nigeria",
   });
 
+  const [promoInput, setPromoInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<{ code: string; discountAmount: number } | null>(null);
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoMsg, setPromoMsg] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const subtotal = cart.reduce((a, b) => a + b.amount, 0);
   const totalFees = cart.reduce((a, b) => a + b.fee, 0);
-  const grandTotal = subtotal + totalFees;
+  const discountAmount = appliedPromo ? appliedPromo.discountAmount : 0;
+  const grandTotal = Math.max(0, subtotal + totalFees - discountAmount);
+
+  const handleApplyPromo = async () => {
+    if (!promoInput.trim()) return;
+    setPromoLoading(true);
+    setPromoMsg("");
+
+    try {
+      const res = await fetch("/api/promo/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promoInput, subtotal }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setAppliedPromo({ code: data.code, discountAmount: data.discountAmount });
+        setPromoMsg(`✓ Code ${data.code} applied! Saved ${fmt(data.discountAmount)}`);
+      } else {
+        setPromoMsg(`✕ ${data.error || "Failed to apply promo code."}`);
+      }
+    } catch {
+      setPromoMsg("✕ Network error applying promo.");
+    } finally {
+      setPromoLoading(false);
+    }
+  };
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +74,8 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           items: cart,
           ...form,
+          promoCode: appliedPromo?.code || null,
+          discountAmount,
         }),
       });
 
@@ -93,7 +126,7 @@ export default function CheckoutPage() {
             Your Cart is Empty
           </h1>
           <p style={{ fontSize: ".7rem", lineHeight: 2, color: "var(--muted)", marginBottom: "32px" }}>
-            Select your timepiece from our collection or create a custom build to proceed to checkout.
+            Select your timepiece from our collection to proceed to checkout.
           </p>
           <Link href="/collection" className="btn-primary" style={{ display: "inline-flex" }}>
             <span>Explore Collection</span>
@@ -255,6 +288,35 @@ export default function CheckoutPage() {
             ))}
           </div>
 
+          {/* Promo Code Input */}
+          <div style={{ borderTop: "1px solid var(--dark3)", paddingTop: "20px", marginBottom: "20px" }}>
+            <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".25em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "8px" }}>
+              Promo / VIP Voucher Code
+            </label>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <input
+                type="text"
+                value={promoInput}
+                onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                placeholder="ROYAL15"
+                style={{ flex: 1, padding: "10px 14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--gold)", fontSize: ".75rem", outline: "none" }}
+              />
+              <button
+                type="button"
+                onClick={handleApplyPromo}
+                disabled={promoLoading}
+                style={{ padding: "10px 16px", background: "var(--gold-dk)", color: "var(--white)", border: "none", fontSize: ".48rem", letterSpacing: ".2em", textTransform: "uppercase", cursor: "pointer" }}
+              >
+                {promoLoading ? "..." : "Apply"}
+              </button>
+            </div>
+            {promoMsg && (
+              <div style={{ fontSize: ".55rem", marginTop: "8px", color: promoMsg.startsWith("✓") ? "var(--gold)" : "#ff6b6b" }}>
+                {promoMsg}
+              </div>
+            )}
+          </div>
+
           <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: ".65rem", color: "var(--text)", borderTop: "1px solid var(--dark3)", paddingTop: "16px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span>Subtotal</span>
@@ -264,6 +326,12 @@ export default function CheckoutPage() {
               <span>Paystack & Gateway Fees</span>
               <span style={{ color: "var(--white)" }}>{fmt(totalFees)}</span>
             </div>
+            {discountAmount > 0 && (
+              <div style={{ display: "flex", justifyContent: "space-between", color: "var(--gold)" }}>
+                <span>Promo Discount ({appliedPromo?.code})</span>
+                <span>-{fmt(discountAmount)}</span>
+              </div>
+            )}
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span>Insured Express Shipping</span>
               <span style={{ color: "var(--gold)" }}>COMPLIMENTARY</span>

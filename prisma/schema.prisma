@@ -35,34 +35,36 @@ model WishlistItem {
 }
 
 model Product {
-  id          String         @id @default(cuid())
-  name        String
-  series      String
-  price       Int
-  tag         String
-  badge       String?
-  badgeNew    String?
-  strapColor  String
-  strapStroke String
-  caseColor   String
-  caseStroke  String
-  markerColor String
-  handColor   String
-  secColor    String
-  textColor   String
-  innerCase   String
-  innerStroke String
-  strokeWidth String
-  inStock     Boolean        @default(true)
-  featured    Boolean        @default(false)
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  description String?
-  images      String[]
-  slug        String         @unique
-  specs       Json?
-  orders      Order[]
-  wishlist    WishlistItem[]
+  id                String         @id @default(cuid())
+  name              String
+  series            String
+  price             Int
+  tag               String
+  badge             String?
+  badgeNew          String?
+  strapColor        String
+  strapStroke       String
+  caseColor         String
+  caseStroke        String
+  markerColor       String
+  handColor         String
+  secColor          String
+  textColor         String
+  innerCase         String
+  innerStroke       String
+  strokeWidth       String
+  inStock           Boolean        @default(true)
+  stockCount        Int            @default(10)
+  lowStockThreshold Int            @default(3)
+  featured          Boolean        @default(false)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  description       String?
+  images            String[]
+  slug              String         @unique
+  specs             Json?
+  orders            Order[]
+  wishlist          WishlistItem[]
 }
 
 model LimitedEdition {
@@ -88,6 +90,8 @@ model Order {
   country         String      @default("Nigeria")
   status          OrderStatus @default(PENDING)
   totalAmount     Int
+  discountAmount  Int         @default(0)
+  promoCode       String?
   paystackRef     String?     @unique
   productId       String?
   userId          String?
@@ -96,6 +100,30 @@ model Order {
   updatedAt       DateTime    @updatedAt
   product         Product?    @relation(fields: [productId], references: [id])
   user            User?       @relation(fields: [userId], references: [id])
+}
+
+model PromoCode {
+  id            String       @id @default(cuid())
+  code          String       @unique
+  discountType  DiscountType @default(PERCENTAGE)
+  discountValue Int
+  minSpend      Int          @default(0)
+  maxUses       Int?
+  usedCount     Int          @default(0)
+  expiresAt     DateTime?
+  active        Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  eventName String
+  pageUrl   String
+  referrer  String?
+  userAgent String?
+  sessionId String?
+  createdAt DateTime @default(now())
 }
 
 model NewsletterSubscriber {
@@ -125,4 +153,9 @@ enum OrderStatus {
   DELIVERED
   CANCELLED
   REFUNDED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
 }

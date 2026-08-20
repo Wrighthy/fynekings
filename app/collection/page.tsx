@@ -29,6 +29,8 @@ type Product = {
     innerCase: string;
     innerStroke: string;
     strokeWidth: string;
+    stockCount?: number;
+    inStock?: boolean;
     specs?: Record<string, string> | null;
 };
 
@@ -333,12 +335,18 @@ export default function CollectionPage() {
                                             <p style={{ fontSize: ".85rem", color: "var(--gold)", fontFamily: "Playfair Display, serif" }}>
                                                 {fmt(p.price)} <small style={{ fontSize: ".5rem", color: "var(--muted)", fontFamily: "Raleway, sans-serif", letterSpacing: ".15em" }}>+ fees</small>
                                             </p>
-                                            <button
-                                                onClick={() => addToCart(p.name, p.series, p.price)}
-                                                style={{ fontSize: ".48rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--muted)", background: "none", border: "none", cursor: "none", fontFamily: "Raleway, sans-serif", transition: "color .3s" }}
-                                                onMouseEnter={e => (e.currentTarget.style.color = "var(--gold)")}
-                                                onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
-                                            >Add →</button>
+                                            {p.stockCount === 0 || p.inStock === false ? (
+                                                <span style={{ fontSize: ".48rem", letterSpacing: ".2em", color: "#ff6b6b", textTransform: "uppercase", fontWeight: 600 }}>
+                                                    Sold Out
+                                                </span>
+                                            ) : (
+                                                <button
+                                                    onClick={() => addToCart(p.name, p.series, p.price)}
+                                                    style={{ fontSize: ".48rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--muted)", background: "none", border: "none", cursor: "none", fontFamily: "Raleway, sans-serif", transition: "color .3s" }}
+                                                    onMouseEnter={e => (e.currentTarget.style.color = "var(--gold)")}
+                                                    onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+                                                >Add →</button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
