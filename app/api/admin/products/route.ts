@@ -16,13 +16,14 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, series, price, tag, description, stockCount, images, specs } = body;
+    const { name, series, price, tag, description, stockCount, imageUrl, images, specs } = body;
 
     if (!name || !series || !price || !tag) {
       return NextResponse.json({ error: "Name, series, price, and tag are required." }, { status: 400 });
     }
 
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") + "-" + Date.now().toString(36);
+    const initialImages = imageUrl ? [imageUrl] : (images || []);
 
     const newProduct = await db.product.create({
       data: {
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
         description: description || "Hand-finished luxury timepiece.",
         stockCount: parseInt(stockCount || "10", 10),
         inStock: parseInt(stockCount || "10", 10) > 0,
-        images: images || [],
+        images: initialImages,
         slug,
         strapColor: "#141414",
         strapStroke: "#C4A962",

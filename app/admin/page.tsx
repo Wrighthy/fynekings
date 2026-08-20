@@ -60,7 +60,7 @@ type Subscriber = {
 };
 
 export default function UnifiedAdminDashboard() {
-  const [activeTab, setActiveTab] = useState<"analytics" | "orders" | "inventory" | "promos" | "subscribers">("analytics");
+  const [activeTab, setActiveTab] = useState<"analytics" | "orders" | "inventory" | "promos" | "subscribers">("inventory");
   const [authenticated, setAuthenticated] = useState(false);
   const [passkeyInput, setPasskeyInput] = useState("");
   const [authError, setAuthError] = useState("");
@@ -76,49 +76,72 @@ export default function UnifiedAdminDashboard() {
   // UI state
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
+
+  // Specific Form Errors & Submitting States
+  const [productError, setProductError] = useState("");
+  const [submittingProduct, setSubmittingProduct] = useState(false);
+
+  const [promoError, setPromoError] = useState("");
+  const [submittingPromo, setSubmittingPromo] = useState(false);
+
+  const [broadcastError, setBroadcastError] = useState("");
+  const [submittingBroadcast, setSubmittingBroadcast] = useState(false);
 
   // Forms
   const [newPromo, setNewPromo] = useState({ code: "", discountType: "PERCENTAGE", discountValue: "15", minSpend: "0", maxUses: "" });
-  const [newProduct, setNewProduct] = useState({ name: "", series: "Midnight Series", price: "450000", tag: "AUTOMATIC · CHRONOMETER", stockCount: "10", description: "" });
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    series: "Midnight Series",
+    price: "450000",
+    tag: "AUTOMATIC · CHRONOMETER",
+    stockCount: "10",
+    description: "",
+    imageUrl: "",
+  });
   const [broadcast, setBroadcast] = useState({ subject: "", html: "" });
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
-    const res = await fetch("/api/admin/auth", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ passkey: passkeyInput }),
-    });
-    if (res.ok) {
-      setAuthenticated(true);
-      fetchDashboardData();
-    } else {
-      setAuthError("Invalid passkey. Key: fynekings2026");
+    try {
+      const res = await fetch("/api/admin/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ passkey: passkeyInput }),
+      });
+      if (res.ok) {
+        setAuthenticated(true);
+        fetchDashboardData();
+      } else {
+        setAuthError("Invalid passkey. Default key: fynekings2026");
+      }
+    } catch {
+      setAuthError("Network error during authorization.");
     }
   };
 
   const fetchDashboardData = () => {
     setLoading(true);
     Promise.all([
-      fetch("/api/admin/analytics").then((r) => r.json()),
-      fetch("/api/admin/orders").then((r) => r.json()),
-      fetch("/api/admin/products").then((r) => r.json()),
-      fetch("/api/admin/promos").then((r) => r.json()),
-      fetch("/api/admin/subscribers").then((r) => r.json()),
+      fetch("/api/admin/analytics").then((r) => r.json()).catch(() => ({})),
+      fetch("/api/admin/orders").then((r) => r.json()).catch(() => ({})),
+      fetch("/api/admin/products").then((r) => r.json()).catch(() => ({})),
+      fetch("/api/admin/promos").then((r) => r.json()).catch(() => ({})),
+      fetch("/api/admin/subscribers").then((r) => r.json()).catch(() => ({})),
     ])
       .then(([aData, oData, pData, prData, sData]) => {
-        if (aData.metrics) setAnalytics(aData);
-        if (oData.orders) setOrders(oData.orders);
-        if (pData.products) setProducts(pData.products);
-        if (prData.promos) setPromos(prData.promos);
-        if (sData.subscribers) setSubscribers(sData.subscribers);
+        if (aData?.metrics) setAnalytics(aData);
+        if (oData?.orders) setOrders(oData.orders);
+        if (pData?.products) setProducts(pData.products);
+        else if (Array.isArray(pData)) setProducts(pData);
+        if (prData?.promos) setPromos(prData.promos);
+        if (sData?.subscribers) setSubscribers(sData.subscribers);
       })
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    // Auto check
     fetchDashboardData();
     setAuthenticated(true);
   }, []);
@@ -149,31 +172,130 @@ export default function UnifiedAdminDashboard() {
     }
   };
 
-  const handleCreateProduct = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await fetch("/api/admin/products", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newProduct),
-    });
+  const handleUploadImage = async (productId: string, files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setUploadingId(productId);
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const formData = new FormData();
+        formData.append("file", files[i]);
+        formData.append("productId", productId);
+        await fetch("/api/upload", { method: "POST", body: formData });
+      }
+      setMessage("✓ Images uploaded successfully");
+      fetchDashboardData();
+      setTimeout(() => setMessage(""), 4000);
+    } catch {
+      setMessage("✕ Upload failed");
+    } finally {
+      setUploadingId(null);
+    }
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm("Are you sure you want to delete this watch model?")) return;
+    const res = await fetch(`/api/admin/products?id=${productId}`, { method: "DELETE" });
     if (res.ok) {
-      setMessage("✓ Product created successfully");
-      setNewProduct({ name: "", series: "Midnight Series", price: "450000", tag: "AUTOMATIC · CHRONOMETER", stockCount: "10", description: "" });
+      setMessage("✓ Watch model deleted");
       fetchDashboardData();
       setTimeout(() => setMessage(""), 3000);
     }
   };
 
+  const handleCreateProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setProductError("");
+
+    if (!newProduct.name.trim() || !newProduct.price) {
+      setProductError("Model Name and Price are required.");
+      return;
+    }
+
+    setSubmittingProduct(true);
+    try {
+      const res = await fetch("/api/admin/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setMessage(`✓ Watch model "${data.product.name}" created successfully!`);
+        setNewProduct({
+          name: "",
+          series: "Midnight Series",
+          price: "450000",
+          tag: "AUTOMATIC · CHRONOMETER",
+          stockCount: "10",
+          description: "",
+          imageUrl: "",
+        });
+        fetchDashboardData();
+        setTimeout(() => setMessage(""), 4000);
+      } else {
+        setProductError(data.error || "Failed to create watch model.");
+      }
+    } catch (err) {
+      console.error("Create product error:", err);
+      setProductError("Network error. Please try again.");
+    } finally {
+      setSubmittingProduct(false);
+    }
+  };
+
   const handleCreatePromo = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPromoError("");
+
+    if (!newPromo.code.trim() || !newPromo.discountValue) {
+      setPromoError("Promo Code and Discount Value are required.");
+      return;
+    }
+
+    setSubmittingPromo(true);
+    try {
+      const res = await fetch("/api/admin/promos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newPromo),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setMessage(`✓ Promo code ${data.promo.code} created!`);
+        setNewPromo({ code: "", discountType: "PERCENTAGE", discountValue: "15", minSpend: "0", maxUses: "" });
+        fetchDashboardData();
+        setTimeout(() => setMessage(""), 4000);
+      } else {
+        setPromoError(data.error || "Failed to create promo code.");
+      }
+    } catch {
+      setPromoError("Network error creating promo code.");
+    } finally {
+      setSubmittingPromo(false);
+    }
+  };
+
+  const handleTogglePromo = async (promoId: string, currentActive: boolean) => {
     const res = await fetch("/api/admin/promos", {
-      method: "POST",
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newPromo),
+      body: JSON.stringify({ promoId, active: !currentActive }),
     });
     if (res.ok) {
-      setMessage("✓ Promo code created");
-      setNewPromo({ code: "", discountType: "PERCENTAGE", discountValue: "15", minSpend: "0", maxUses: "" });
+      setMessage("✓ Promo code status updated");
+      fetchDashboardData();
+      setTimeout(() => setMessage(""), 3000);
+    }
+  };
+
+  const handleDeletePromo = async (promoId: string) => {
+    const res = await fetch(`/api/admin/promos?id=${promoId}`, { method: "DELETE" });
+    if (res.ok) {
+      setMessage("✓ Promo code deleted");
       fetchDashboardData();
       setTimeout(() => setMessage(""), 3000);
     }
@@ -181,16 +303,35 @@ export default function UnifiedAdminDashboard() {
 
   const handleBroadcast = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/admin/subscribers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ subject: broadcast.subject, messageHtml: broadcast.html }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      setMessage(`✓ ${data.message}`);
-      setBroadcast({ subject: "", html: "" });
-      setTimeout(() => setMessage(""), 4000);
+    setBroadcastError("");
+
+    if (!broadcast.subject.trim() || !broadcast.html.trim()) {
+      setBroadcastError("Subject Line and Email Content are required.");
+      return;
+    }
+
+    setSubmittingBroadcast(true);
+    try {
+      const res = await fetch("/api/admin/subscribers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject: broadcast.subject, messageHtml: broadcast.html }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setMessage(`✓ ${data.message}`);
+        setBroadcast({ subject: "", html: "" });
+        fetchDashboardData();
+        setTimeout(() => setMessage(""), 5000);
+      } else {
+        setBroadcastError(data.error || "Failed to send email campaign.");
+      }
+    } catch {
+      setBroadcastError("Network error dispatching campaign.");
+    } finally {
+      setSubmittingBroadcast(false);
     }
   };
 
@@ -230,9 +371,9 @@ export default function UnifiedAdminDashboard() {
         {/* Tabs Navigation */}
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           {[
-            { id: "analytics", label: "📈 Analytics" },
-            { id: "orders", label: "📦 Orders & Fulfilment" },
             { id: "inventory", label: "⌚ Inventory & Products" },
+            { id: "orders", label: "📦 Orders & Fulfilment" },
+            { id: "analytics", label: "📈 Analytics" },
             { id: "promos", label: "🏷 Promo Codes" },
             { id: "subscribers", label: "✉ Subscribers & Broadcast" },
           ].map((tab) => (
@@ -258,63 +399,177 @@ export default function UnifiedAdminDashboard() {
       </div>
 
       {message && (
-        <div style={{ background: "rgba(196,169,98,.15)", borderBottom: "1px solid #C4A962", padding: "12px 40px", color: "#C4A962", fontSize: ".65rem", letterSpacing: ".2em", textTransform: "uppercase" }}>
+        <div style={{ background: "rgba(196,169,98,.15)", borderBottom: "1px solid #C4A962", padding: "14px 40px", color: "#C4A962", fontSize: ".7rem", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600 }}>
           {message}
         </div>
       )}
 
       {/* Main Content Body */}
       <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "40px" }}>
-        {/* TAB 1: ANALYTICS */}
-        {activeTab === "analytics" && (
-          <div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px", marginBottom: "40px" }}>
-              <div style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
-                <div style={{ fontSize: ".5rem", color: "#888", textTransform: "uppercase", letterSpacing: ".2em" }}>Total Verified Revenue</div>
-                <div style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#C4A962", marginTop: "8px" }}>{fmt(analytics?.metrics.totalRevenue || 0)}</div>
+        {/* TAB 1: INVENTORY & PRODUCTS */}
+        {activeTab === "inventory" && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))", gap: "40px", alignItems: "start" }}>
+            {/* Products List & Stock Manager */}
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+                <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem" }}>Watch Collection ({products.length})</h2>
+                <button onClick={fetchDashboardData} style={{ background: "none", border: "1px solid #333", color: "#C4A962", padding: "6px 12px", fontSize: ".5rem", textTransform: "uppercase", cursor: "pointer" }}>
+                  Refresh List ↻
+                </button>
               </div>
-              <div style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
-                <div style={{ fontSize: ".5rem", color: "#888", textTransform: "uppercase", letterSpacing: ".2em" }}>Total Orders</div>
-                <div style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#fff", marginTop: "8px" }}>{analytics?.metrics.totalOrders || 0}</div>
-              </div>
-              <div style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
-                <div style={{ fontSize: ".5rem", color: "#888", textTransform: "uppercase", letterSpacing: ".2em" }}>Store Pageviews</div>
-                <div style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#fff", marginTop: "8px" }}>{analytics?.metrics.totalPageviews || 0}</div>
-              </div>
-              <div style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
-                <div style={{ fontSize: ".5rem", color: "#888", textTransform: "uppercase", letterSpacing: ".2em" }}>Paid Conversion Rate</div>
-                <div style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#C4A962", marginTop: "8px" }}>{analytics?.metrics.conversionRate || "0.00"}%</div>
-              </div>
-              <div style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
-                <div style={{ fontSize: ".5rem", color: "#888", textTransform: "uppercase", letterSpacing: ".2em" }}>Newsletter Collectors</div>
-                <div style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#fff", marginTop: "8px" }}>{analytics?.metrics.newsletterCount || 0}</div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                {products.map((p) => (
+                  <div key={p.id} style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
+                      <div>
+                        <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.3rem", color: "#fff" }}>{p.name}</div>
+                        <div style={{ fontSize: ".55rem", color: "#888", letterSpacing: ".2em", textTransform: "uppercase", marginTop: "2px" }}>
+                          {p.series} • <span style={{ color: "#C4A962" }}>{fmt(p.price)}</span>
+                        </div>
+                      </div>
+                      <button onClick={() => handleDeleteProduct(p.id)} style={{ background: "none", border: "none", color: "#ff6b6b", fontSize: ".6rem", cursor: "pointer" }}>
+                        Delete Model ✕
+                      </button>
+                    </div>
+
+                    {/* Image thumbnails */}
+                    {p.images && p.images.length > 0 && (
+                      <div style={{ display: "flex", gap: "8px", marginBottom: "16px", overflowX: "auto" }}>
+                        {p.images.map((img, idx) => (
+                          <div key={idx} style={{ width: "50px", height: "50px", border: "1px solid #2a2a2a", overflow: "hidden", flexShrink: 0 }}>
+                            <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #1a1a1a", paddingTop: "14px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <span style={{ fontSize: ".58rem", color: p.stockCount < 5 ? "#ff6b6b" : "#C4A962", fontWeight: 600 }}>
+                          {p.stockCount === 0 ? "OUT OF STOCK" : `${p.stockCount} IN STOCK`}
+                        </span>
+                        <input
+                          type="number"
+                          defaultValue={p.stockCount}
+                          onBlur={(e) => updateStock(p.id, parseInt(e.target.value, 10))}
+                          style={{ width: "64px", padding: "6px 8px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem" }}
+                        />
+                      </div>
+
+                      <label style={{ padding: "8px 14px", background: uploadingId === p.id ? "#555" : "#222", border: "1px solid #333", color: "#C4A962", fontSize: ".5rem", letterSpacing: ".15em", textTransform: "uppercase", cursor: "pointer" }}>
+                        {uploadingId === p.id ? "Uploading..." : "+ Add Images"}
+                        <input type="file" multiple accept="image/*" style={{ display: "none" }} onChange={(e) => handleUploadImage(p.id, e.target.files)} />
+                      </label>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "30px" }}>
-              <div style={{ background: "#121212", border: "1px solid #222", padding: "28px" }}>
-                <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", marginBottom: "16px" }}>Top Visited Pages</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {analytics?.topPages.map((p, i) => (
-                    <div key={i} style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #222", paddingBottom: "8px", fontSize: ".7rem" }}>
-                      <span style={{ color: "#C4A962" }}>{p.url}</span>
-                      <span style={{ color: "#888" }}>{p.count} hits</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            {/* Create Watch Model Form */}
+            <div style={{ background: "#121212", border: "1px solid #C4A962", padding: "32px" }}>
+              <div style={{ fontSize: ".45rem", letterSpacing: ".3em", color: "#C4A962", textTransform: "uppercase", marginBottom: "8px" }}>Catalog Expansion</div>
+              <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", marginBottom: "20px" }}>Create Watch Model</h3>
 
-              <div style={{ background: "#121212", border: "1px solid #222", padding: "28px" }}>
-                <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", marginBottom: "16px" }}>Live Traffic Log</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: ".65rem" }}>
-                  {analytics?.recentEvents.map((ev) => (
-                    <div key={ev.id} style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #222", paddingBottom: "6px" }}>
-                      <span>{ev.eventName} on <strong style={{ color: "#fff" }}>{ev.pageUrl}</strong></span>
-                      <span style={{ color: "#555" }}>{new Date(ev.createdAt).toLocaleTimeString()}</span>
-                    </div>
-                  ))}
+              {productError && (
+                <div style={{ padding: "12px", background: "rgba(255,107,107,.15)", border: "1px solid #ff6b6b", color: "#ff6b6b", fontSize: ".65rem", marginBottom: "16px" }}>
+                  {productError}
                 </div>
-              </div>
+              )}
+
+              <form onSubmit={handleCreateProduct} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Model Name *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Sovereign Imperial Gold"
+                    value={newProduct.name}
+                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                    style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem", outline: "none" }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Series / Collection *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Gold Edition"
+                    value={newProduct.series}
+                    onChange={(e) => setNewProduct({ ...newProduct, series: e.target.value })}
+                    style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem", outline: "none" }}
+                  />
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Price (₦) *</label>
+                    <input
+                      type="number"
+                      required
+                      placeholder="450000"
+                      value={newProduct.price}
+                      onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                      style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem", outline: "none" }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Initial Stock *</label>
+                    <input
+                      type="number"
+                      required
+                      placeholder="10"
+                      value={newProduct.stockCount}
+                      onChange={(e) => setNewProduct({ ...newProduct, stockCount: e.target.value })}
+                      style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem", outline: "none" }}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Badge Tag</label>
+                  <input
+                    type="text"
+                    placeholder="AUTOMATIC · CHRONOMETER"
+                    value={newProduct.tag}
+                    onChange={(e) => setNewProduct({ ...newProduct, tag: e.target.value })}
+                    style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem", outline: "none" }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Primary Image URL (Optional)</label>
+                  <input
+                    type="url"
+                    placeholder="https://..."
+                    value={newProduct.imageUrl}
+                    onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
+                    style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem", outline: "none" }}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={submittingProduct}
+                  style={{
+                    width: "100%",
+                    padding: "16px",
+                    background: "#C4A962",
+                    color: "#000",
+                    border: "none",
+                    fontSize: ".6rem",
+                    letterSpacing: ".25em",
+                    textTransform: "uppercase",
+                    fontWeight: 600,
+                    cursor: submittingProduct ? "wait" : "pointer",
+                    marginTop: "10px",
+                  }}
+                >
+                  {submittingProduct ? "Creating Model..." : "Create Watch Model →"}
+                </button>
+              </form>
             </div>
           </div>
         )}
@@ -322,15 +577,15 @@ export default function UnifiedAdminDashboard() {
         {/* TAB 2: ORDERS */}
         {activeTab === "orders" && (
           <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
               <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem" }}>Acquisition Queue ({orders.length})</h2>
-              <div style={{ display: "flex", gap: "8px" }}>
+              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                 {["ALL", "PENDING", "PAID", "PROCESSING", "SHIPPED", "DELIVERED"].map((st) => (
                   <button
                     key={st}
                     onClick={() => setOrderStatusFilter(st)}
                     style={{
-                      padding: "8px 14px",
+                      padding: "8px 12px",
                       background: orderStatusFilter === st ? "#C4A962" : "#181818",
                       color: orderStatusFilter === st ? "#000" : "#888",
                       border: "none",
@@ -381,76 +636,51 @@ export default function UnifiedAdminDashboard() {
           </div>
         )}
 
-        {/* TAB 3: INVENTORY */}
-        {activeTab === "inventory" && (
+        {/* TAB 3: ANALYTICS */}
+        {activeTab === "analytics" && (
           <div>
-            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "30px", alignItems: "start" }}>
-              <div>
-                <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", marginBottom: "24px" }}>Inventory & Stock Counts</h2>
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                  {products.map((p) => (
-                    <div key={p.id} style={{ background: "#121212", border: "1px solid #222", padding: "24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <div>
-                        <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.3rem" }}>{p.name}</div>
-                        <div style={{ fontSize: ".55rem", color: "#888", letterSpacing: ".2em", textTransform: "uppercase" }}>{p.series} • {fmt(p.price)}</div>
-                      </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginBottom: "40px" }}>
+              <div style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
+                <div style={{ fontSize: ".5rem", color: "#888", textTransform: "uppercase", letterSpacing: ".2em" }}>Total Verified Revenue</div>
+                <div style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#C4A962", marginTop: "8px" }}>{fmt(analytics?.metrics.totalRevenue || 0)}</div>
+              </div>
+              <div style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
+                <div style={{ fontSize: ".5rem", color: "#888", textTransform: "uppercase", letterSpacing: ".2em" }}>Total Orders</div>
+                <div style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#fff", marginTop: "8px" }}>{analytics?.metrics.totalOrders || 0}</div>
+              </div>
+              <div style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
+                <div style={{ fontSize: ".5rem", color: "#888", textTransform: "uppercase", letterSpacing: ".2em" }}>Store Pageviews</div>
+                <div style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#fff", marginTop: "8px" }}>{analytics?.metrics.totalPageviews || 0}</div>
+              </div>
+              <div style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
+                <div style={{ fontSize: ".5rem", color: "#888", textTransform: "uppercase", letterSpacing: ".2em" }}>Paid Conversion Rate</div>
+                <div style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#C4A962", marginTop: "8px" }}>{analytics?.metrics.conversionRate || "0.00"}%</div>
+              </div>
+            </div>
 
-                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <span style={{ fontSize: ".6rem", color: p.stockCount < 5 ? "#ff6b6b" : "#C4A962", fontWeight: 600 }}>
-                          {p.stockCount === 0 ? "OUT OF STOCK" : `${p.stockCount} in stock`}
-                        </span>
-                        <input
-                          type="number"
-                          defaultValue={p.stockCount}
-                          onBlur={(e) => updateStock(p.id, parseInt(e.target.value, 10))}
-                          style={{ width: "70px", padding: "8px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem" }}
-                        />
-                      </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))", gap: "30px" }}>
+              <div style={{ background: "#121212", border: "1px solid #222", padding: "28px" }}>
+                <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", marginBottom: "16px" }}>Top Visited Pages</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {analytics?.topPages.map((p, i) => (
+                    <div key={i} style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #222", paddingBottom: "8px", fontSize: ".7rem" }}>
+                      <span style={{ color: "#C4A962" }}>{p.url}</span>
+                      <span style={{ color: "#888" }}>{p.count} hits</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Create Product Form */}
               <div style={{ background: "#121212", border: "1px solid #222", padding: "28px" }}>
-                <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", marginBottom: "20px" }}>Add New Timepiece</h3>
-                <form onSubmit={handleCreateProduct} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Watch Name (e.g. Sovereign Imperial)"
-                    value={newProduct.name}
-                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                    style={{ padding: "10px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem" }}
-                  />
-                  <input
-                    type="text"
-                    required
-                    placeholder="Series (e.g. Gold Edition)"
-                    value={newProduct.series}
-                    onChange={(e) => setNewProduct({ ...newProduct, series: e.target.value })}
-                    style={{ padding: "10px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem" }}
-                  />
-                  <input
-                    type="number"
-                    required
-                    placeholder="Price (₦)"
-                    value={newProduct.price}
-                    onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-                    style={{ padding: "10px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem" }}
-                  />
-                  <input
-                    type="number"
-                    required
-                    placeholder="Initial Stock Count"
-                    value={newProduct.stockCount}
-                    onChange={(e) => setNewProduct({ ...newProduct, stockCount: e.target.value })}
-                    style={{ padding: "10px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem" }}
-                  />
-                  <button type="submit" style={{ padding: "12px", background: "#C4A962", color: "#000", border: "none", fontSize: ".55rem", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
-                    Create Model →
-                  </button>
-                </form>
+                <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", marginBottom: "16px" }}>Live Traffic Log</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: ".65rem" }}>
+                  {analytics?.recentEvents.map((ev) => (
+                    <div key={ev.id} style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #222", paddingBottom: "6px" }}>
+                      <span>{ev.eventName} on <strong style={{ color: "#fff" }}>{ev.pageUrl}</strong></span>
+                      <span style={{ color: "#555" }}>{new Date(ev.createdAt).toLocaleTimeString()}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -458,113 +688,189 @@ export default function UnifiedAdminDashboard() {
 
         {/* TAB 4: PROMOS */}
         {activeTab === "promos" && (
-          <div>
-            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "30px", alignItems: "start" }}>
-              <div>
-                <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", marginBottom: "24px" }}>Active Promo Codes</h2>
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                  {promos.map((pr) => (
-                    <div key={pr.id} style={{ background: "#121212", border: "1px solid #222", padding: "24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <div>
-                        <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", color: "#C4A962" }}>{pr.code}</div>
-                        <div style={{ fontSize: ".6rem", color: "#888" }}>
-                          Discount: {pr.discountType === "PERCENTAGE" ? `${pr.discountValue}% OFF` : fmt(pr.discountValue)} • Min Spend: {fmt(pr.minSpend)}
-                        </div>
-                        <div style={{ fontSize: ".55rem", color: "#555", marginTop: "2px" }}>Used: {pr.usedCount} times</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))", gap: "40px", alignItems: "start" }}>
+            <div>
+              <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", marginBottom: "24px" }}>Active Promo Codes</h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                {promos.map((pr) => (
+                  <div key={pr.id} style={{ background: "#121212", border: "1px solid #222", padding: "24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", color: "#C4A962" }}>{pr.code}</div>
+                      <div style={{ fontSize: ".6rem", color: "#888" }}>
+                        Discount: {pr.discountType === "PERCENTAGE" ? `${pr.discountValue}% OFF` : fmt(pr.discountValue)} • Min Spend: {fmt(pr.minSpend)}
                       </div>
-                      <span style={{ fontSize: ".55rem", letterSpacing: ".2em", padding: "4px 10px", background: pr.active ? "rgba(196,169,98,.2)" : "#222", color: pr.active ? "#C4A962" : "#666" }}>
-                        {pr.active ? "ACTIVE" : "INACTIVE"}
-                      </span>
+                      <div style={{ fontSize: ".55rem", color: "#555", marginTop: "2px" }}>Used: {pr.usedCount} times</div>
                     </div>
-                  ))}
-                </div>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                      <button
+                        onClick={() => handleTogglePromo(pr.id, pr.active)}
+                        style={{ padding: "4px 10px", background: pr.active ? "rgba(196,169,98,.2)" : "#222", color: pr.active ? "#C4A962" : "#666", border: "none", fontSize: ".55rem", cursor: "pointer" }}
+                      >
+                        {pr.active ? "ACTIVE" : "DISABLED"}
+                      </button>
+                      <button onClick={() => handleDeletePromo(pr.id)} style={{ background: "none", border: "none", color: "#ff6b6b", fontSize: ".6rem", cursor: "pointer" }}>
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
+            </div>
 
-              {/* Create Promo Form */}
-              <div style={{ background: "#121212", border: "1px solid #222", padding: "28px" }}>
-                <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", marginBottom: "20px" }}>Create Promo Code</h3>
-                <form onSubmit={handleCreatePromo} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+            {/* Create Promo Form */}
+            <div style={{ background: "#121212", border: "1px solid #C4A962", padding: "32px" }}>
+              <div style={{ fontSize: ".45rem", letterSpacing: ".3em", color: "#C4A962", textTransform: "uppercase", marginBottom: "8px" }}>Voucher System</div>
+              <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", marginBottom: "20px" }}>Create Promo Code</h3>
+
+              {promoError && (
+                <div style={{ padding: "12px", background: "rgba(255,107,107,.15)", border: "1px solid #ff6b6b", color: "#ff6b6b", fontSize: ".65rem", marginBottom: "16px" }}>
+                  {promoError}
+                </div>
+              )}
+
+              <form onSubmit={handleCreatePromo} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Promo Code *</label>
                   <input
                     type="text"
                     required
-                    placeholder="Code (e.g. VIP20)"
+                    placeholder="e.g. ROYAL15"
                     value={newPromo.code}
-                    onChange={(e) => setNewPromo({ ...newPromo, code: e.target.value })}
-                    style={{ padding: "10px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem" }}
+                    onChange={(e) => setNewPromo({ ...newPromo, code: e.target.value.toUpperCase() })}
+                    style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#C4A962", fontSize: ".85rem", fontWeight: 600, outline: "none" }}
                   />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Discount Type</label>
                   <select
                     value={newPromo.discountType}
                     onChange={(e) => setNewPromo({ ...newPromo, discountType: e.target.value })}
-                    style={{ padding: "10px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem" }}
+                    style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem", outline: "none" }}
                   >
                     <option value="PERCENTAGE">Percentage Discount (%)</option>
                     <option value="FIXED">Fixed Amount Discount (₦)</option>
                   </select>
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Discount Value *</label>
                   <input
                     type="number"
                     required
-                    placeholder="Discount Value"
+                    placeholder="15"
                     value={newPromo.discountValue}
                     onChange={(e) => setNewPromo({ ...newPromo, discountValue: e.target.value })}
-                    style={{ padding: "10px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem" }}
+                    style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem", outline: "none" }}
                   />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Minimum Spend (₦)</label>
                   <input
                     type="number"
-                    placeholder="Min Spend (₦)"
+                    placeholder="0"
                     value={newPromo.minSpend}
                     onChange={(e) => setNewPromo({ ...newPromo, minSpend: e.target.value })}
-                    style={{ padding: "10px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem" }}
+                    style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem", outline: "none" }}
                   />
-                  <button type="submit" style={{ padding: "12px", background: "#C4A962", color: "#000", border: "none", fontSize: ".55rem", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
-                    Publish Promo →
-                  </button>
-                </form>
-              </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={submittingPromo}
+                  style={{
+                    width: "100%",
+                    padding: "16px",
+                    background: "#C4A962",
+                    color: "#000",
+                    border: "none",
+                    fontSize: ".6rem",
+                    letterSpacing: ".25em",
+                    textTransform: "uppercase",
+                    fontWeight: 600,
+                    cursor: submittingPromo ? "wait" : "pointer",
+                    marginTop: "10px",
+                  }}
+                >
+                  {submittingPromo ? "Creating Promo..." : "Publish Promo Code →"}
+                </button>
+              </form>
             </div>
           </div>
         )}
 
         {/* TAB 5: SUBSCRIBERS */}
         {activeTab === "subscribers" && (
-          <div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "30px" }}>
-              <div>
-                <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", marginBottom: "24px" }}>Subscribers ({subscribers.length})</h2>
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px", maxHeight: "400px", overflowY: "auto" }}>
-                  {subscribers.map((s) => (
-                    <div key={s.id} style={{ background: "#121212", border: "1px solid #222", padding: "14px 20px", display: "flex", justifyContent: "space-between", fontSize: ".7rem" }}>
-                      <span style={{ color: "#C4A962" }}>{s.email}</span>
-                      <span style={{ color: "#555" }}>{new Date(s.createdAt).toLocaleDateString()}</span>
-                    </div>
-                  ))}
-                </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))", gap: "40px", alignItems: "start" }}>
+            <div>
+              <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", marginBottom: "24px" }}>Subscribers ({subscribers.length})</h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px", maxHeight: "450px", overflowY: "auto" }}>
+                {subscribers.map((s) => (
+                  <div key={s.id} style={{ background: "#121212", border: "1px solid #222", padding: "14px 20px", display: "flex", justifyContent: "space-between", fontSize: ".7rem" }}>
+                    <span style={{ color: "#C4A962" }}>{s.email}</span>
+                    <span style={{ color: "#555" }}>{new Date(s.createdAt).toLocaleDateString()}</span>
+                  </div>
+                ))}
               </div>
+            </div>
 
-              {/* Email Broadcast */}
-              <div style={{ background: "#121212", border: "1px solid #222", padding: "28px" }}>
-                <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", marginBottom: "20px" }}>Dispatch Email Campaign</h3>
-                <form onSubmit={handleBroadcast} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+            {/* Email Broadcast */}
+            <div style={{ background: "#121212", border: "1px solid #C4A962", padding: "32px" }}>
+              <div style={{ fontSize: ".45rem", letterSpacing: ".3em", color: "#C4A962", textTransform: "uppercase", marginBottom: "8px" }}>Direct Marketing</div>
+              <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", marginBottom: "20px" }}>Dispatch Email Campaign</h3>
+
+              {broadcastError && (
+                <div style={{ padding: "12px", background: "rgba(255,107,107,.15)", border: "1px solid #ff6b6b", color: "#ff6b6b", fontSize: ".65rem", marginBottom: "16px" }}>
+                  {broadcastError}
+                </div>
+              )}
+
+              <form onSubmit={handleBroadcast} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Campaign Subject *</label>
                   <input
                     type="text"
                     required
-                    placeholder="Email Subject Line"
+                    placeholder="Exclusive Collector Invitation..."
                     value={broadcast.subject}
                     onChange={(e) => setBroadcast({ ...broadcast, subject: e.target.value })}
-                    style={{ padding: "10px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem" }}
+                    style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".8rem", outline: "none" }}
                   />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".2em", color: "#888", textTransform: "uppercase", marginBottom: "4px" }}>Email Body HTML *</label>
                   <textarea
                     rows={6}
                     required
-                    placeholder="HTML / Text Message Content..."
+                    placeholder="<h1>Exclusive Access</h1><p>Discover our newest chronometer release...</p>"
                     value={broadcast.html}
                     onChange={(e) => setBroadcast({ ...broadcast, html: e.target.value })}
-                    style={{ padding: "10px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem", fontFamily: "monospace" }}
+                    style={{ width: "100%", padding: "12px", background: "#000", border: "1px solid #333", color: "#fff", fontSize: ".75rem", fontFamily: "monospace", outline: "none" }}
                   />
-                  <button type="submit" style={{ padding: "12px", background: "#C4A962", color: "#000", border: "none", fontSize: ".55rem", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
-                    Send Broadcast ({subscribers.length} Collectors) →
-                  </button>
-                </form>
-              </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={submittingBroadcast}
+                  style={{
+                    width: "100%",
+                    padding: "16px",
+                    background: "#C4A962",
+                    color: "#000",
+                    border: "none",
+                    fontSize: ".6rem",
+                    letterSpacing: ".25em",
+                    textTransform: "uppercase",
+                    fontWeight: 600,
+                    cursor: submittingBroadcast ? "wait" : "pointer",
+                    marginTop: "10px",
+                  }}
+                >
+                  {submittingBroadcast ? "Dispatching..." : `Send Broadcast (${subscribers.length} Collectors) →`}
+                </button>
+              </form>
             </div>
           </div>
         )}
