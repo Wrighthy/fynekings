@@ -8,8 +8,34 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model User {
+  id              String         @id @default(cuid())
+  email           String         @unique
+  passwordHash    String
+  name            String
+  phone           String?
+  shippingAddress String?
+  city            String?
+  country         String?        @default("Nigeria")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  orders          Order[]
+  wishlist        WishlistItem[]
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
 model Product {
-  id          String   @id @default(cuid())
+  id          String         @id @default(cuid())
   name        String
   series      String
   price       Int
@@ -27,15 +53,16 @@ model Product {
   innerCase   String
   innerStroke String
   strokeWidth String
-  inStock     Boolean  @default(true)
-  featured    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  inStock     Boolean        @default(true)
+  featured    Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   description String?
   images      String[]
-  slug        String   @unique
+  slug        String         @unique
   specs       Json?
   orders      Order[]
+  wishlist    WishlistItem[]
 }
 
 model LimitedEdition {
@@ -63,10 +90,12 @@ model Order {
   totalAmount     Int
   paystackRef     String?     @unique
   productId       String?
+  userId          String?
   customConfig    Json?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   product         Product?    @relation(fields: [productId], references: [id])
+  user            User?       @relation(fields: [userId], references: [id])
 }
 
 model NewsletterSubscriber {

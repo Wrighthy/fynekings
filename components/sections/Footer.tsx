@@ -1,39 +1,37 @@
 "use client";
 import Link from "next/link";
+
 const FOOTER_COLS = [
   {
     h: "Collection", l: [
       { label: "Best Sellers", href: "/collection" },
       { label: "New Arrivals", href: "/collection" },
-      { label: "Limited Editions", href: "/#countdown" },
-      { label: "Custom Build", href: "/#customizer" },
-      { label: "Archive", href: "/collection" },
+      { label: "Customizer", href: "/customize" },
+      { label: "Compare Models", href: "/compare" },
+      { label: "Wishlist", href: "/wishlist" },
     ]
   },
   {
     h: "Experience", l: [
-      { label: "AR Try-On", href: "/#tryon" },
-      { label: "3D Customizer", href: "/#customizer" },
+      { label: "About Atelier", href: "/about" },
+      { label: "Track Order", href: "/orders/track" },
+      { label: "My Account", href: "/account" },
       { label: "Watch Education", href: "/#education" },
-      { label: "Collector Club", href: "/#newsletter" },
       { label: "Lagos Atelier", href: "/#heritage" },
     ]
   },
   {
     h: "Service", l: [
-      { label: "Shipping & Returns", href: "#" },
-      { label: "Warranty", href: "#" },
-      { label: "Watch Servicing", href: "#" },
-      { label: "Authentication", href: "#" },
-      { label: "Contact", href: "#" },
+      { label: "Shipping Policy", href: "/shipping-policy" },
+      { label: "Return Policy", href: "/return-policy" },
+      { label: "Contact Atelier", href: "/contact" },
+      { label: "FAQ & Help", href: "/faq" },
     ]
   },
   {
     h: "Legal", l: [
-      { label: "Privacy Policy", href: "#" },
-      { label: "Terms of Sale", href: "#" },
-      { label: "Cookies", href: "#" },
-      { label: "Accessibility", href: "#" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Sale", href: "/terms" },
     ]
   },
 ];

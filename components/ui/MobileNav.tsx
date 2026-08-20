@@ -3,21 +3,25 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/store";
+import { useAuth } from "@/lib/authStore";
 
 const NAV_LINKS = [
     { label: "Collection", href: "/collection" },
-    { label: "Limited Edition", href: "/#countdown" },
-    { label: "Try On", href: "/#tryon" },
-    { label: "Atelier", href: "/#heritage" },
-    { label: "Craft", href: "/#education" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: "Customize Watch", href: "/customize" },
+    { label: "Wishlist", href: "/wishlist" },
+    { label: "Compare Models", href: "/compare" },
+    { label: "Track Order", href: "/orders/track" },
+    { label: "My Account", href: "/account" },
+    { label: "About Atelier", href: "/about" },
+    { label: "Contact Us", href: "/contact" },
+    { label: "FAQ & Help", href: "/faq" },
 ];
 
 export default function MobileNav() {
     const [open, setOpen] = useState(false);
     const cart = useCart(s => s.cart);
     const setCartOpen = useCart(s => s.setCartOpen);
+    const { user, setAuthOpen } = useAuth();
 
     // Prevent body scroll when menu is open
     useEffect(() => {
@@ -114,9 +118,25 @@ export default function MobileNav() {
                     </button>
                 </div>
 
+                {/* Account Header banner */}
+                <div style={{ padding: "16px 32px", background: "var(--dark2)", borderBottom: "1px solid var(--dark3)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    {user ? (
+                        <div style={{ fontSize: ".55rem", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase" }}>
+                            Signed in as {user.name || user.email}
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => { setAuthOpen(true, "login"); setOpen(false); }}
+                            style={{ background: "none", border: "none", color: "var(--gold)", fontSize: ".55rem", letterSpacing: ".2em", textTransform: "uppercase", cursor: "pointer" }}
+                        >
+                            Sign In / Register →
+                        </button>
+                    )}
+                </div>
+
                 {/* Nav links */}
-                <nav style={{ padding: "40px 32px", flex: 1 }}>
-                    <div style={{ fontSize: ".45rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "24px" }}>Navigation</div>
+                <nav style={{ padding: "32px 32px", flex: 1 }}>
+                    <div style={{ fontSize: ".45rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "20px" }}>Navigation</div>
                     <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0" }}>
                         {NAV_LINKS.map((link, i) => (
                             <li key={link.label}>
@@ -127,21 +147,21 @@ export default function MobileNav() {
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "space-between",
-                                        padding: "18px 0",
+                                        padding: "14px 0",
                                         borderBottom: "1px solid var(--dark3)",
                                         fontFamily: "Playfair Display, serif",
-                                        fontSize: "1.4rem",
+                                        fontSize: "1.2rem",
                                         fontWeight: 300,
                                         color: "var(--white)",
                                         textDecoration: "none",
                                         transition: "color .3s",
-                                        animation: `slideIn .4s ease ${i * 0.06}s both`,
+                                        animation: `slideIn .4s ease ${i * 0.04}s both`,
                                     }}
                                     onMouseEnter={e => (e.currentTarget.style.color = "var(--gold)")}
                                     onMouseLeave={e => (e.currentTarget.style.color = "var(--white)")}
                                 >
                                     {link.label}
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
                                 </Link>
                             </li>
                         ))}
@@ -152,7 +172,7 @@ export default function MobileNav() {
                         onClick={() => { setCartOpen(true); setOpen(false); }}
                         style={{
                             width: "100%",
-                            marginTop: "32px",
+                            marginTop: "24px",
                             padding: "16px",
                             background: "var(--gold)",
                             color: "var(--black)",
@@ -175,8 +195,8 @@ export default function MobileNav() {
                 </nav>
 
                 {/* Footer */}
-                <div style={{ padding: "28px 32px", borderTop: "1px solid var(--dark3)" }}>
-                    <div style={{ fontSize: ".45rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "16px" }}>Follow Us</div>
+                <div style={{ padding: "24px 32px", borderTop: "1px solid var(--dark3)" }}>
+                    <div style={{ fontSize: ".45rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "12px" }}>Follow Atelier</div>
                     <div style={{ display: "flex", gap: "10px" }}>
                         {[
                             { label: "Instagram", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" /></svg>, href: "https://instagram.com/fynekings" },
@@ -192,9 +212,6 @@ export default function MobileNav() {
                             </a>
                         ))}
                     </div>
-                    <p style={{ fontSize: ".45rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginTop: "20px" }}>
-                        © 2024 Fynekings International Ltd
-                    </p>
                 </div>
             </div>
         </>

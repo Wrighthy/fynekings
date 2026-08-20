@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useCart, fmt } from "@/lib/store";
+import { useWishlist } from "@/lib/wishlistStore";
+import { useCompare } from "@/lib/compareStore";
 import Link from "next/link";
 
 type Product = {
@@ -25,6 +27,7 @@ type Product = {
   innerStroke: string;
   strokeWidth: string;
   images: string[];
+  specs?: Record<string, string> | null;
 };
 
 const FILTERS = ["All", "Midnight", "Gold", "Steel", "Limited"];
@@ -36,34 +39,40 @@ function WatchCardImage({ p }: { p: Product }) {
   useEffect(() => {
     if (!hovered || !p.images || p.images.length <= 1) return;
     const id = setInterval(() => {
-      setCurrentImg(i => (i + 1) % p.images.length);
+      setCurrentImg((i) => (i + 1) % p.images.length);
     }, 2500);
     return () => clearInterval(id);
   }, [hovered, p.images]);
 
-  if (!p.images || p.images.length === 0) return (
-    <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
-      <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
-      <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
-      <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth} />
-      <circle cx="80" cy="80" r="44" fill={p.innerCase} stroke={p.innerStroke} strokeWidth=".5" />
-      <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6" />
-      <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6" />
-      <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
-      <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
-      <text x="80" y="68" textAnchor="middle" fill={p.textColor} fontFamily="Playfair Display,serif" fontSize="6" letterSpacing="2">FYNEKINGS</text>
-      <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round" />
-      <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round" />
-      <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round" />
-      <circle cx="80" cy="80" r="3" fill={p.markerColor} />
-    </svg>
-  );
+  if (!p.images || p.images.length === 0)
+    return (
+      <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+        <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
+        <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
+        <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth} />
+        <circle cx="80" cy="80" r="44" fill={p.innerCase} stroke={p.innerStroke} strokeWidth=".5" />
+        <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6" />
+        <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6" />
+        <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
+        <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
+        <text x="80" y="68" textAnchor="middle" fill={p.textColor} fontFamily="Playfair Display,serif" fontSize="6" letterSpacing="2">
+          FYNEKINGS
+        </text>
+        <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round" />
+        <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round" />
+        <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round" />
+        <circle cx="80" cy="80" r="3" fill={p.markerColor} />
+      </svg>
+    );
 
   return (
     <div
       style={{ position: "absolute", inset: 0 }}
       onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => { setHovered(false); setCurrentImg(0); }}
+      onMouseLeave={() => {
+        setHovered(false);
+        setCurrentImg(0);
+      }}
     >
       {p.images.map((img, i) => (
         <img
@@ -97,7 +106,10 @@ export default function BestSellers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
-  const addToCart = useCart(s => s.addToCart);
+
+  const addToCart = useCart((s) => s.addToCart);
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { toggleCompare, isInCompare } = useCompare();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -125,16 +137,14 @@ export default function BestSellers() {
         <div className="products-header reveal">
           <div>
             <p className="sec-tag">Curated Selection · No. 01</p>
-            <h2 className="sec-title">Best <em>Sellers</em></h2>
+            <h2 className="sec-title">
+              Best <em>Sellers</em>
+            </h2>
             <p className="sec-desc">Our most coveted pieces, ranked by collector demand. Each piece is signed, numbered, and shipped insured worldwide.</p>
           </div>
           <div className="products-filter">
-            {FILTERS.map(f => (
-              <button
-                key={f}
-                className={`filter-btn ${activeFilter === f ? "active" : ""}`}
-                onClick={() => setActiveFilter(f)}
-              >
+            {FILTERS.map((f) => (
+              <button key={f} className={`filter-btn ${activeFilter === f ? "active" : ""}`} onClick={() => setActiveFilter(f)}>
                 {f}
               </button>
             ))}
@@ -157,48 +167,130 @@ export default function BestSellers() {
               Unable to load collection. Please refresh.
             </div>
           ) : (
-            products.map(p => (
-              <div key={p.id} className="product-card">
-                {p.badge && <div className="badge-sold">{p.badge}</div>}
-                {p.badgeNew && <div className="badge-new">{p.badgeNew}</div>}
+            products.map((p) => {
+              const inWishlist = isInWishlist(p.id);
+              const inCompare = isInCompare(p.id);
 
-                {/* Clicking the image goes to product page */}
-                <Link href={`/watches/${p.slug}`} style={{ textDecoration: "none", display: "block" }}>
-                  <div className="prod-img" style={{ position: "relative" }}>
-                    <WatchCardImage p={p} />
-                    <div className="prod-overlay"><div className="prod-overlay-inner"><span>View Watch</span></div></div>
-                  </div>
-                </Link>
+              return (
+                <div key={p.id} className="product-card" style={{ position: "relative" }}>
+                  {p.badge && <div className="badge-sold">{p.badge}</div>}
+                  {p.badgeNew && <div className="badge-new">{p.badgeNew}</div>}
 
-                {/* Product info */}
-                <div className="prod-info">
-                  <p className="prod-tag">{p.tag}</p>
-                  <Link href={`/watches/${p.slug}`} style={{ textDecoration: "none" }}>
-                    <p className="prod-name">{p.name}</p>
-                  </Link>
-                  <p className="prod-series">{p.series}</p>
-                  <div className="prod-bottom">
-                    <p className="prod-price">{fmt(p.price)} <small>+ fees</small></p>
+                  {/* Wishlist & Compare Quick Action Buttons */}
+                  <div style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10, display: "flex", gap: "6px" }}>
                     <button
-                      className="prod-cta"
-                      style={{ background: "none", border: "none", cursor: "none", fontFamily: "Raleway, sans-serif", fontSize: ".48rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--muted)", transition: "color .3s" }}
-                      onClick={() => addToCart(p.name, p.series, p.price)}
-                      onMouseEnter={e => (e.currentTarget.style.color = "var(--gold)")}
-                      onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleWishlist(p.id);
+                      }}
+                      style={{
+                        background: "rgba(12, 12, 12, 0.75)",
+                        backdropFilter: "blur(4px)",
+                        border: inWishlist ? "1px solid var(--gold)" : "1px solid var(--dark4)",
+                        color: inWishlist ? "var(--gold)" : "var(--muted)",
+                        width: "30px",
+                        height: "30px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                      }}
+                      title={inWishlist ? "Remove from Wishlist" : "Save to Wishlist"}
                     >
-                      Add →
+                      {inWishlist ? "♥" : "♡"}
+                    </button>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleCompare({
+                          id: p.id,
+                          name: p.name,
+                          slug: p.slug,
+                          series: p.series,
+                          price: p.price,
+                          strapColor: p.strapColor,
+                          caseColor: p.caseColor,
+                          caseStroke: p.caseStroke,
+                          images: p.images,
+                          specs: p.specs || null,
+                        });
+                      }}
+                      style={{
+                        background: "rgba(12, 12, 12, 0.75)",
+                        backdropFilter: "blur(4px)",
+                        border: inCompare ? "1px solid var(--gold)" : "1px solid var(--dark4)",
+                        color: inCompare ? "var(--gold)" : "var(--muted)",
+                        width: "30px",
+                        height: "30px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        fontSize: ".6rem",
+                      }}
+                      title={inCompare ? "Remove from Compare" : "Compare Model"}
+                    >
+                      ⚖
                     </button>
                   </div>
+
+                  {/* Clicking the image goes to product page */}
+                  <Link href={`/watches/${p.slug}`} style={{ textDecoration: "none", display: "block" }}>
+                    <div className="prod-img" style={{ position: "relative" }}>
+                      <WatchCardImage p={p} />
+                      <div className="prod-overlay">
+                        <div className="prod-overlay-inner">
+                          <span>View Watch</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+
+                  {/* Product info */}
+                  <div className="prod-info">
+                    <p className="prod-tag">{p.tag}</p>
+                    <Link href={`/watches/${p.slug}`} style={{ textDecoration: "none" }}>
+                      <p className="prod-name">{p.name}</p>
+                    </Link>
+                    <p className="prod-series">{p.series}</p>
+                    <div className="prod-bottom">
+                      <p className="prod-price">
+                        {fmt(p.price)} <small>+ fees</small>
+                      </p>
+                      <button
+                        className="prod-cta"
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontFamily: "Raleway, sans-serif",
+                          fontSize: ".48rem",
+                          letterSpacing: ".3em",
+                          textTransform: "uppercase",
+                          color: "var(--muted)",
+                          transition: "color .3s",
+                        }}
+                        onClick={() => addToCart(p.name, p.series, p.price)}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+                      >
+                        Add →
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 
         <div className="products-footer reveal">
           <Link href="/collection" className="view-all" style={{ textDecoration: "none" }}>
             View Full Collection ({products.length} pieces)
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M5 12h14M13 5l7 7-7 7" />
+            </svg>
           </Link>
         </div>
       </div>
