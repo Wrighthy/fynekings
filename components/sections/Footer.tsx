@@ -6,7 +6,6 @@ const FOOTER_COLS = [
     h: "Collection", l: [
       { label: "Best Sellers", href: "/collection" },
       { label: "New Arrivals", href: "/collection" },
-      { label: "Customizer", href: "/customize" },
       { label: "Compare Models", href: "/compare" },
       { label: "Wishlist", href: "/wishlist" },
     ]

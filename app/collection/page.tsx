@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart, fmt } from "@/lib/store";
+import { useWishlist } from "@/lib/wishlistStore";
+import { useCompare } from "@/lib/compareStore";
+import Nav from "@/components/sections/Nav";
+import Footer from "@/components/sections/Footer";
 
 type Product = {
     id: string;
@@ -25,6 +29,7 @@ type Product = {
     innerCase: string;
     innerStroke: string;
     strokeWidth: string;
+    specs?: Record<string, string> | null;
 };
 
 const SORTS = ["Default", "Price: Low to High", "Price: High to Low", "Name A-Z"];
@@ -91,13 +96,17 @@ function WatchCardImage({ p }: { p: Product }) {
         </div>
     );
 }
+
 export default function CollectionPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
     const [activeSort, setActiveSort] = useState("Default");
     const [search, setSearch] = useState("");
+
     const addToCart = useCart(s => s.addToCart);
+    const { toggleWishlist, isInWishlist } = useWishlist();
+    const { toggleCompare, isInCompare } = useCompare();
 
     useEffect(() => {
         fetch("/api/products", { cache: "no-store" })
@@ -123,6 +132,7 @@ export default function CollectionPage() {
 
     return (
         <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
+            <Nav />
 
             {/* Header */}
             <div style={{ background: "var(--dark)", borderBottom: "1px solid var(--dark3)", padding: "140px 64px 60px" }}>
@@ -214,65 +224,131 @@ export default function CollectionPage() {
                     </div>
                 ) : (
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1px", background: "var(--dark3)" }}>
-                        {filtered.map(p => (
-                            <div key={p.id} style={{ background: "var(--dark)", position: "relative", cursor: "none", transition: "background .4s" }}
-                                onMouseEnter={e => (e.currentTarget.style.background = "var(--dark2)")}
-                                onMouseLeave={e => (e.currentTarget.style.background = "var(--dark)")}>
-                                {p.badge && <div className="badge-sold">{p.badge}</div>}
-                                {p.badgeNew && <div className="badge-new">{p.badgeNew}</div>}
+                        {filtered.map(p => {
+                            const inWishlist = isInWishlist(p.id);
+                            const inCompare = isInCompare(p.id);
 
-                                {/* Image / SVG */}
-                                <Link href={`/watches/${p.slug}`} style={{ display: "block", textDecoration: "none" }}>
-                                    <div style={{ aspectRatio: "1", display: "flex", alignItems: "center", justifyContent: "center", padding: "30px", background: "linear-gradient(135deg, var(--dark2) 0%, var(--dark) 100%)", position: "relative", overflow: "hidden" }}>
-                                        {p.images && p.images.length > 0 ? (
-                                            <WatchCardImage p={p} />
-                                        ) : (
-                                            <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
-                                                <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
-                                                <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
-                                                <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth} />
-                                                <circle cx="80" cy="80" r="44" fill={p.innerCase} stroke={p.innerStroke} strokeWidth=".5" />
-                                                <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6" />
-                                                <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6" />
-                                                <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
-                                                <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
-                                                <text x="80" y="68" textAnchor="middle" fill={p.textColor} fontFamily="Playfair Display,serif" fontSize="6" letterSpacing="2">FYNEKINGS</text>
-                                                <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round" />
-                                                <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round" />
-                                                <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round" />
-                                                <circle cx="80" cy="80" r="3" fill={p.markerColor} />
-                                            </svg>
-                                        )}
-                                    </div>
-                                </Link>
+                            return (
+                                <div key={p.id} style={{ background: "var(--dark)", position: "relative", cursor: "none", transition: "background .4s" }}
+                                    onMouseEnter={e => (e.currentTarget.style.background = "var(--dark2)")}
+                                    onMouseLeave={e => (e.currentTarget.style.background = "var(--dark)")}>
+                                    {p.badge && <div className="badge-sold">{p.badge}</div>}
+                                    {p.badgeNew && <div className="badge-new">{p.badgeNew}</div>}
 
-                                {/* Info */}
-                                <div style={{ padding: "24px 26px", borderTop: "1px solid var(--dark3)" }}>
-                                    <p style={{ fontSize: ".45rem", letterSpacing: ".35em", textTransform: "uppercase", color: "var(--gold-dk)", marginBottom: "8px" }}>{p.tag}</p>
-                                    <Link href={`/watches/${p.slug}`} style={{ textDecoration: "none" }}>
-                                        <p style={{ fontFamily: "Playfair Display, serif", fontSize: "1.15rem", fontWeight: 400, color: "var(--white)", marginBottom: "4px", letterSpacing: ".01em", transition: "color .3s" }}
-                                            onMouseEnter={e => (e.currentTarget.style.color = "var(--gold)")}
-                                            onMouseLeave={e => (e.currentTarget.style.color = "var(--white)")}
-                                        >{p.name}</p>
-                                    </Link>
-                                    <p style={{ fontSize: ".55rem", letterSpacing: ".22em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "18px" }}>{p.series}</p>
-                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                        <p style={{ fontSize: ".85rem", color: "var(--gold)", fontFamily: "Playfair Display, serif" }}>
-                                            {fmt(p.price)} <small style={{ fontSize: ".5rem", color: "var(--muted)", fontFamily: "Raleway, sans-serif", letterSpacing: ".15em" }}>+ fees</small>
-                                        </p>
+                                    {/* Wishlist & Compare Buttons */}
+                                    <div style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10, display: "flex", gap: "6px" }}>
                                         <button
-                                            onClick={() => addToCart(p.name, p.series, p.price)}
-                                            style={{ fontSize: ".48rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--muted)", background: "none", border: "none", cursor: "none", fontFamily: "Raleway, sans-serif", transition: "color .3s" }}
-                                            onMouseEnter={e => (e.currentTarget.style.color = "var(--gold)")}
-                                            onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
-                                        >Add →</button>
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleWishlist(p.id);
+                                            }}
+                                            style={{
+                                                background: "rgba(12, 12, 12, 0.8)",
+                                                backdropFilter: "blur(4px)",
+                                                border: inWishlist ? "1px solid var(--gold)" : "1px solid var(--dark4)",
+                                                color: inWishlist ? "var(--gold)" : "var(--muted)",
+                                                width: "32px",
+                                                height: "32px",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                cursor: "none",
+                                            }}
+                                            title={inWishlist ? "Remove from Wishlist" : "Save to Wishlist"}
+                                        >
+                                            {inWishlist ? "♥" : "♡"}
+                                        </button>
+
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleCompare({
+                                                    id: p.id,
+                                                    name: p.name,
+                                                    slug: p.slug,
+                                                    series: p.series,
+                                                    price: p.price,
+                                                    strapColor: p.strapColor,
+                                                    caseColor: p.caseColor,
+                                                    caseStroke: p.caseStroke,
+                                                    images: p.images,
+                                                    specs: p.specs || null,
+                                                });
+                                            }}
+                                            style={{
+                                                background: "rgba(12, 12, 12, 0.8)",
+                                                backdropFilter: "blur(4px)",
+                                                border: inCompare ? "1px solid var(--gold)" : "1px solid var(--dark4)",
+                                                color: inCompare ? "var(--gold)" : "var(--muted)",
+                                                width: "32px",
+                                                height: "32px",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                cursor: "none",
+                                                fontSize: ".65rem",
+                                            }}
+                                            title={inCompare ? "Remove from Compare Matrix" : "Add to Watch Comparison"}
+                                        >
+                                            ⚖
+                                        </button>
+                                    </div>
+
+                                    {/* Image / SVG */}
+                                    <Link href={`/watches/${p.slug}`} style={{ display: "block", textDecoration: "none" }}>
+                                        <div style={{ aspectRatio: "1", display: "flex", alignItems: "center", justifyContent: "center", padding: "30px", background: "linear-gradient(135deg, var(--dark2) 0%, var(--dark) 100%)", position: "relative", overflow: "hidden" }}>
+                                            {p.images && p.images.length > 0 ? (
+                                                <WatchCardImage p={p} />
+                                            ) : (
+                                                <svg viewBox="0 0 160 160" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
+                                                    <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
+                                                    <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth} />
+                                                    <circle cx="80" cy="80" r="44" fill={p.innerCase} stroke={p.innerStroke} strokeWidth=".5" />
+                                                    <line x1="80" y1="40" x2="80" y2="48" stroke={p.markerColor} strokeWidth="1.6" />
+                                                    <line x1="80" y1="112" x2="80" y2="120" stroke={p.markerColor} strokeWidth="1.6" />
+                                                    <line x1="40" y1="80" x2="48" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
+                                                    <line x1="112" y1="80" x2="120" y2="80" stroke={p.markerColor} strokeWidth="1.6" />
+                                                    <text x="80" y="68" textAnchor="middle" fill={p.textColor} fontFamily="Playfair Display,serif" fontSize="6" letterSpacing="2">FYNEKINGS</text>
+                                                    <line x1="80" y1="80" x2="80" y2="50" stroke={p.handColor} strokeWidth="2" strokeLinecap="round" />
+                                                    <line x1="80" y1="80" x2="98" y2="70" stroke={p.handColor} strokeWidth="1.6" strokeLinecap="round" />
+                                                    <line x1="80" y1="80" x2="64" y2="92" stroke={p.secColor} strokeWidth="1" strokeLinecap="round" />
+                                                    <circle cx="80" cy="80" r="3" fill={p.markerColor} />
+                                                </svg>
+                                            )}
+                                        </div>
+                                    </Link>
+
+                                    {/* Info */}
+                                    <div style={{ padding: "24px 26px", borderTop: "1px solid var(--dark3)" }}>
+                                        <p style={{ fontSize: ".45rem", letterSpacing: ".35em", textTransform: "uppercase", color: "var(--gold-dk)", marginBottom: "8px" }}>{p.tag}</p>
+                                        <Link href={`/watches/${p.slug}`} style={{ textDecoration: "none" }}>
+                                            <p style={{ fontFamily: "Playfair Display, serif", fontSize: "1.15rem", fontWeight: 400, color: "var(--white)", marginBottom: "4px", letterSpacing: ".01em", transition: "color .3s" }}
+                                                onMouseEnter={e => (e.currentTarget.style.color = "var(--gold)")}
+                                                onMouseLeave={e => (e.currentTarget.style.color = "var(--white)")}
+                                            >{p.name}</p>
+                                        </Link>
+                                        <p style={{ fontSize: ".55rem", letterSpacing: ".22em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "18px" }}>{p.series}</p>
+                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                            <p style={{ fontSize: ".85rem", color: "var(--gold)", fontFamily: "Playfair Display, serif" }}>
+                                                {fmt(p.price)} <small style={{ fontSize: ".5rem", color: "var(--muted)", fontFamily: "Raleway, sans-serif", letterSpacing: ".15em" }}>+ fees</small>
+                                            </p>
+                                            <button
+                                                onClick={() => addToCart(p.name, p.series, p.price)}
+                                                style={{ fontSize: ".48rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--muted)", background: "none", border: "none", cursor: "none", fontFamily: "Raleway, sans-serif", transition: "color .3s" }}
+                                                onMouseEnter={e => (e.currentTarget.style.color = "var(--gold)")}
+                                                onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+                                            >Add →</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>
+
+            <Footer />
         </div>
     );
 }

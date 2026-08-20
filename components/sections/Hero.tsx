@@ -28,8 +28,8 @@ export default function Hero() {
               <span>Explore Collection</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
             </a>
-            <a href="#customizer" className="btn-outline">
-              Customize Yours
+            <a href="/collection" className="btn-outline">
+              View All Watches
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14"/></svg>
             </a>
           </div>

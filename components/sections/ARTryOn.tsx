@@ -11,7 +11,7 @@ export default function ARTryOn() {
             <div className="ar-steps">
               <div className="ar-step">
                 <div className="ar-step-num">i</div>
-                <div><h4>Select Your Model</h4><p>Choose any watch from the collection — or load your custom configuration from the customizer.</p></div>
+                <div><h4>Select Your Model</h4><p>Choose any watch from our signature collection to preview on your wrist.</p></div>
               </div>
               <div className="ar-step">
                 <div className="ar-step-num">ii</div>

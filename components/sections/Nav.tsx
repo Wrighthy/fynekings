@@ -37,7 +37,6 @@ export default function Nav() {
 
         <ul className="nav-links">
           <li><Link href="/collection">Collection</Link></li>
-          <li><Link href="/customize">Customize</Link></li>
           <li><Link href="/about">About</Link></li>
           <li><Link href="/contact">Contact</Link></li>
           <li><Link href="/faq">FAQ</Link></li>

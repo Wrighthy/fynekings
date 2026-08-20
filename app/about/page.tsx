@@ -82,13 +82,10 @@ export default function AboutPage() {
       <div style={{ borderTop: "1px solid var(--dark3)", background: "var(--dark2)", padding: "80px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: "600px", margin: "0 auto" }}>
           <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.2rem", color: "var(--white)", marginBottom: "16px", fontWeight: 300 }}>Explore the Collection</h2>
-          <p style={{ fontSize: ".68rem", color: "var(--muted)", marginBottom: "32px", letterSpacing: ".1em" }}>Discover our signature automatic timepieces or customize your own build.</p>
+          <p style={{ fontSize: ".68rem", color: "var(--muted)", marginBottom: "32px", letterSpacing: ".1em" }}>Discover our signature automatic timepieces hand-finished in our Lagos atelier.</p>
           <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/collection" className="btn-primary">
-              <span>View Collection</span>
-            </Link>
-            <Link href="/customize" className="btn-outline">
-              <span>Build Custom Watch</span>
+              <span>Explore Full Collection →</span>
             </Link>
           </div>
         </div>
