@@ -3289,4 +3289,18 @@ footer {
     position: relative !important;
     top: auto !important;
   }
+
+  .related-section {
+    padding: 60px 24px !important;
+  }
+
+  .related-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .related-grid {
+    grid-template-columns: 1fr !important;
+  }
 }

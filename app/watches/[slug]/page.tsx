@@ -351,13 +351,13 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
             {/* Related watches */}
             {related.length > 0 && (
-                <div style={{ borderTop: "1px solid var(--dark3)", background: "var(--dark)", padding: "80px 64px" }}>
+                <div style={{ borderTop: "1px solid var(--dark3)", background: "var(--dark)", padding: "80px 24px" }} className="related-section">
                     <div style={{ maxWidth: "1300px", margin: "0 auto" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "48px" }}>
                             <span style={{ width: "24px", height: "1px", background: "var(--gold-dk)", display: "inline-block" }}></span>
                             <span style={{ fontSize: ".52rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase" }}>You May Also Like</span>
                         </div>
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1px", background: "var(--dark3)" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 250px), 1fr))", gap: "1px", background: "var(--dark3)" }} className="related-grid">
                             {related.map(p => (
                                 <Link key={p.id} href={`/watches/${p.slug}`} style={{ textDecoration: "none", background: "var(--dark)", display: "block" }}
                                     onMouseEnter={e => (e.currentTarget.style.background = "var(--dark2)")}
