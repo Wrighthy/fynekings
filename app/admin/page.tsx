@@ -175,18 +175,33 @@ export default function UnifiedAdminDashboard() {
   const handleUploadImage = async (productId: string, files: FileList | null) => {
     if (!files || files.length === 0) return;
     setUploadingId(productId);
+    let uploadedCount = 0;
+    let lastError = "";
     try {
       for (let i = 0; i < files.length; i++) {
         const formData = new FormData();
         formData.append("file", files[i]);
         formData.append("productId", productId);
-        await fetch("/api/upload", { method: "POST", body: formData });
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          uploadedCount++;
+        } else {
+          lastError = data.details || data.error || `HTTP ${res.status}`;
+          console.error("Upload error for file", files[i].name, ":", lastError);
+        }
       }
-      setMessage("✓ Images uploaded successfully");
-      fetchDashboardData();
-      setTimeout(() => setMessage(""), 4000);
-    } catch {
-      setMessage("✕ Upload failed");
+      if (uploadedCount > 0) {
+        setMessage(`✓ ${uploadedCount} image${uploadedCount > 1 ? "s" : ""} uploaded successfully`);
+        fetchDashboardData();
+        setTimeout(() => setMessage(""), 5000);
+      }
+      if (lastError) {
+        setMessage(`✕ Upload failed: ${lastError}`);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setMessage(`✕ Network error during upload: ${msg}`);
     } finally {
       setUploadingId(null);
     }
