@@ -207,6 +207,28 @@ export default function UnifiedAdminDashboard() {
     }
   };
 
+  const handleDeleteImage = async (productId: string, imageUrl: string) => {
+    if (!confirm("Remove this image from the watch?")) return;
+    try {
+      const res = await fetch("/api/upload", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, imageUrl }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setMessage("✓ Image removed successfully");
+        fetchDashboardData();
+        setTimeout(() => setMessage(""), 4000);
+      } else {
+        setMessage(`✕ Failed to remove image: ${data.error || "Unknown error"}`);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setMessage(`✕ Network error: ${msg}`);
+    }
+  };
+
   const handleDeleteProduct = async (productId: string) => {
     if (!confirm("Are you sure you want to delete this watch model?")) return;
     const res = await fetch(`/api/admin/products?id=${productId}`, { method: "DELETE" });
@@ -448,12 +470,40 @@ export default function UnifiedAdminDashboard() {
                       </button>
                     </div>
 
-                    {/* Image thumbnails */}
+                    {/* Image thumbnails with delete */}
                     {p.images && p.images.length > 0 && (
-                      <div style={{ display: "flex", gap: "8px", marginBottom: "16px", overflowX: "auto" }}>
+                      <div style={{ display: "flex", gap: "8px", marginBottom: "16px", overflowX: "auto", flexWrap: "wrap" }}>
                         {p.images.map((img, idx) => (
-                          <div key={idx} style={{ width: "50px", height: "50px", border: "1px solid #2a2a2a", overflow: "hidden", flexShrink: 0 }}>
-                            <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          <div
+                            key={idx}
+                            style={{ position: "relative", width: "64px", height: "64px", border: "1px solid #2a2a2a", overflow: "visible", flexShrink: 0 }}
+                            title={`Image ${idx + 1} — click × to remove`}
+                          >
+                            <img src={img} alt={`Watch image ${idx + 1}`} style={{ width: "64px", height: "64px", objectFit: "cover", display: "block" }} />
+                            <button
+                              onClick={() => handleDeleteImage(p.id, img)}
+                              title="Remove this image"
+                              style={{
+                                position: "absolute",
+                                top: "-8px",
+                                right: "-8px",
+                                width: "20px",
+                                height: "20px",
+                                borderRadius: "50%",
+                                background: "#ff4444",
+                                color: "#fff",
+                                border: "none",
+                                fontSize: "10px",
+                                lineHeight: "20px",
+                                textAlign: "center",
+                                cursor: "pointer",
+                                fontWeight: 700,
+                                padding: 0,
+                                zIndex: 10,
+                              }}
+                            >
+                              ✕
+                            </button>
                           </div>
                         ))}
                       </div>

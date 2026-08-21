@@ -89,3 +89,42 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { productId, imageUrl } = await req.json();
+
+    if (!productId || !imageUrl) {
+      return NextResponse.json({ error: "productId and imageUrl are required" }, { status: 400 });
+    }
+
+    // Remove from the DB first
+    const product = await db.product.findUnique({ where: { id: productId } });
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    const updatedImages = (product.images as string[]).filter((url) => url !== imageUrl);
+    await db.product.update({
+      where: { id: productId },
+      data: { images: updatedImages },
+    });
+
+    // Try to delete from Cloudinary (non-fatal if it fails)
+    try {
+      // Derive public_id from URL: everything after /upload/ and before the extension
+      const match = imageUrl.match(/\/upload\/(?:v\d+\/)?(.+?)(?:\.[a-z]+)?$/);
+      if (match && match[1]) {
+        await cloudinary.uploader.destroy(match[1], { resource_type: "image" });
+      }
+    } catch (cdnErr) {
+      console.warn("Cloudinary delete skipped:", cdnErr);
+    }
+
+    return NextResponse.json({ success: true, remainingImages: updatedImages });
+  } catch (error: unknown) {
+    const errMsg = error instanceof Error ? error.message : JSON.stringify(error);
+    console.error("Image delete error:", errMsg);
+    return NextResponse.json({ error: "Failed to delete image", details: errMsg }, { status: 500 });
+  }
+}
