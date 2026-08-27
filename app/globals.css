@@ -2368,6 +2368,43 @@ section {
   width: fit-content
 }
 
+/* ============ JOURNAL ============ */
+.journal-card {
+  text-decoration: none;
+  background: var(--dark);
+  display: block;
+  padding: 48px 44px;
+  position: relative;
+  transition: background .4s;
+  overflow: hidden;
+}
+
+.journal-card:hover {
+  background: var(--dark2);
+}
+
+.journal-card:hover .journal-accent-line {
+  width: 100% !important;
+}
+
+.journal-card:hover .journal-read-link svg {
+  transform: translateX(4px);
+}
+
+.journal-nav-card {
+  text-decoration: none;
+  padding: 28px;
+  border: 1px solid var(--dark3);
+  background: var(--dark);
+  transition: all .3s;
+  display: block;
+}
+
+.journal-nav-card:hover {
+  border-color: var(--gold-dk);
+  background: var(--dark2);
+}
+
 /* ============ NEWSLETTER ============ */
 #newsletter {
   background: linear-gradient(135deg, var(--dark2) 0%, var(--black) 100%);

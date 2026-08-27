@@ -15,7 +15,7 @@ const FOOTER_COLS = [
       { label: "About Atelier", href: "/about" },
       { label: "Track Order", href: "/orders/track" },
       { label: "My Account", href: "/account" },
-      { label: "Watch Education", href: "/#education" },
+      { label: "Watch Education", href: "/journal" },
       { label: "Lagos Atelier", href: "/#heritage" },
     ]
   },

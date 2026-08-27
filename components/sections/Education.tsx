@@ -1,11 +1,6 @@
-const ARTICLES = [
-  { vol: "I", title: "Movement Types", body: "Quartz, automatic, manual, tourbillon — understanding the engine inside your watch and what each means for performance and prestige." },
-  { vol: "II", title: "Case Materials", body: "316L steel, titanium, gold PVD, ceramic, DLC coating — how material choice affects durability, weight, aesthetics and long-term value." },
-  { vol: "III", title: "Strap Guide", body: "Leather, rubber, NATO, mesh bracelet — choosing the right strap for your lifestyle, occasion, and personal style." },
-  { vol: "IV", title: "Complications", body: "Chronograph, moonphase, GMT, annual calendar — what watch complications are, how they work, and which ones are worth the investment." },
-  { vol: "V", title: "Watch Care", body: "Servicing intervals, water resistance ratings, proper storage, and cleaning. Keep your Fynekings piece performing for generations." },
-  { vol: "VI", title: "Investment Value", body: "How limited editions, complications, and provenance affect resale value. Building a collection that appreciates over time." },
-];
+import Link from "next/link";
+import { ARTICLES } from "@/lib/articles";
+
 
 export default function Education() {
   return (
@@ -27,10 +22,8 @@ export default function Education() {
                 <line x1="24" y1="24" x2="34" y2="17" strokeLinecap="round" strokeWidth="1.2" />
               </svg>
               <h3>{e.title}</h3>
-              <p>{e.body}</p>
-              <button className="edu-link" style={{ background: "none", border: "none", cursor: "pointer" }}>
-                Read Article →
-              </button>
+              <p>{e.subtitle}</p>
+              <Link href={`/journal/${e.slug}`} className="edu-link">Read Article →</Link>
             </div>
           ))}
         </div>
