@@ -20,7 +20,7 @@ const FAQS: FAQItem[] = [
   {
     category: "Ordering & Payment",
     q: "Can I modify or cancel my order after placing it?",
-    a: "Standard collection orders can be modified or cancelled within 2 hours of payment by contacting our concierge desk. Custom build and engraved timepieces enter atelier production immediately and cannot be cancelled once assembly has begun.",
+    a: "Standard collection orders can be modified or cancelled within 2 hours of payment by contacting our concierge desk. Custom build and engraved timepieces enter production immediately and cannot be cancelled once assembly has begun.",
   },
   {
     category: "Shipping & Delivery",
@@ -30,7 +30,7 @@ const FAQS: FAQItem[] = [
   {
     category: "Shipping & Delivery",
     q: "Is my shipment insured against loss or damage?",
-    a: "Yes. Every Fynekings shipment is 100% transit-insured from our Victoria Island atelier until signed for at your delivery address.",
+    a: "Yes. Every Fynekings shipment is 100% transit-insured from our Victoria Island horological house until signed for at your delivery address.",
   },
   {
     category: "Warranty & Servicing",
@@ -40,7 +40,7 @@ const FAQS: FAQItem[] = [
   {
     category: "Warranty & Servicing",
     q: "How do I send my watch for routine servicing?",
-    a: "You may drop off your watch directly at our Victoria Island atelier or request a complimentary insured pickup box through our concierge service.",
+    a: "You may drop off your watch directly at our Victoria Island gallery or request a complimentary insured pickup box through our concierge service.",
   },
   {
     category: "Customization & Bespoke",
@@ -70,7 +70,7 @@ export default function FAQPage() {
           Frequently Asked <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Questions</em>
         </h1>
         <p style={{ fontSize: ".7rem", letterSpacing: ".1em", lineHeight: 2.2, color: "var(--text)", maxWidth: "600px", margin: "0 auto" }}>
-          Find answers to common questions about purchasing, shipping, horological warranties, and custom atelier builds.
+          Find answers to common questions about purchasing, shipping, horological warranties, and custom timepiece builds.
         </p>
       </div>
 

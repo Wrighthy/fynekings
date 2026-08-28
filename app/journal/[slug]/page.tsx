@@ -92,7 +92,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
                         {section.tip && (
                             <div style={{ margin: "24px 0 0", padding: "20px 24px", borderLeft: "2px solid var(--gold)", background: "var(--dark2)" }}>
-                                <div style={{ fontSize: ".45rem", letterSpacing: ".35em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Atelier Note</div>
+                                <div style={{ fontSize: ".45rem", letterSpacing: ".35em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Horological Note</div>
                                 <p style={{ fontSize: ".65rem", letterSpacing: ".06em", lineHeight: 2, color: "var(--text)", fontStyle: "italic" }}>{section.tip}</p>
                             </div>
                         )}

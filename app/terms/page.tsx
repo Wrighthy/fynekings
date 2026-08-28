@@ -25,7 +25,7 @@ export default function TermsPage() {
           </p>
           <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", fontWeight: 300 }}>2. Bespoke Customizations</h2>
           <p>
-            Custom built or custom engraved timepieces are made specifically to client specifications. Once assembly begins in our Victoria Island atelier, bespoke orders cannot be refunded or exchanged.
+            Custom built or custom engraved timepieces are made specifically to client specifications. Once assembly begins in our Victoria Island horological house, bespoke orders cannot be refunded or exchanged.
           </p>
           <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", fontWeight: 300 }}>3. International Warranty</h2>
           <p>

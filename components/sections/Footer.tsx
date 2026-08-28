@@ -12,18 +12,18 @@ const FOOTER_COLS = [
   },
   {
     h: "Experience", l: [
-      { label: "About Atelier", href: "/about" },
+      { label: "About Fynekings", href: "/about" },
       { label: "Track Order", href: "/orders/track" },
       { label: "My Account", href: "/account" },
       { label: "Watch Education", href: "/journal" },
-      { label: "Lagos Atelier", href: "/#heritage" },
+      { label: "Lagos Gallery & Archive", href: "/#heritage" },
     ]
   },
   {
     h: "Service", l: [
       { label: "Shipping Policy", href: "/shipping-policy" },
       { label: "Return Policy", href: "/return-policy" },
-      { label: "Contact Atelier", href: "/contact" },
+      { label: "Contact Concierge", href: "/contact" },
       { label: "FAQ & Help", href: "/faq" },
     ]
   },

@@ -15,7 +15,7 @@ async function main() {
         price: 485000,
         tag: "Auto · 40mm",
         badge: "No. 01 Best Seller",
-        description: "The Sovereign I is the flagship of the Midnight Series. Hand-finished in our Victoria Island atelier, every component speaks to an obsession with precision. The deep black dial absorbs light like a Lagos night sky.",
+        description: "The Sovereign I is the flagship of the Midnight Series. Hand-finished in our Victoria Island gallery, every component speaks to an obsession with precision. The deep black dial absorbs light like a Lagos night sky.",
         specs: {
           movement: "Automatic · Cal. F-2401",
           caseDiameter: "40mm",

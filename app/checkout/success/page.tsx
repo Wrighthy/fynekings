@@ -24,14 +24,14 @@ export default function CheckoutSuccessPage({ searchParams }: { searchParams: Pr
         </h1>
         <p style={{ fontSize: ".72rem", lineHeight: 2.2, color: "var(--text)", marginBottom: "32px" }}>
           Thank you for acquiring a Fynekings timepiece. Your order reference is{" "}
-          <strong style={{ color: "var(--gold)", letterSpacing: ".1em" }}>#{orderId?.slice(-8).toUpperCase() || "CONFIRMED"}</strong>. Our master watchmaker is preparing your timepiece for dispatch from our Victoria Island atelier.
+          <strong style={{ color: "var(--gold)", letterSpacing: ".1em" }}>#{orderId?.slice(-8).toUpperCase() || "CONFIRMED"}</strong>. Our master watchmaker is preparing your timepiece for dispatch from our Victoria Island horological gallery.
         </p>
 
         <div style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "32px", marginBottom: "40px", textAlign: "left" }}>
           <div style={{ fontSize: ".5rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>Next Steps</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontSize: ".68rem", color: "var(--text)", lineHeight: 1.8 }}>
             <div><strong>1. Order Inspection:</strong> Final timing calibration & 5ATM pressure testing.</div>
-            <div><strong>2. Atelier Packaging:</strong> Sealed in signature velvet presentation case with 5-Year NFC warranty.</div>
+            <div><strong>2. Signature Packaging:</strong> Sealed in luxury presentation case with 5-Year NFC warranty.</div>
             <div><strong>3. Insured Dispatch:</strong> Armed courier tracking details will be sent via SMS & email.</div>
           </div>
         </div>

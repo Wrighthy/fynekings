@@ -59,7 +59,7 @@ export default function Newsletter() {
           Join the Inner <em>Circle</em>
         </h2>
         <p className="sec-desc" style={{ margin: "20px auto 0", textAlign: "center" }}>
-          First access to limited drops, exclusive collector content, early customization slots, and private sale invitations from our Lagos atelier.
+          First access to limited drops, exclusive collector content, early customization slots, and private sale invitations from our Lagos horological gallery.
         </p>
         <div className="perks">
           {PERKS.map(p => (

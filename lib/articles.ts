@@ -205,7 +205,7 @@ export const ARTICLES: Article[] = [
             {
                 heading: "How to Change Your Strap",
                 body: "Changing a watch strap is a skill every collector should have. You need a spring bar tool — a small forked instrument that compresses the spring bars holding the strap in place. Insert the forked end between the strap and the lug, compress the spring bar, and the strap releases. Reverse the process to attach a new one. The entire operation takes under two minutes once you have practiced it.",
-                tip: "Fynekings offers a strap change service at our Lagos atelier — free for the first year of ownership.",
+                tip: "Fynekings offers a strap change service at our Lagos gallery — free for the first year of ownership.",
             },
         ],
     },
@@ -288,7 +288,7 @@ export const ARTICLES: Article[] = [
                     "Vintage watches: Service every 3 years minimum",
                     "Signs you need a service: Running fast/slow, condensation inside crystal, stiff crown, irregular power reserve",
                 ],
-                tip: "All Fynekings watches come with a 5-year warranty that covers manufacturing defects. Our Lagos atelier offers servicing for all Fynekings pieces.",
+                tip: "All Fynekings watches come with a 5-year warranty that covers manufacturing defects. Our Lagos gallery offers servicing for all Fynekings pieces.",
             },
             {
                 heading: "Water Resistance",

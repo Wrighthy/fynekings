@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
             <h1 style="color: #C4A962; font-size: 1.8rem; margin-bottom: 8px;">Configuration Received</h1>
             <p style="color: #5A5550; font-size: 0.8rem; margin-bottom: 24px;">Fynekings International · Lagos</p>
             <p style="color: #F4EFE4; line-height: 1.8; margin-bottom: 24px;">
-              Thank you ${customerName ? `, ${customerName}` : ""}. We've received your custom watch configuration and our atelier team will review it within 24 hours.
+              Thank you ${customerName ? `, ${customerName}` : ""}. We've received your custom watch configuration and our concierge team will review it within 24 hours.
             </p>
             <p style="color: #C4A962; font-size: 0.85rem; margin-bottom: 32px;">
               Base: ${baseWatchName} · ${strapName} strap · ${caseName} case · ${dialName} dial<br/>

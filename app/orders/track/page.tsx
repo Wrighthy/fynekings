@@ -25,7 +25,7 @@ type TrackedOrder = {
 const STEPS = [
   { key: "PENDING", label: "Order Placed", desc: "Awaiting payment authorization" },
   { key: "PAID", label: "Payment Verified", desc: "Payment confirmed via Paystack" },
-  { key: "PROCESSING", label: "Atelier Calibration", desc: "Assembly & 5ATM pressure testing" },
+  { key: "PROCESSING", label: "Horological Calibration", desc: "Inspection & 5ATM pressure testing" },
   { key: "SHIPPED", label: "Insured Transit", desc: "Dispatched via armed express courier" },
   { key: "DELIVERED", label: "Delivered", desc: "Hand-delivered to client" },
 ];
@@ -82,7 +82,7 @@ export default function OrderTrackPage({ searchParams }: { searchParams: Promise
       {/* Header */}
       <div style={{ padding: "160px 24px 60px", maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
         <div style={{ fontSize: ".52rem", letterSpacing: ".45em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
-          Insured Courier & Atelier Tracking
+          Insured Courier & Order Tracking
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.8rem, 6vw, 4.5rem)", fontWeight: 300, color: "var(--white)", marginBottom: "20px" }}>
           Track Your <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Timepiece</em>

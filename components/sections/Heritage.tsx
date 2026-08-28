@@ -41,9 +41,9 @@ export default function Heritage() {
           </div>
 
           <div className="reveal" style={{ transitionDelay: ".2s" }}>
-            <p className="sec-tag">The Atelier · No. 03</p>
+            <p className="sec-tag">The Heritage · No. 03</p>
             <h2 className="sec-title">Lagos Made.<br/><em>World Class.</em></h2>
-            <p className="sec-desc">Inside our Victoria Island atelier, fourteen master watchmakers assemble each Fynekings piece by hand. Every escapement is regulated to chronometer-grade accuracy. Every bevel is mirror-polished under 10× magnification.</p>
+            <p className="sec-desc">Within our Victoria Island horological gallery and archive, fourteen master watchmakers curate, inspect, and calibrate each Fynekings piece by hand. Every escapement is regulated to chronometer-grade accuracy. Every bevel is mirror-polished under 10× magnification.</p>
             <div className="heritage-quote">
               &ldquo;We don&apos;t make watches that compete with Geneva. We make watches that <em>stand alongside</em> them — and tell a story Geneva can&apos;t.&rdquo;
             </div>

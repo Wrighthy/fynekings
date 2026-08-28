@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
     console.log("Contact form submission received:", { name, email, phone, subject, message, date: new Date().toISOString() });
 
-    return NextResponse.json({ success: true, message: "Thank you for contacting Fynekings Concierge. Our atelier will respond within 24 hours." });
+    return NextResponse.json({ success: true, message: "Thank you for contacting Fynekings Concierge. Our team will respond within 24 hours." });
   } catch (error) {
     console.error("Contact API error:", error);
     return NextResponse.json({ error: "Failed to dispatch message." }, { status: 500 });

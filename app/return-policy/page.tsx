@@ -24,7 +24,7 @@ export default function ReturnPolicyPage() {
           </p>
           <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", fontWeight: 300 }}>2. Exclusions</h2>
           <p>
-            Custom built 3D timepieces, engraved serial pieces, and worn/resized straps are non-returnable unless a mechanical defect is verified by our atelier.
+            Custom built 3D timepieces, engraved serial pieces, and worn/resized straps are non-returnable unless a mechanical defect is verified by our horological house.
           </p>
           <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", fontWeight: 300 }}>3. Refund Process</h2>
           <p>

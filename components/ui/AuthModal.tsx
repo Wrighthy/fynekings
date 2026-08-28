@@ -95,7 +95,7 @@ export default function AuthModal() {
 
         <div style={{ textAlign: "center", marginBottom: "28px" }}>
           <div style={{ fontSize: ".45rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
-            Atelier Collector Portal
+            Collector Portal
           </div>
           <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "var(--white)", fontWeight: 300 }}>
             {mode === "login" ? "Sign In" : "Create Account"}

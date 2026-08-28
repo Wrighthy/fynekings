@@ -61,7 +61,7 @@ export default function AccountPage() {
         <Nav />
         <div style={{ padding: "180px 24px 100px", maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
           <div style={{ fontSize: ".5rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
-            Atelier Collector Access
+            Collector Vault Access
           </div>
           <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.8rem", color: "var(--white)", fontWeight: 300, marginBottom: "20px" }}>
             Sign In Required
