@@ -64,10 +64,45 @@ export async function POST(req: Request) {
       }
     }
 
+    // Initialize a real Paystack transaction so the customer is charged
+    const secretKey = process.env.PAYSTACK_SECRET_KEY;
+    const origin = req.headers.get("origin") || new URL(req.url).origin;
+
+    let authorizationUrl: string | null = null;
+    if (secretKey) {
+      const initRes = await fetch("https://api.paystack.co/transaction/initialize", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${secretKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: customerEmail,
+          amount: finalTotal * 100, // Paystack expects kobo
+          currency: "NGN",
+          reference: paystackRef,
+          callback_url: `${origin}/checkout/success?orderId=${order.id}`,
+          metadata: { orderId: order.id },
+        }),
+      });
+
+      const initData = await initRes.json().catch(() => null);
+      if (!initRes.ok || !initData?.data?.authorization_url) {
+        return NextResponse.json(
+          { error: "Failed to initialize payment. Please try again." },
+          { status: 502 }
+        );
+      }
+      authorizationUrl = initData.data.authorization_url;
+    }
+
     return NextResponse.json({
       orderId: order.id,
       paystackRef: order.paystackRef,
       totalAmount: order.totalAmount,
+      authorizationUrl,
+      // Mock mode is only ever used when running locally without Paystack keys
+      mock: !secretKey && process.env.NODE_ENV !== "production",
     });
   } catch (error) {
     console.error("Checkout creation error:", error);

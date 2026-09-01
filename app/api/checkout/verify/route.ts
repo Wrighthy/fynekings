@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
+function orderSummary(order: { id: string; status: string; totalAmount: number; customerName: string; customerEmail: string }) {
+  return {
+    id: order.id,
+    status: order.status,
+    totalAmount: order.totalAmount,
+    customerName: order.customerName,
+    customerEmail: order.customerEmail,
+  };
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -15,48 +25,67 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Order not found." }, { status: 404 });
     }
 
-    const secretKey = process.env.PAYSTACK_SECRET_KEY;
-
-    if (secretKey && !reference.startsWith("MOCK-")) {
-      // Direct server-to-server verification call to official Paystack API
-      const paystackRes = await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${secretKey}`,
-        },
-      });
-
-      const paystackData = await paystackRes.json();
-
-      if (!paystackRes.ok || !paystackData.status || paystackData.data?.status !== "success") {
-        return NextResponse.json({ error: "Payment verification failed with payment gateway." }, { status: 400 });
-      }
-
-      // Verify amount (Paystack amount is in kobo, so totalAmount * 100)
-      const expectedKobo = order.totalAmount * 100;
-      if (paystackData.data.amount < expectedKobo) {
-        return NextResponse.json({ error: "Paid amount does not match order total." }, { status: 400 });
-      }
+    // Already confirmed (e.g. by the Paystack webhook) — idempotent success
+    if (order.status === "PAID") {
+      return NextResponse.json({ success: true, order: orderSummary(order) });
     }
 
-    // Update order status to PAID
+    const secretKey = process.env.PAYSTACK_SECRET_KEY;
+
+    // Mock references are only accepted when running locally without Paystack
+    // keys — never in production, never when real verification is possible.
+    if (reference.startsWith("MOCK-")) {
+      if (process.env.NODE_ENV === "production" || secretKey) {
+        return NextResponse.json({ error: "Payment verification failed." }, { status: 400 });
+      }
+      const updatedOrder = await db.order.update({
+        where: { id: orderId },
+        data: { status: "PAID" },
+      });
+      return NextResponse.json({ success: true, order: orderSummary(updatedOrder) });
+    }
+
+    // Real reference — fail closed when verification isn't configured
+    if (!secretKey) {
+      return NextResponse.json({ error: "Payment verification is not configured." }, { status: 503 });
+    }
+
+    // The reference must belong to this order, so one real payment cannot be
+    // replayed against a different (more expensive) order.
+    if (reference !== order.paystackRef) {
+      return NextResponse.json({ error: "Reference does not match this order." }, { status: 400 });
+    }
+
+    // Direct server-to-server verification call to official Paystack API
+    const paystackRes = await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${secretKey}`,
+      },
+    });
+
+    const paystackData = await paystackRes.json();
+
+    if (!paystackRes.ok || !paystackData.status || paystackData.data?.status !== "success") {
+      return NextResponse.json({ error: "Payment verification failed with payment gateway." }, { status: 400 });
+    }
+
+    // Verify amount (Paystack amount is in kobo, so totalAmount * 100)
+    const expectedKobo = order.totalAmount * 100;
+    if (paystackData.data.amount < expectedKobo) {
+      return NextResponse.json({ error: "Paid amount does not match order total." }, { status: 400 });
+    }
+
     const updatedOrder = await db.order.update({
       where: { id: orderId },
       data: {
         status: "PAID",
-        paystackRef: reference,
       },
     });
 
     return NextResponse.json({
       success: true,
-      order: {
-        id: updatedOrder.id,
-        status: updatedOrder.status,
-        totalAmount: updatedOrder.totalAmount,
-        customerName: updatedOrder.customerName,
-        customerEmail: updatedOrder.customerEmail,
-      },
+      order: orderSummary(updatedOrder),
     });
   } catch (error) {
     console.error("Payment verification error:", error);
