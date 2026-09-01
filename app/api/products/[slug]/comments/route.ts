@@ -42,7 +42,10 @@ export async function POST(
 ) {
     try {
         const { slug } = await params;
-        const body = await req.json();
+        const body = await req.json().catch(() => null);
+        if (!body || typeof body !== "object") {
+            return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+        }
         const name = typeof body.name === "string" ? body.name.trim() : "";
         const email = typeof body.email === "string" ? body.email.trim() : "";
         const commentBody = typeof body.body === "string" ? body.body.trim() : "";
