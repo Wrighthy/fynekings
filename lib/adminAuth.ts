@@ -1,4 +1,6 @@
 import crypto from "crypto";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 // HMAC key for signing admin session tokens. Set ADMIN_PASSKEY in production;
 // tokens are signed with it, so changing the passkey invalidates old sessions.
@@ -39,4 +41,17 @@ export function verifyAdminToken(token: string | undefined): boolean {
   } catch {
     return false;
   }
+}
+
+// Route-handler guard. Returns a 401 response when the request lacks a valid
+// admin session, or null when authorized. Usage:
+//   const unauthorized = await requireAdmin();
+//   if (unauthorized) return unauthorized;
+export async function requireAdmin(): Promise<NextResponse | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("fynekings_admin_token")?.value;
+  if (!verifyAdminToken(token)) {
+    return NextResponse.json({ error: "Admin authentication required." }, { status: 401 });
+  }
+  return null;
 }

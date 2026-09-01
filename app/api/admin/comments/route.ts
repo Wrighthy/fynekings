@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { CommentStatus } from "@prisma/client";
+import { requireAdmin } from "@/lib/adminAuth";
 
 const VALID_STATUSES: CommentStatus[] = ["PENDING", "APPROVED", "REJECTED"];
 
 export async function GET(req: Request) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
@@ -28,6 +32,9 @@ export async function GET(req: Request) {
 }
 
 export async function PATCH(req: Request) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const body = await req.json();
     const { commentId, status } = body;
@@ -55,6 +62,9 @@ export async function PATCH(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");

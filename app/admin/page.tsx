@@ -163,16 +163,23 @@ export default function UnifiedAdminDashboard() {
     }
   };
 
+  // Fetch that drops back to the passkey screen when the admin session has expired
+  const adminFetch = (url: string) =>
+    fetch(url).then((r) => {
+      if (r.status === 401) setAuthenticated(false);
+      return r.json();
+    });
+
   const fetchDashboardData = () => {
     setLoading(true);
     Promise.all([
-      fetch("/api/admin/analytics").then((r) => r.json()).catch(() => ({})),
-      fetch("/api/admin/orders").then((r) => r.json()).catch(() => ({})),
-      fetch("/api/admin/products").then((r) => r.json()).catch(() => ({})),
-      fetch("/api/admin/promos").then((r) => r.json()).catch(() => ({})),
-      fetch("/api/admin/subscribers").then((r) => r.json()).catch(() => ({})),
-      fetch("/api/admin/comments").then((r) => r.json()).catch(() => ({})),
-      fetch("/api/admin/edition").then((r) => r.json()).catch(() => null),
+      adminFetch("/api/admin/analytics").catch(() => ({})),
+      adminFetch("/api/admin/orders").catch(() => ({})),
+      adminFetch("/api/admin/products").catch(() => ({})),
+      adminFetch("/api/admin/promos").catch(() => ({})),
+      adminFetch("/api/admin/subscribers").catch(() => ({})),
+      adminFetch("/api/admin/comments").catch(() => ({})),
+      adminFetch("/api/admin/edition").catch(() => null),
     ])
       .then(([aData, oData, pData, prData, sData, cData, eData]) => {
         if (aData?.metrics) setAnalytics(aData);
