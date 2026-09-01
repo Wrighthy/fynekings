@@ -1,9 +1,15 @@
 import crypto from "crypto";
 
-// HMAC key for signing user session tokens. Set SESSION_SECRET in production
-// (falls back to the admin passkey so one env var is enough to secure both).
+// HMAC key for signing user session tokens. SESSION_SECRET is recommended;
+// ADMIN_PASSKEY is used as a fallback so one env var secures both. In
+// production at least one must be set — there is no hardcoded fallback.
 function sessionSecret() {
-  return process.env.SESSION_SECRET || process.env.ADMIN_PASSKEY || "fynekings-dev-secret";
+  const secret = process.env.SESSION_SECRET || process.env.ADMIN_PASSKEY;
+  if (secret) return secret;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("SESSION_SECRET (or ADMIN_PASSKEY) must be set in production");
+  }
+  return "fynekings-dev-secret"; // local development only
 }
 
 const SESSION_TTL_MS = 7 * 24 * 3600 * 1000;

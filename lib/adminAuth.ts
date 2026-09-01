@@ -2,10 +2,16 @@ import crypto from "crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-// HMAC key for signing admin session tokens. Set ADMIN_PASSKEY in production;
-// tokens are signed with it, so changing the passkey invalidates old sessions.
+// HMAC key for signing admin session tokens. ADMIN_PASSKEY is required in
+// production — there is no hardcoded fallback. Changing the passkey also
+// invalidates all existing admin sessions.
 function adminSecret() {
-  return process.env.ADMIN_PASSKEY || "fynekings-dev-secret";
+  const secret = process.env.ADMIN_PASSKEY;
+  if (secret) return secret;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("ADMIN_PASSKEY must be set in production");
+  }
+  return "fynekings-dev-secret"; // local development only
 }
 
 const TOKEN_TTL_MS = 7 * 24 * 3600 * 1000;

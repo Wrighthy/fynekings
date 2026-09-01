@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import crypto from "crypto";
 import { createAdminToken, verifyAdminToken } from "@/lib/adminAuth";
 
 export async function POST(req: Request) {
@@ -7,9 +8,22 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { passkey } = body;
 
-    const expectedPasskey = process.env.ADMIN_PASSKEY || "fynekings2026";
+    const expectedPasskey = process.env.ADMIN_PASSKEY;
 
-    if (!passkey || passkey !== expectedPasskey) {
+    // Fail closed: no hardcoded fallback — without the env var the admin
+    // portal simply cannot be unlocked.
+    if (!expectedPasskey) {
+      console.error("Admin login attempted but ADMIN_PASSKEY is not configured.");
+      return NextResponse.json(
+        { error: "Admin login is not configured on this server." },
+        { status: 503 }
+      );
+    }
+
+    // Timing-safe comparison
+    const supplied = crypto.createHash("sha256").update(String(passkey || "")).digest();
+    const expected = crypto.createHash("sha256").update(expectedPasskey).digest();
+    if (!crypto.timingSafeEqual(supplied, expected)) {
       return NextResponse.json({ error: "Invalid admin passkey." }, { status: 401 });
     }
 
