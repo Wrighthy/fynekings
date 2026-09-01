@@ -1,25 +1,20 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
+import { verifyUserToken } from "@/lib/sessionAuth";
 
 export async function GET() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("fynekings_token")?.value;
 
-    if (!token) {
-      return NextResponse.json({ user: null });
-    }
-
-    const payloadRaw = Buffer.from(token, "base64url").toString("utf-8");
-    const payload = JSON.parse(payloadRaw);
-
-    if (payload.exp < Date.now()) {
+    const session = verifyUserToken(token);
+    if (!session) {
       return NextResponse.json({ user: null });
     }
 
     const user = await db.user.findUnique({
-      where: { id: payload.userId },
+      where: { id: session.userId },
       select: {
         id: true,
         email: true,

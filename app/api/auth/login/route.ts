@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import crypto from "crypto";
+import { createUserToken } from "@/lib/sessionAuth";
 
 function verifyPassword(password: string, storedHash: string) {
   const [salt, originalHash] = storedHash.split(":");
@@ -22,9 +23,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
     }
 
-    // Set HttpOnly cookie
-    const tokenPayload = JSON.stringify({ userId: user.id, email: user.email, exp: Date.now() + 7 * 24 * 3600 * 1000 });
-    const sessionToken = Buffer.from(tokenPayload).toString("base64url");
+    // Set HttpOnly cookie with an HMAC-signed session token
+    const sessionToken = createUserToken(user.id, user.email);
 
     const response = NextResponse.json({
       user: {

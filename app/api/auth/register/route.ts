@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import crypto from "crypto";
+import { createUserToken } from "@/lib/sessionAuth";
 
 function hashPassword(password: string) {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -34,9 +35,8 @@ export async function POST(req: Request) {
       },
     });
 
-    // Create session token & set HttpOnly cookie
-    const tokenPayload = JSON.stringify({ userId: user.id, email: user.email, exp: Date.now() + 7 * 24 * 3600 * 1000 });
-    const sessionToken = Buffer.from(tokenPayload).toString("base64url");
+    // Create signed session token & set HttpOnly cookie
+    const sessionToken = createUserToken(user.id, user.email);
 
     const response = NextResponse.json({
       user: {

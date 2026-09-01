@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
+import { verifyUserToken } from "@/lib/sessionAuth";
 
 export async function POST(req: Request) {
   try {
@@ -16,12 +17,9 @@ export async function POST(req: Request) {
     try {
       const cookieStore = await cookies();
       const token = cookieStore.get("fynekings_token")?.value;
-      if (token) {
-        const payloadRaw = Buffer.from(token, "base64url").toString("utf-8");
-        const payload = JSON.parse(payloadRaw);
-        if (payload.userId && payload.exp > Date.now()) {
-          userId = payload.userId;
-        }
+      const session = verifyUserToken(token);
+      if (session) {
+        userId = session.userId;
       }
     } catch {
       // unauthenticated guest
