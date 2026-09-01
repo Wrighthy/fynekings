@@ -59,6 +59,16 @@ type Subscriber = {
   createdAt: string;
 };
 
+type Comment = {
+  id: string;
+  name: string;
+  email: string;
+  body: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  createdAt: string;
+  product: { name: string; slug: string };
+};
+
 type LimitedEditionData = {
   id?: string;
   name: string;
@@ -73,7 +83,7 @@ type LimitedEditionData = {
 };
 
 export default function UnifiedAdminDashboard() {
-  const [activeTab, setActiveTab] = useState<"analytics" | "orders" | "inventory" | "promos" | "subscribers">("inventory");
+  const [activeTab, setActiveTab] = useState<"analytics" | "orders" | "inventory" | "promos" | "subscribers" | "comments">("inventory");
   const [authenticated, setAuthenticated] = useState(false);
   const [passkeyInput, setPasskeyInput] = useState("");
   const [authError, setAuthError] = useState("");
@@ -85,6 +95,8 @@ export default function UnifiedAdminDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [promos, setPromos] = useState<Promo[]>([]);
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentFilter, setCommentFilter] = useState<"PENDING" | "APPROVED" | "REJECTED" | "ALL">("PENDING");
 
   // UI state
   const [loading, setLoading] = useState(false);
@@ -158,15 +170,17 @@ export default function UnifiedAdminDashboard() {
       fetch("/api/admin/products").then((r) => r.json()).catch(() => ({})),
       fetch("/api/admin/promos").then((r) => r.json()).catch(() => ({})),
       fetch("/api/admin/subscribers").then((r) => r.json()).catch(() => ({})),
+      fetch("/api/admin/comments").then((r) => r.json()).catch(() => ({})),
       fetch("/api/admin/edition").then((r) => r.json()).catch(() => null),
     ])
-      .then(([aData, oData, pData, prData, sData, eData]) => {
+      .then(([aData, oData, pData, prData, sData, cData, eData]) => {
         if (aData?.metrics) setAnalytics(aData);
         if (oData?.orders) setOrders(oData.orders);
         if (pData?.products) setProducts(pData.products);
         else if (Array.isArray(pData)) setProducts(pData);
         if (prData?.promos) setPromos(prData.promos);
         if (sData?.subscribers) setSubscribers(sData.subscribers);
+        if (cData?.comments) setComments(cData.comments);
         if (eData && !eData.error) {
           setEditionData({
             ...eData,
@@ -273,6 +287,86 @@ export default function UnifiedAdminDashboard() {
       fetchDashboardData();
       setTimeout(() => setMessage(""), 3000);
     }
+  };
+
+  // ——— Comment moderation ———
+
+  const updateCommentStatus = async (commentId: string, status: string) => {
+    const res = await fetch("/api/admin/comments", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ commentId, status }),
+    });
+    if (res.ok) {
+      setMessage(`✓ Comment ${status === "APPROVED" ? "approved" : status === "REJECTED" ? "rejected" : "updated"}`);
+      fetchDashboardData();
+      setTimeout(() => setMessage(""), 3000);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!confirm("Permanently delete this comment?")) return;
+    const res = await fetch(`/api/admin/comments?id=${commentId}`, { method: "DELETE" });
+    if (res.ok) {
+      setMessage("✓ Comment deleted");
+      fetchDashboardData();
+      setTimeout(() => setMessage(""), 3000);
+    }
+  };
+
+  // ——— Subscriber management ———
+
+  const handleDeleteSubscriber = async (subscriberId: string) => {
+    if (!confirm("Remove this subscriber from the newsletter list?")) return;
+    const res = await fetch(`/api/admin/subscribers?id=${subscriberId}`, { method: "DELETE" });
+    if (res.ok) {
+      setMessage("✓ Subscriber removed");
+      fetchDashboardData();
+      setTimeout(() => setMessage(""), 3000);
+    }
+  };
+
+  const exportSubscribersCsv = () => {
+    if (subscribers.length === 0) {
+      setMessage("No subscribers to export yet.");
+      setTimeout(() => setMessage(""), 3000);
+      return;
+    }
+    const csvEscape = (value: string) => `"${value.replace(/"/g, '""')}"`;
+    const rows = [
+      ["Email", "Subscribed At"].map(csvEscape).join(","),
+      ...subscribers.map((s) =>
+        [csvEscape(s.email), csvEscape(new Date(s.createdAt).toISOString())].join(",")
+      ),
+    ];
+    const csv = rows.join("\n");
+    // UTF-8 BOM so Excel opens the file with correct encoding
+    const blob = new Blob([String.fromCharCode(0xfeff) + csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Fynekings-Newsletter-Subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    setMessage(`✓ Exported ${subscribers.length} subscriber${subscribers.length > 1 ? "s" : ""} to CSV`);
+    setTimeout(() => setMessage(""), 3000);
+  };
+
+  const copySubscriberEmails = async () => {
+    if (subscribers.length === 0) {
+      setMessage("No subscribers to copy yet.");
+      setTimeout(() => setMessage(""), 3000);
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(subscribers.map((s) => s.email).join(", "));
+      setMessage(`✓ ${subscribers.length} email${subscribers.length > 1 ? "s" : ""} copied to clipboard`);
+    } catch {
+      setMessage("✕ Clipboard access was blocked by your browser");
+    }
+    setTimeout(() => setMessage(""), 3000);
   };
 
   const handleCreateProduct = async (e: React.FormEvent) => {
@@ -449,6 +543,7 @@ export default function UnifiedAdminDashboard() {
             { id: "analytics", label: "📈 Analytics" },
             { id: "promos", label: "🏷 Promo Codes" },
             { id: "subscribers", label: "✉ Subscribers & Broadcast" },
+            { id: "comments", label: "💬 Comment Moderation" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -1112,14 +1207,32 @@ export default function UnifiedAdminDashboard() {
         {activeTab === "subscribers" && (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))", gap: "40px", alignItems: "start" }}>
             <div>
-              <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", marginBottom: "24px" }}>Subscribers ({subscribers.length})</h2>
+              <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", marginBottom: "16px" }}>Subscribers ({subscribers.length})</h2>
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "20px" }}>
+                <button onClick={exportSubscribersCsv} style={{ background: "#C4A962", color: "#000", border: "none", padding: "10px 16px", fontSize: ".55rem", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
+                  ⬇ Export CSV
+                </button>
+                <button onClick={copySubscriberEmails} style={{ background: "none", border: "1px solid #333", color: "#C4A962", padding: "10px 16px", fontSize: ".55rem", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
+                  ⧉ Copy All Emails
+                </button>
+              </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px", maxHeight: "450px", overflowY: "auto" }}>
                 {subscribers.map((s) => (
-                  <div key={s.id} style={{ background: "#121212", border: "1px solid #222", padding: "14px 20px", display: "flex", justifyContent: "space-between", fontSize: ".7rem" }}>
+                  <div key={s.id} style={{ background: "#121212", border: "1px solid #222", padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: ".7rem" }}>
                     <span style={{ color: "#C4A962" }}>{s.email}</span>
-                    <span style={{ color: "#555" }}>{new Date(s.createdAt).toLocaleDateString()}</span>
+                    <span style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                      <span style={{ color: "#555" }}>{new Date(s.createdAt).toLocaleDateString()}</span>
+                      <button onClick={() => handleDeleteSubscriber(s.id)} title="Remove subscriber" style={{ background: "none", border: "none", color: "#ff6b6b", fontSize: ".6rem", cursor: "pointer" }}>
+                        ✕
+                      </button>
+                    </span>
                   </div>
                 ))}
+                {subscribers.length === 0 && (
+                  <div style={{ background: "#121212", border: "1px solid #222", padding: "40px", textAlign: "center", color: "#555", fontSize: ".7rem", letterSpacing: ".2em", textTransform: "uppercase" }}>
+                    No subscribers yet
+                  </div>
+                )}
               </div>
             </div>
 
@@ -1179,6 +1292,106 @@ export default function UnifiedAdminDashboard() {
                   {submittingBroadcast ? "Dispatching..." : `Send Broadcast (${subscribers.length} Collectors) →`}
                 </button>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 6: COMMENT MODERATION */}
+        {activeTab === "comments" && (
+          <div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px", marginBottom: "24px" }}>
+              <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem" }}>Comment Moderation</h2>
+              <button onClick={fetchDashboardData} style={{ background: "none", border: "1px solid #333", color: "#C4A962", padding: "6px 12px", fontSize: ".5rem", textTransform: "uppercase", cursor: "pointer" }}>
+                Refresh ↻
+              </button>
+            </div>
+
+            {/* Status filters */}
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "28px" }}>
+              {([
+                { id: "PENDING", label: `Pending (${comments.filter((c) => c.status === "PENDING").length})` },
+                { id: "APPROVED", label: `Approved (${comments.filter((c) => c.status === "APPROVED").length})` },
+                { id: "REJECTED", label: `Rejected (${comments.filter((c) => c.status === "REJECTED").length})` },
+                { id: "ALL", label: `All (${comments.length})` },
+              ] as const).map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setCommentFilter(f.id)}
+                  style={{
+                    padding: "10px 16px",
+                    background: commentFilter === f.id ? "#C4A962" : "#181818",
+                    color: commentFilter === f.id ? "#000" : "#888",
+                    border: "1px solid #2a2a2a",
+                    fontSize: ".55rem",
+                    letterSpacing: ".15em",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                  }}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              {comments
+                .filter((c) => commentFilter === "ALL" || c.status === commentFilter)
+                .map((c) => (
+                  <div key={c.id} style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", flexWrap: "wrap", marginBottom: "12px" }}>
+                      <div>
+                        <div style={{ fontSize: ".5rem", letterSpacing: ".25em", color: "#C4A962", textTransform: "uppercase", marginBottom: "4px" }}>
+                          {c.product?.name || "Deleted product"}
+                        </div>
+                        <div style={{ fontSize: ".8rem", color: "#fff" }}>
+                          {c.name} <span style={{ color: "#555", fontSize: ".7rem" }}>· {c.email}</span>
+                        </div>
+                        <div style={{ fontSize: ".55rem", color: "#555", letterSpacing: ".15em", marginTop: "2px" }}>
+                          {new Date(c.createdAt).toLocaleString()}
+                        </div>
+                      </div>
+                      <span
+                        style={{
+                          padding: "5px 12px",
+                          fontSize: ".5rem",
+                          letterSpacing: ".2em",
+                          textTransform: "uppercase",
+                          fontWeight: 600,
+                          border: "1px solid",
+                          color: c.status === "PENDING" ? "#C4A962" : c.status === "APPROVED" ? "#6bd68b" : "#ff6b6b",
+                          borderColor: c.status === "PENDING" ? "#C4A962" : c.status === "APPROVED" ? "#6bd68b" : "#ff6b6b",
+                        }}
+                      >
+                        {c.status}
+                      </span>
+                    </div>
+
+                    <p style={{ fontSize: ".8rem", color: "#ccc", lineHeight: 1.8, marginBottom: "18px", whiteSpace: "pre-wrap" }}>{c.body}</p>
+
+                    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", borderTop: "1px solid #1a1a1a", paddingTop: "14px" }}>
+                      {c.status !== "APPROVED" && (
+                        <button onClick={() => updateCommentStatus(c.id, "APPROVED")} style={{ background: "#C4A962", color: "#000", border: "none", padding: "8px 16px", fontSize: ".55rem", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
+                          Approve ✓
+                        </button>
+                      )}
+                      {c.status !== "REJECTED" && (
+                        <button onClick={() => updateCommentStatus(c.id, "REJECTED")} style={{ background: "none", border: "1px solid #ff6b6b", color: "#ff6b6b", padding: "8px 16px", fontSize: ".55rem", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
+                          Reject ✕
+                        </button>
+                      )}
+                      <button onClick={() => handleDeleteComment(c.id)} style={{ background: "none", border: "none", color: "#ff6b6b", fontSize: ".55rem", letterSpacing: ".15em", textTransform: "uppercase", cursor: "pointer", marginLeft: "auto" }}>
+                        Delete 🗑
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+              {comments.filter((c) => commentFilter === "ALL" || c.status === commentFilter).length === 0 && (
+                <div style={{ background: "#121212", border: "1px solid #222", padding: "40px", textAlign: "center", color: "#555", fontSize: ".7rem", letterSpacing: ".2em", textTransform: "uppercase" }}>
+                  No {commentFilter === "ALL" ? "" : commentFilter.toLowerCase() + " "}comments
+                </div>
+              )}
             </div>
           </div>
         )}

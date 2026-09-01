@@ -65,6 +65,7 @@ model Product {
   specs             Json?
   orders            Order[]
   wishlist          WishlistItem[]
+  comments          ProductComment[]
 }
 
 model LimitedEdition {
@@ -132,6 +133,23 @@ model NewsletterSubscriber {
   id        String   @id @default(cuid())
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+model ProductComment {
+  id        String        @id @default(cuid())
+  productId String
+  name      String
+  email     String
+  body      String
+  status    CommentStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  product   Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Customization {

@@ -4,6 +4,7 @@ import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useCart, fmt } from "@/lib/store";
 import { useClockHands } from "@/lib/useClockHands";
+import ProductComments from "@/components/sections/ProductComments";
 
 type Product = {
     id: string;
@@ -348,6 +349,9 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                     </div>
                 </div>
             </div>
+
+            {/* Comments & impressions */}
+            <ProductComments slug={product.slug} />
 
             {/* Related watches */}
             {related.length > 0 && (
