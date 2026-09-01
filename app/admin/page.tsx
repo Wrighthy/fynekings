@@ -85,6 +85,7 @@ type LimitedEditionData = {
 export default function UnifiedAdminDashboard() {
   const [activeTab, setActiveTab] = useState<"analytics" | "orders" | "inventory" | "promos" | "subscribers" | "comments">("inventory");
   const [authenticated, setAuthenticated] = useState(false);
+  const [authChecking, setAuthChecking] = useState(true);
   const [passkeyInput, setPasskeyInput] = useState("");
   const [authError, setAuthError] = useState("");
 
@@ -155,7 +156,7 @@ export default function UnifiedAdminDashboard() {
         setAuthenticated(true);
         fetchDashboardData();
       } else {
-        setAuthError("Invalid passkey. Default key: fynekings2026");
+        setAuthError("Invalid passkey.");
       }
     } catch {
       setAuthError("Network error during authorization.");
@@ -192,8 +193,17 @@ export default function UnifiedAdminDashboard() {
   };
 
   useEffect(() => {
-    fetchDashboardData();
-    setAuthenticated(true);
+    // Check for an existing valid admin session before showing the passkey form
+    fetch("/api/admin/auth")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.authenticated) {
+          setAuthenticated(true);
+          fetchDashboardData();
+        }
+      })
+      .catch(() => { })
+      .finally(() => setAuthChecking(false));
   }, []);
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
@@ -502,6 +512,14 @@ export default function UnifiedAdminDashboard() {
     }
   };
 
+  if (authChecking) {
+    return (
+      <div style={{ background: "#0a0a0a", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "Raleway, sans-serif" }}>
+        <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.2rem", color: "#C4A962", fontStyle: "italic" }}>Verifying session...</div>
+      </div>
+    );
+  }
+
   if (!authenticated) {
     return (
       <div style={{ background: "#0a0a0a", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "Raleway, sans-serif", padding: "24px" }}>
@@ -512,7 +530,7 @@ export default function UnifiedAdminDashboard() {
           <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <input
               type="password"
-              placeholder="Enter Admin Passkey (default: fynekings2026)"
+              placeholder="Enter Admin Passkey"
               value={passkeyInput}
               onChange={(e) => setPasskeyInput(e.target.value)}
               style={{ width: "100%", padding: "14px", background: "#080808", border: "1px solid #2a2a2a", color: "#F4EFE4", fontSize: ".85rem", outline: "none" }}

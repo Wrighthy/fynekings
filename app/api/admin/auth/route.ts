@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { createAdminToken, verifyAdminToken } from "@/lib/adminAuth";
 
 export async function POST(req: Request) {
   try {
@@ -11,12 +13,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid admin passkey." }, { status: 401 });
     }
 
-    const tokenPayload = JSON.stringify({ admin: true, exp: Date.now() + 7 * 24 * 3600 * 1000 });
-    const adminToken = Buffer.from(tokenPayload).toString("base64url");
-
     const response = NextResponse.json({ success: true, message: "Admin access granted." });
 
-    response.cookies.set("fynekings_admin_token", adminToken, {
+    response.cookies.set("fynekings_admin_token", createAdminToken(), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -32,6 +31,11 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  // Check admin auth state
-  return NextResponse.json({ authenticated: true });
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("fynekings_admin_token")?.value;
+    return NextResponse.json({ authenticated: verifyAdminToken(token) });
+  } catch {
+    return NextResponse.json({ authenticated: false });
+  }
 }
