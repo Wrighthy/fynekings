@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { Resend } from "resend";
+import { CUSTOM_STRAPS, CUSTOM_CASES, CUSTOM_DIALS, customPrice } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -15,15 +16,21 @@ export async function POST(req: NextRequest) {
             strapName,
             caseName,
             dialName,
-            strapExtra,
-            caseExtra,
-            dialExtra,
-            totalPrice,
             customerName,
             customerEmail,
             customerPhone,
             notes,
         } = body;
+
+        // Recompute the price server-side — client-sent extras/total are
+        // never trusted for the recorded and emailed quote.
+        const strapExtra = CUSTOM_STRAPS[String(strapName)] ?? 0;
+        const caseExtra = CUSTOM_CASES[String(caseName)] ?? 0;
+        const dialExtra = CUSTOM_DIALS[String(dialName)] ?? 0;
+        const totalPrice = customPrice(String(strapName), String(caseName), String(dialName));
+        if (totalPrice === null) {
+            return NextResponse.json({ error: "Invalid custom configuration." }, { status: 400 });
+        }
 
         // Save to database
         const customization = await db.customization.create({
