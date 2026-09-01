@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { verifyUserToken } from "@/lib/sessionAuth";
 import { customPrice, paystackFee } from "@/lib/pricing";
+import { limitOr429 } from "@/lib/rateLimit";
 
 type IncomingItem = {
   name?: unknown;
@@ -20,6 +22,11 @@ type PricedItem = {
 
 export async function POST(req: Request) {
   try {
+    // 10 checkout attempts per 10 minutes per IP — blocks order spam and
+    // Paystack transaction flooding.
+    const limited = limitOr429(req, "checkout", 10, 10 * 60 * 1000);
+    if (limited) return limited;
+
     const body = await req.json();
     const { items, customerName, customerEmail, customerPhone, shippingAddress, city, country, promoCode } = body;
 
@@ -139,7 +146,8 @@ export async function POST(req: Request) {
         promoCode: appliedPromoCode,
         paystackRef,
         userId,
-        customConfig: pricedItems.some((i) => i.custom) ? pricedItems : null,
+        // Prisma requires JsonNull (not plain null) to store NULL in a Json column
+        customConfig: pricedItems.some((i) => i.custom) ? pricedItems : Prisma.JsonNull,
       },
     });
 

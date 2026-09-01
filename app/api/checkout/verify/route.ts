@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { limitOr429 } from "@/lib/rateLimit";
 
 function orderSummary(order: { id: string; status: string; totalAmount: number; customerName: string; customerEmail: string }) {
   return {
@@ -13,6 +14,11 @@ function orderSummary(order: { id: string; status: string; totalAmount: number; 
 
 export async function POST(req: Request) {
   try {
+    // 20 verifications per 10 minutes per IP — enough for retries from the
+    // success page, slow enough to block reference probing.
+    const limited = limitOr429(req, "verify", 20, 10 * 60 * 1000);
+    if (limited) return limited;
+
     const body = await req.json();
     const { reference, orderId } = body;
 

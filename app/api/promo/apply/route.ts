@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { limitOr429 } from "@/lib/rateLimit";
 
 export async function POST(req: Request) {
   try {
+    // 10 attempts per 5 minutes per IP — slows promo-code guessing.
+    const limited = limitOr429(req, "promo", 10, 5 * 60 * 1000);
+    if (limited) return limited;
+
     const body = await req.json();
     const { code, subtotal } = body;
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { limitOr429 } from "@/lib/rateLimit";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,10 @@ export async function POST(
     { params }: { params: Promise<{ slug: string }> }
 ) {
     try {
+        // 5 comments per 10 minutes per IP — comment spam throttle.
+        const limited = limitOr429(req, "comment", 5, 10 * 60 * 1000);
+        if (limited) return limited;
+
         const { slug } = await params;
         const body = await req.json().catch(() => null);
         if (!body || typeof body !== "object") {

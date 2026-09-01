@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import crypto from "crypto";
 import { createUserToken } from "@/lib/sessionAuth";
+import { limitOr429 } from "@/lib/rateLimit";
 
 function hashPassword(password: string) {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -11,6 +12,10 @@ function hashPassword(password: string) {
 
 export async function POST(req: Request) {
   try {
+    // 10 signups per 15 minutes per IP — blocks bulk account creation.
+    const limited = limitOr429(req, "register", 10, 15 * 60 * 1000);
+    if (limited) return limited;
+
     const body = await req.json();
     const { email, password, name, phone, shippingAddress, city } = body;
 

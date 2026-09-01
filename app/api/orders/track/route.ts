@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { limitOr429 } from "@/lib/rateLimit";
 
 export async function GET(req: Request) {
   try {
+    // 30 lookups per 10 minutes per IP — slows order-ID/email enumeration.
+    const limited = limitOr429(req, "track", 30, 10 * 60 * 1000);
+    if (limited) return limited;
+
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("query") || searchParams.get("id") || "";
     const clean = query.trim();

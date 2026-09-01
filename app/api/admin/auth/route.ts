@@ -2,9 +2,14 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 import { createAdminToken, verifyAdminToken } from "@/lib/adminAuth";
+import { limitOr429 } from "@/lib/rateLimit";
 
 export async function POST(req: Request) {
   try {
+    // Passkey brute-force throttle: 5 attempts per 15 minutes per IP.
+    const limited = limitOr429(req, "admin-auth", 5, 15 * 60 * 1000);
+    if (limited) return limited;
+
     const body = await req.json();
     const { passkey } = body;
 

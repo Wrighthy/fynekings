@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import crypto from "crypto";
 import { createUserToken } from "@/lib/sessionAuth";
+import { limitOr429 } from "@/lib/rateLimit";
 
 function verifyPassword(password: string, storedHash: string) {
   const [salt, originalHash] = storedHash.split(":");
@@ -11,6 +12,10 @@ function verifyPassword(password: string, storedHash: string) {
 
 export async function POST(req: Request) {
   try {
+    // Brute-force throttle: 10 attempts per 15 minutes per IP.
+    const limited = limitOr429(req, "login", 10, 15 * 60 * 1000);
+    if (limited) return limited;
+
     const body = await req.json();
     const { email, password } = body;
 
