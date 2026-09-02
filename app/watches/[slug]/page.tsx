@@ -4,6 +4,7 @@ import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useCart, fmt } from "@/lib/store";
 import { useClockHands } from "@/lib/useClockHands";
+import ProductComments from "@/components/sections/ProductComments";
 
 type Product = {
     id: string;
@@ -293,7 +294,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                     <p style={{ fontSize: ".6rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "32px" }}>{product.tag}</p>
                     <div style={{ width: "48px", height: "1px", background: "linear-gradient(to right, var(--gold), transparent)", marginBottom: "32px" }}></div>
                     <p style={{ fontSize: ".7rem", letterSpacing: ".1em", lineHeight: 2.4, color: "var(--text)", marginBottom: "40px" }}>
-                        {product.description || "A masterpiece of horological craft, hand-finished in our Victoria Island atelier."}
+                        {product.description || "A masterpiece of horological craft, hand-finished in our Victoria Island gallery."}
                     </p>
 
                     {/* Price */}
@@ -348,6 +349,9 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                     </div>
                 </div>
             </div>
+
+            {/* Comments & impressions */}
+            <ProductComments slug={product.slug} />
 
             {/* Related watches */}
             {related.length > 0 && (

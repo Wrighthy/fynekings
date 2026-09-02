@@ -40,6 +40,7 @@ export default function Nav() {
           <li><Link href="/about">About</Link></li>
           <li><Link href="/contact">Contact</Link></li>
           <li><Link href="/faq">FAQ</Link></li>
+          <li><Link href="/journal">Craft</Link></li>
         </ul>
 
         <div className="nav-right" style={{ gap: "12px" }}>

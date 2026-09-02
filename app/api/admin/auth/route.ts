@@ -1,22 +1,40 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import crypto from "crypto";
+import { createAdminToken, verifyAdminToken } from "@/lib/adminAuth";
+import { limitOr429 } from "@/lib/rateLimit";
 
 export async function POST(req: Request) {
   try {
+    // Passkey brute-force throttle: 5 attempts per 15 minutes per IP.
+    const limited = limitOr429(req, "admin-auth", 5, 15 * 60 * 1000);
+    if (limited) return limited;
+
     const body = await req.json();
     const { passkey } = body;
 
-    const expectedPasskey = process.env.ADMIN_PASSKEY || "fynekings2026";
+    const expectedPasskey = process.env.ADMIN_PASSKEY;
 
-    if (!passkey || passkey !== expectedPasskey) {
+    // Fail closed: no hardcoded fallback — without the env var the admin
+    // portal simply cannot be unlocked.
+    if (!expectedPasskey) {
+      console.error("Admin login attempted but ADMIN_PASSKEY is not configured.");
+      return NextResponse.json(
+        { error: "Admin login is not configured on this server." },
+        { status: 503 }
+      );
+    }
+
+    // Timing-safe comparison
+    const supplied = crypto.createHash("sha256").update(String(passkey || "")).digest();
+    const expected = crypto.createHash("sha256").update(expectedPasskey).digest();
+    if (!crypto.timingSafeEqual(supplied, expected)) {
       return NextResponse.json({ error: "Invalid admin passkey." }, { status: 401 });
     }
 
-    const tokenPayload = JSON.stringify({ admin: true, exp: Date.now() + 7 * 24 * 3600 * 1000 });
-    const adminToken = Buffer.from(tokenPayload).toString("base64url");
-
     const response = NextResponse.json({ success: true, message: "Admin access granted." });
 
-    response.cookies.set("fynekings_admin_token", adminToken, {
+    response.cookies.set("fynekings_admin_token", createAdminToken(), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -32,6 +50,11 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  // Check admin auth state
-  return NextResponse.json({ authenticated: true });
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("fynekings_admin_token")?.value;
+    return NextResponse.json({ authenticated: verifyAdminToken(token) });
+  } catch {
+    return NextResponse.json({ authenticated: false });
+  }
 }

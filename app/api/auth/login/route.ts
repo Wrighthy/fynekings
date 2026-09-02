@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import crypto from "crypto";
+import { createUserToken } from "@/lib/sessionAuth";
+import { limitOr429 } from "@/lib/rateLimit";
 
 function verifyPassword(password: string, storedHash: string) {
   const [salt, originalHash] = storedHash.split(":");
@@ -10,6 +12,10 @@ function verifyPassword(password: string, storedHash: string) {
 
 export async function POST(req: Request) {
   try {
+    // Brute-force throttle: 10 attempts per 15 minutes per IP.
+    const limited = limitOr429(req, "login", 10, 15 * 60 * 1000);
+    if (limited) return limited;
+
     const body = await req.json();
     const { email, password } = body;
 
@@ -22,9 +28,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
     }
 
-    // Set HttpOnly cookie
-    const tokenPayload = JSON.stringify({ userId: user.id, email: user.email, exp: Date.now() + 7 * 24 * 3600 * 1000 });
-    const sessionToken = Buffer.from(tokenPayload).toString("base64url");
+    // Set HttpOnly cookie with an HMAC-signed session token
+    const sessionToken = createUserToken(user.id, user.email);
 
     const response = NextResponse.json({
       user: {

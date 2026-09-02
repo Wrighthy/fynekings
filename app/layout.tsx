@@ -4,6 +4,7 @@ import CustomCursor from "@/components/ui/CustomCursor";
 import CookieConsent from "@/components/ui/CookieConsent";
 import AuthModal from "@/components/ui/AuthModal";
 import AnalyticsTracker from "@/components/ui/AnalyticsTracker";
+import Toast from "@/components/ui/Toast";
 
 export const metadata: Metadata = {
   title: "FYNEKINGS INT LTD — Timepieces Redefined",
@@ -23,6 +24,7 @@ export default function RootLayout({
         {children}
         <CookieConsent />
         <AuthModal />
+        <Toast />
       </body>
     </html>
   );

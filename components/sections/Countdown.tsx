@@ -11,7 +11,11 @@ type Edition = {
   totalStock: number;
   soldCount: number;
   dropEndsAt: string;
+  imageUrl?: string;
+  description?: string;
 };
+
+const DEFAULT_EDITION_IMAGE = "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1200&auto=format&fit=crop";
 
 export default function Countdown() {
   const [timer, setTimer] = useState({ d: "14", h: "00", m: "00", s: "00" });
@@ -73,30 +77,54 @@ export default function Countdown() {
           <span><span className="dot"></span>Ships in October</span>
         </div>
 
-        <div className="limited-watch-preview">
-          <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", animation: "floatWatch 5s ease-in-out infinite", filter: "drop-shadow(0 20px 40px rgba(139,32,32,.3))" }}>
-            <defs>
-              <radialGradient id="lfg" cx="50%" cy="42%" r="55%">
-                <stop offset="0%" stopColor="#1a0a0a"/>
-                <stop offset="100%" stopColor="#040000"/>
-              </radialGradient>
-            </defs>
-            <rect x="98" y="14" width="44" height="48" rx="8" fill="#0a0606" stroke="#2a1010" strokeWidth=".8"/>
-            <rect x="98" y="178" width="44" height="48" rx="8" fill="#0a0606" stroke="#2a1010" strokeWidth=".8"/>
-            <circle cx="120" cy="120" r="68" fill="#0a0606" stroke="#C4A962" strokeWidth="2"/>
-            <circle cx="120" cy="120" r="60" fill="url(#lfg)" stroke="#1a0a0a" strokeWidth=".5"/>
-            <line x1="120" y1="58" x2="120" y2="68" stroke="#C4A962" strokeWidth="1.8"/>
-            <line x1="120" y1="172" x2="120" y2="182" stroke="#C4A962" strokeWidth="1.8"/>
-            <line x1="58" y1="120" x2="68" y2="120" stroke="#C4A962" strokeWidth="1.8"/>
-            <line x1="172" y1="120" x2="182" y2="120" stroke="#C4A962" strokeWidth="1.8"/>
-            <text x="120" y="100" textAnchor="middle" fill="#C4A962" fontFamily="Playfair Display,serif" fontSize="7.5" letterSpacing="3" fontStyle="italic">{editionName}</text>
-            <text x="120" y="112" textAnchor="middle" fill="#5A5550" fontFamily="Raleway,sans-serif" fontSize="4.5" letterSpacing="2">No. {edition?.soldCount ?? 38} / {total}</text>
-            <line x1="120" y1="120" x2="120" y2="80" stroke="#F4EFE4" strokeWidth="2.5" strokeLinecap="round"/>
-            <line x1="120" y1="120" x2="146" y2="100" stroke="#F4EFE4" strokeWidth="2" strokeLinecap="round"/>
-            <line x1="120" y1="120" x2="100" y2="142" stroke="#C4A962" strokeWidth="1.2" strokeLinecap="round"/>
-            <circle cx="120" cy="120" r="4" fill="#C4A962"/>
-            <circle cx="120" cy="120" r="1.5" fill="#080808"/>
-          </svg>
+        {/* Real Luxury Watch Photo Presentation */}
+        <div className="limited-watch-preview" style={{ maxWidth: "360px", margin: "0 auto 36px", position: "relative" }}>
+          <div
+            style={{
+              position: "relative",
+              borderRadius: "16px",
+              overflow: "hidden",
+              border: "1px solid var(--gold-dk)",
+              boxShadow: "0 24px 60px -12px rgba(196,169,98,.2), 0 16px 32px -8px rgba(0,0,0,.9)",
+              background: "radial-gradient(circle at center, #1a1a1a 0%, #080808 100%)",
+              aspectRatio: "1 / 1",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              src={edition?.imageUrl || DEFAULT_EDITION_IMAGE}
+              alt={editionName}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                transition: "transform .6s ease",
+              }}
+              className="edition-img"
+            />
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                background: "linear-gradient(to top, rgba(8,8,8,.92) 0%, rgba(8,8,8,0.4) 60%, transparent 100%)",
+                padding: "28px 20px 14px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+              }}
+            >
+              <span style={{ fontSize: ".52rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase" }}>
+                Ref. {reference}
+              </span>
+              <span style={{ fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase" }}>
+                No. {edition?.soldCount ?? 38} / {total}
+              </span>
+            </div>
+          </div>
         </div>
 
         <p style={{ fontSize: ".55rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "32px" }}>Drop Closes In</p>

@@ -42,13 +42,13 @@ export default function ContactPage() {
       {/* Header */}
       <div style={{ padding: "160px 24px 60px", maxWidth: "1200px", margin: "0 auto", textAlign: "center" }}>
         <div style={{ fontSize: ".52rem", letterSpacing: ".45em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
-          Client Concierge & Atelier Support
+          Client Concierge & Horological Support
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.8rem, 6vw, 4.5rem)", fontWeight: 300, color: "var(--white)", marginBottom: "20px" }}>
           Contact <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Fynekings</em>
         </h1>
         <p style={{ fontSize: ".7rem", letterSpacing: ".1em", lineHeight: 2.2, color: "var(--text)", maxWidth: "600px", margin: "0 auto" }}>
-          Have a question about a timepiece, custom order, or atelier appointment? Our horological concierge team is at your service.
+          Have a question about a timepiece, custom order, or private gallery viewing? Our horological concierge team is at your service.
         </p>
       </div>
 
@@ -124,7 +124,7 @@ export default function ContactPage() {
                 <option value="Custom Order Inquiry">Custom Watch Build</option>
                 <option value="Order Status & Delivery">Order Status & Delivery</option>
                 <option value="Warranty & Servicing">Warranty & Servicing</option>
-                <option value="Private Atelier Appointment">Private Atelier Appointment</option>
+                <option value="Private Gallery Viewing Appointment">Private Gallery Viewing Appointment</option>
               </select>
             </div>
 
@@ -162,11 +162,11 @@ export default function ContactPage() {
           </form>
         </div>
 
-        {/* Contact Info & Atelier Details */}
+        {/* Contact Info & Gallery Details */}
         <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
           <div style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "32px" }}>
-            <div style={{ fontSize: ".5rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Atelier Headquarters</div>
-            <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.5rem", color: "var(--white)", fontWeight: 300, marginBottom: "16px" }}>Victoria Island Atelier</h3>
+            <div style={{ fontSize: ".5rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Horological Headquarters</div>
+            <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.5rem", color: "var(--white)", fontWeight: 300, marginBottom: "16px" }}>Victoria Island Gallery & Archive</h3>
             <p style={{ fontSize: ".68rem", lineHeight: 2, color: "var(--text)", marginBottom: "16px" }}>
               Ahmadu Bello Way, Victoria Island<br />
               Lagos, Nigeria
@@ -183,7 +183,7 @@ export default function ContactPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontSize: ".68rem", color: "var(--text)" }}>
               <div><strong>WhatsApp Concierge:</strong> +234 803 337 6287</div>
               <div><strong>Email Desk:</strong> concierge@fynekings.com</div>
-              <div><strong>Response Time:</strong> Under 2 hours during atelier operating hours</div>
+              <div><strong>Response Time:</strong> Under 2 hours during concierge operating hours</div>
             </div>
           </div>
         </div>

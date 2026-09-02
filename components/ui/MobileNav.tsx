@@ -7,11 +7,12 @@ import { useAuth } from "@/lib/authStore";
 
 const NAV_LINKS = [
     { label: "Collection", href: "/collection" },
+    { label: "The Craft", href: "/journal" },
     { label: "Wishlist", href: "/wishlist" },
     { label: "Compare Models", href: "/compare" },
     { label: "Track Order", href: "/orders/track" },
     { label: "My Account", href: "/account" },
-    { label: "About Atelier", href: "/about" },
+    { label: "About Fynekings", href: "/about" },
     { label: "Contact Us", href: "/contact" },
     { label: "FAQ & Help", href: "/faq" },
 ];
@@ -195,7 +196,7 @@ export default function MobileNav() {
 
                 {/* Footer */}
                 <div style={{ padding: "24px 32px", borderTop: "1px solid var(--dark3)" }}>
-                    <div style={{ fontSize: ".45rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "12px" }}>Follow Atelier</div>
+                    <div style={{ fontSize: ".45rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "12px" }}>Follow Fynekings</div>
                     <div style={{ display: "flex", gap: "10px" }}>
                         {[
                             { label: "Instagram", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" /></svg>, href: "https://instagram.com/fynekings" },

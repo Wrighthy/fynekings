@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import Ticker from "@/components/ui/Ticker";
-import Toast from "@/components/ui/Toast";
 import Nav from "@/components/sections/Nav";
 import Cart from "@/components/sections/Cart";
 import Hero from "@/components/sections/Hero";
@@ -44,7 +43,6 @@ export default function Home() {
       <Education />
       <Newsletter />
       <Footer />
-      <Toast />
     </>
   );
 }

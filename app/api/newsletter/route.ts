@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { limitOr429 } from "@/lib/rateLimit";
 
 export async function POST(req: NextRequest) {
   try {
+    // 5 signups per hour per IP — plenty for humans, stops list-flooding.
+    const limited = limitOr429(req, "newsletter", 5, 60 * 60 * 1000);
+    if (limited) return limited;
+
     const { email } = await req.json();
 
     if (!email || !email.includes("@")) {

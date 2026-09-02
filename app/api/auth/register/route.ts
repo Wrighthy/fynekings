@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import crypto from "crypto";
+import { createUserToken } from "@/lib/sessionAuth";
+import { limitOr429 } from "@/lib/rateLimit";
 
 function hashPassword(password: string) {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -10,6 +12,10 @@ function hashPassword(password: string) {
 
 export async function POST(req: Request) {
   try {
+    // 10 signups per 15 minutes per IP — blocks bulk account creation.
+    const limited = limitOr429(req, "register", 10, 15 * 60 * 1000);
+    if (limited) return limited;
+
     const body = await req.json();
     const { email, password, name, phone, shippingAddress, city } = body;
 
@@ -34,9 +40,8 @@ export async function POST(req: Request) {
       },
     });
 
-    // Create session token & set HttpOnly cookie
-    const tokenPayload = JSON.stringify({ userId: user.id, email: user.email, exp: Date.now() + 7 * 24 * 3600 * 1000 });
-    const sessionToken = Buffer.from(tokenPayload).toString("base64url");
+    // Create signed session token & set HttpOnly cookie
+    const sessionToken = createUserToken(user.id, user.email);
 
     const response = NextResponse.json({
       user: {

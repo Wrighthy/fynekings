@@ -16,27 +16,27 @@ export default function Hero() {
         <div>
           <div className="hero-meta">
             <div className="hero-meta-line"></div>
-            <span className="hero-meta-text">Est. 2024 · Lagos · Genève</span>
+            <span className="hero-meta-text">Est. 2014 · Lagos · Nigeria</span>
             <div className="hero-meta-line"></div>
           </div>
-          <h1 className="h-title">Time is<br/>an <em>Art</em>.</h1>
+          <h1 className="h-title">Time is<br />an <em>Art</em>.</h1>
           <p className="h-sub">
-            <strong>Handcrafted timepieces for the African collector.</strong> Each Fynekings piece is hand-finished in our Lagos atelier, regulated to chronometer-grade precision, and signed by the watchmaker.
+            <strong>Distinctive timepieces for the ambitious collector.</strong> Fynekings presents a premier gallery of hand-curated, authentic wristwatches in Lagos, engineered for precision and styled for leadership.
           </p>
           <div className="h-actions">
             <a href="#bestsellers" className="btn-primary">
               <span>Explore Collection</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg>
             </a>
             <a href="/collection" className="btn-outline">
               View All Watches
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14" /></svg>
             </a>
           </div>
           <div className="hero-trust">
-            <div className="trust-item"><div className="num">412</div><div className="label">Hand-finished components</div></div>
-            <div className="trust-item"><div className="num">72hr</div><div className="label">Power reserve</div></div>
-            <div className="trust-item"><div className="num">5yr</div><div className="label">International warranty</div></div>
+            <div className="trust-item"><div className="num">412</div><div className="label">Hand-curated timepieces</div></div>
+            <div className="trust-item"><div className="num">24hr</div><div className="label">Power reserve</div></div>
+            <div className="trust-item"><div className="num">2yr</div><div className="label">National warranty</div></div>
           </div>
         </div>
 

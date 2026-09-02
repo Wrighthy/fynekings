@@ -7,14 +7,16 @@ import { fmt } from "@/lib/store";
 
 type TrackedOrder = {
   id: string;
-  customerName: string;
-  customerEmail: string;
-  shippingAddress: string;
-  city: string;
-  country: string;
   status: string;
   totalAmount: number;
   createdAt: string;
+  // Only present when tracking by order ID / payment reference —
+  // email lookups return a sanitized view without personal details.
+  customerName?: string;
+  customerEmail?: string;
+  shippingAddress?: string;
+  city?: string;
+  country?: string;
   product?: {
     name: string;
     series: string;
@@ -25,7 +27,7 @@ type TrackedOrder = {
 const STEPS = [
   { key: "PENDING", label: "Order Placed", desc: "Awaiting payment authorization" },
   { key: "PAID", label: "Payment Verified", desc: "Payment confirmed via Paystack" },
-  { key: "PROCESSING", label: "Atelier Calibration", desc: "Assembly & 5ATM pressure testing" },
+  { key: "PROCESSING", label: "Horological Calibration", desc: "Inspection & 5ATM pressure testing" },
   { key: "SHIPPED", label: "Insured Transit", desc: "Dispatched via armed express courier" },
   { key: "DELIVERED", label: "Delivered", desc: "Hand-delivered to client" },
 ];
@@ -82,7 +84,7 @@ export default function OrderTrackPage({ searchParams }: { searchParams: Promise
       {/* Header */}
       <div style={{ padding: "160px 24px 60px", maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
         <div style={{ fontSize: ".52rem", letterSpacing: ".45em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
-          Insured Courier & Atelier Tracking
+          Insured Courier & Order Tracking
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.8rem, 6vw, 4.5rem)", fontWeight: 300, color: "var(--white)", marginBottom: "20px" }}>
           Track Your <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Timepiece</em>
@@ -140,12 +142,19 @@ export default function OrderTrackPage({ searchParams }: { searchParams: Promise
               <div>
                 <div style={{ fontSize: ".48rem", color: "var(--gold-dk)", textTransform: "uppercase", letterSpacing: ".3em" }}>Official Order Reference</div>
                 <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", color: "var(--white)" }}>#{order.id.slice(-8).toUpperCase()}</div>
-                <div style={{ fontSize: ".6rem", color: "var(--muted)", marginTop: "4px" }}>Customer: {order.customerName} ({order.customerEmail})</div>
+                {order.customerName && (
+                  <div style={{ fontSize: ".6rem", color: "var(--muted)", marginTop: "4px" }}>Customer: {order.customerName}{order.customerEmail ? ` (${order.customerEmail})` : ""}</div>
+                )}
+                {!order.customerName && (
+                  <div style={{ fontSize: ".6rem", color: "var(--muted)", marginTop: "4px" }}>Tracking by email — full details are shown when tracking with your order ID</div>
+                )}
               </div>
               <div style={{ textAlign: "right" }}>
                 <div style={{ fontSize: ".48rem", color: "var(--gold-dk)", textTransform: "uppercase", letterSpacing: ".3em" }}>Acquisition Value</div>
                 <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", color: "var(--gold)" }}>{fmt(order.totalAmount)}</div>
-                <div style={{ fontSize: ".6rem", color: "var(--muted)", marginTop: "4px" }}>{order.shippingAddress}, {order.city}</div>
+                {order.shippingAddress && (
+                  <div style={{ fontSize: ".6rem", color: "var(--muted)", marginTop: "4px" }}>{order.shippingAddress}{order.city ? `, ${order.city}` : ""}</div>
+                )}
               </div>
             </div>
 

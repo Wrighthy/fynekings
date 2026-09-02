@@ -27,7 +27,7 @@ export default function AboutPage() {
         <div style={{ maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))", gap: "60px", alignItems: "center" }}>
           <div>
             <div style={{ fontSize: ".5rem", letterSpacing: ".35em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "12px" }}>
-              Our Atelier Story
+              Our Horological Story
             </div>
             <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.4rem", color: "var(--white)", fontWeight: 300, marginBottom: "20px" }}>
               Born from a Pursuit of Absolute Prestige
@@ -36,7 +36,7 @@ export default function AboutPage() {
               Fynekings International was founded with a singular vision: to craft luxury timepieces that carry the weight of African heritage while competing on the grandest horological stages of Geneva and Tokyo.
             </p>
             <p style={{ fontSize: ".7rem", lineHeight: 2.2, color: "var(--text)" }}>
-              Every watch face features our signature hand-beveled hour indices, surgical-grade 316L stainless steel or 18k PVD gold casing, and high-frequency automatic movements calibrated by master watchmakers in our Victoria Island atelier.
+              Every watch face features our signature hand-beveled hour indices, surgical-grade 316L stainless steel or 18k PVD gold casing, and high-frequency automatic movements calibrated by master horologists in our Victoria Island house.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export default function AboutPage() {
           {[
             { title: "Bespoke Engraving", desc: "Personalized crests, initials, and numbered limited edition case backs hand-etched by artisan engravers." },
             { title: "Guaranteed Authenticity", desc: "Each timepiece comes signed with a physical certificate of authenticity and NFC-verified digital passport." },
-            { title: "5-Year International Guarantee", desc: "Comprehensive coverage covering mechanical movement precision, seals, and atelier servicing." },
+            { title: "5-Year International Guarantee", desc: "Comprehensive coverage covering mechanical movement precision, seals, and certified horological servicing." },
           ].map((pillar) => (
             <div key={pillar.title} style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "36px 28px" }}>
               <div style={{ width: "32px", height: "1px", background: "var(--gold)", marginBottom: "20px" }}></div>
@@ -82,7 +82,7 @@ export default function AboutPage() {
       <div style={{ borderTop: "1px solid var(--dark3)", background: "var(--dark2)", padding: "80px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: "600px", margin: "0 auto" }}>
           <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.2rem", color: "var(--white)", marginBottom: "16px", fontWeight: 300 }}>Explore the Collection</h2>
-          <p style={{ fontSize: ".68rem", color: "var(--muted)", marginBottom: "32px", letterSpacing: ".1em" }}>Discover our signature automatic timepieces hand-finished in our Lagos atelier.</p>
+          <p style={{ fontSize: ".68rem", color: "var(--muted)", marginBottom: "32px", letterSpacing: ".1em" }}>Discover our signature automatic timepieces curated in our Lagos horological gallery.</p>
           <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/collection" className="btn-primary">
               <span>Explore Full Collection →</span>

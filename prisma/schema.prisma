@@ -65,19 +65,22 @@ model Product {
   specs             Json?
   orders            Order[]
   wishlist          WishlistItem[]
+  comments          ProductComment[]
 }
 
 model LimitedEdition {
-  id         String   @id @default(cuid())
-  name       String
-  reference  String
-  price      Int
-  totalStock Int
-  soldCount  Int      @default(0)
-  dropEndsAt DateTime
-  active     Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  reference   String
+  price       Int
+  totalStock  Int
+  soldCount   Int      @default(0)
+  dropEndsAt  DateTime
+  imageUrl    String?
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Order {
@@ -130,6 +133,34 @@ model NewsletterSubscriber {
   id        String   @id @default(cuid())
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  handled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model ProductComment {
+  id        String        @id @default(cuid())
+  productId String
+  name      String
+  email     String
+  body      String
+  status    CommentStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  product   Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Customization {
