@@ -82,14 +82,34 @@ export async function POST(req: Request) {
           },
         });
       } else {
+        // Catalog watch — price comes from the Product table. The limited
+        // edition drop ("Reserve Yours Now" on the countdown) is sold under
+        // its own table, so fall back to it when no catalog match exists.
         const product = await db.product.findFirst({ where: { name, series } });
-        if (!product) {
+        let amount: number | null = product ? product.price : null;
+        if (amount === null) {
+          const edition = await db.limitedEdition.findFirst({
+            where: { name, active: true },
+            orderBy: { createdAt: "desc" },
+          });
+          if (edition) {
+            const remaining = edition.totalStock - edition.soldCount;
+            if (remaining <= 0 || edition.dropEndsAt < new Date()) {
+              return NextResponse.json(
+                { error: `The ${edition.name} limited edition is sold out or has ended.` },
+                { status: 400 }
+              );
+            }
+            amount = edition.price;
+          }
+        }
+        if (amount === null) {
           return NextResponse.json(
             { error: `"${name}" could not be verified. Please refresh the page and try again.` },
             { status: 400 }
           );
         }
-        pricedItems.push({ name, series, amount: product.price, fee: paystackFee(product.price), custom: null });
+        pricedItems.push({ name, series, amount, fee: paystackFee(amount), custom: null });
       }
     }
 

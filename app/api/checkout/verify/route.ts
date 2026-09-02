@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { limitOr429 } from "@/lib/rateLimit";
+import { markOrderPaid } from "@/lib/orderFulfillment";
 
 function orderSummary(order: { id: string; status: string; totalAmount: number; customerName: string; customerEmail: string }) {
   return {
@@ -44,10 +45,7 @@ export async function POST(req: Request) {
       if (process.env.NODE_ENV === "production" || secretKey) {
         return NextResponse.json({ error: "Payment verification failed." }, { status: 400 });
       }
-      const updatedOrder = await db.order.update({
-        where: { id: orderId },
-        data: { status: "PAID" },
-      });
+      const updatedOrder = (await markOrderPaid(orderId)) ?? order;
       return NextResponse.json({ success: true, order: orderSummary(updatedOrder) });
     }
 
@@ -82,12 +80,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Paid amount does not match order total." }, { status: 400 });
     }
 
-    const updatedOrder = await db.order.update({
-      where: { id: orderId },
-      data: {
-        status: "PAID",
-      },
-    });
+    // Shared fulfillment: status flip + inventory + customer receipt.
+    // Returns null when the webhook already confirmed this order — the
+    // pre-check above makes that rare, but the helper is idempotent anyway.
+    const updatedOrder = (await markOrderPaid(orderId)) ?? order;
 
     return NextResponse.json({
       success: true,

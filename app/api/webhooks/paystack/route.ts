@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { markOrderPaid } from "@/lib/orderFulfillment";
 import crypto from "crypto";
 
 export async function POST(req: Request) {
@@ -35,10 +36,9 @@ export async function POST(req: Request) {
             console.error(`Paystack webhook amount mismatch for order ${order.id}: paid ${event.data.amount} kobo, expected ${order.totalAmount * 100}`);
             return NextResponse.json({ received: true });
           }
-          await db.order.update({
-            where: { id: order.id },
-            data: { status: "PAID" },
-          });
+          // Shared fulfillment: status flip + inventory + customer receipt.
+          // Idempotent — safe if the redirect verify already confirmed it.
+          await markOrderPaid(order.id);
         }
       }
     }
