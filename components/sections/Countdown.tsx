@@ -22,7 +22,12 @@ export default function Countdown() {
   useEffect(() => {
     fetch("/api/edition")
       .then(r => r.json())
-      .then(data => setEdition(data))
+      .then(data => {
+        // Only set edition if the API returned a valid edition object
+        if (data && data.price !== undefined && !data.error) {
+          setEdition(data);
+        }
+      })
       .catch(console.error);
   }, []);
 
@@ -49,7 +54,7 @@ export default function Countdown() {
   const total = edition ? edition.totalStock : 50;
   const stockPercent = Math.round((remaining / total) * 100);
   const claimedPercent = 100 - stockPercent;
-  const price = edition ? edition.price : 850000;
+  const price = (edition ? edition.price : 850000) || 850000;
   const editionName = edition ? edition.name : "Obsidian King";
   const reference = edition ? edition.reference : "F-OBK/24";
 
