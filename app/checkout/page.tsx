@@ -87,25 +87,38 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Step 2: Verify Payment on Backend
-      const mockRef = `MOCK-PAYSTACK-${Date.now()}`;
-      const verifyRes = await fetch("/api/checkout/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          reference: mockRef,
-          orderId: data.orderId,
-        }),
-      });
+      // Step 2: Payment
+      if (data.authorizationUrl) {
+        // Real Paystack transaction — send the customer to the hosted
+        // payment page. Verification happens server-side when Paystack
+        // redirects back to /checkout/success with the reference.
+        window.location.href = data.authorizationUrl;
+        return; // stay in loading state while the redirect happens
+      }
 
-      const verifyData = await verifyRes.json();
+      if (data.mock) {
+        // Local development only (no Paystack keys configured)
+        const mockRef = `MOCK-PAYSTACK-${Date.now()}`;
+        const verifyRes = await fetch("/api/checkout/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            reference: mockRef,
+            orderId: data.orderId,
+          }),
+        });
 
-      if (verifyRes.ok && verifyData.success) {
-        // Clear cart and redirect to order confirmation
-        useCart.setState({ cart: [] });
-        router.push(`/checkout/success?orderId=${data.orderId}`);
+        const verifyData = await verifyRes.json();
+
+        if (verifyRes.ok && verifyData.success) {
+          useCart.setState({ cart: [] });
+          router.push(`/checkout/success?orderId=${data.orderId}`);
+        } else {
+          setError(verifyData.error || "Payment verification failed.");
+          setLoading(false);
+        }
       } else {
-        setError(verifyData.error || "Payment verification failed.");
+        setError("Payment could not be initialized. Please try again.");
         setLoading(false);
       }
     } catch {
