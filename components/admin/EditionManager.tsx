@@ -11,6 +11,7 @@ export default function EditionManager() {
     submittingEdition,
     setSubmittingEdition,
     uploadingEditionImg,
+    setUploadingEditionImg,
     setMessage,
     fetchDashboardData,
   } = useAdmin();
