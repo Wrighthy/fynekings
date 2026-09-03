@@ -22,12 +22,19 @@ export type Order = {
   customerPhone?: string;
   shippingAddress: string;
   city: string;
+  country?: string;
   status: string;
   totalAmount: number;
   discountAmount: number;
   promoCode?: string;
   paystackRef?: string;
   createdAt: string;
+  // Priced cart items recorded at checkout ({name, series, amount, fee, custom})
+  customConfig?: unknown;
+  // Legacy single-product orders
+  product?: { name: string; series: string; price: number; images?: string[] } | null;
+  // Linked account, when the order was placed while signed in
+  user?: { id: string; name: string; email: string } | null;
 };
 
 export type Promo = {
