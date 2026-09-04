@@ -133,6 +133,40 @@ export function useHandTracking(
       const middleMCP: NormalizedLandmark = { ...landmarks[9] };
       const pinkyMCP: NormalizedLandmark = { ...landmarks[17] };
 
+      // Determine which hand we're looking at.
+      // MediaPipe reports handedness from the camera's perspective. With a
+      // front-facing camera the image is mirrored, so the label is inverted
+      // relative to the user's actual hand.
+      let isLeftHand = false;
+      if (results.handednesses && results.handednesses.length > 0) {
+        const label = results.handednesses[0][0]?.categoryName ?? "Right";
+        // MediaPipe label is from camera POV. Front camera flips it.
+        isLeftHand = front
+          ? label === "Right"   // camera sees "Right" → user's left
+          : label === "Left";   // rear camera is un-mirrored
+      }
+
+      // Detect whether the BACK of the hand faces the camera using the
+      // 2D cross product of wrist→indexMCP × wrist→pinkyMCP. The sign
+      // of the z-component flips when the hand rotates from palm to back.
+      // We use the RAW landmarks (before mirroring) so the geometric
+      // relationship is consistent regardless of camera facing mode.
+      const v1x = landmarks[5].x - landmarks[0].x;
+      const v1y = landmarks[5].y - landmarks[0].y;
+      const v2x = landmarks[17].x - landmarks[0].x;
+      const v2y = landmarks[17].y - landmarks[0].y;
+      const crossZ = v1x * v2y - v1y * v2x;
+
+      // Raw MediaPipe label (camera POV, before our front-camera swap).
+      const rawLabel =
+        results.handednesses?.[0]?.[0]?.categoryName ?? "Right";
+      // "Right" hand (camera POV): back faces camera when crossZ > 0.
+      // "Left"  hand (camera POV): back faces camera when crossZ < 0.
+      // A small dead-zone (0.002) avoids flicker when the hand is edge-on.
+      const isBackOfHand = rawLabel === "Right"
+        ? crossZ > 0.002
+        : crossZ < -0.002;
+
       // Mirror X if front camera
       if (front) {
         wrist.x = 1 - wrist.x;
@@ -148,13 +182,17 @@ export function useHandTracking(
       // Position (pixels) — offset AWAY from fingers, toward the forearm.
       // A larger multiplier pushes the watch further down the arm so it sits
       // where a real watch would be (below the wrist joint, not on top of it).
-      const rawX = wrist.x * cw - dirX * cw * 0.35;
+      const rawX = wrist.x * cw - dirX * cw * 0.35 - 0.11;
       const rawY = wrist.y * ch - dirY * ch * 0.35;
 
       // Rotation (degrees) — the watch image has straps at 12/6 o'clock,
-      // so strap direction == arm axis. No perpendicular offset needed.
+      // so strap direction == arm axis.
+      // For the RIGHT hand the wrist→fingers vector points away from the
+      // body, so we add 180° to flip the watch dial toward the wearer.
+      // For the LEFT hand the geometry is mirrored and no offset is needed.
       const angle = Math.atan2(dirY, dirX);
-      const rotationDeg = angle * (180 / Math.PI) + 180;
+      const rotationOffset = isLeftHand ? 180 : 0;
+      const rotationDeg = angle * (180 / Math.PI) + rotationOffset;
 
       // Scale — use cross-wrist width (index MCP ↔ pinky MCP) for a more
       // anatomically accurate size reference.
@@ -183,7 +221,7 @@ export function useHandTracking(
         y: smooth.y,
         rotation: smooth.rotation,
         scale: smooth.scale,
-        visible: true,
+        visible: isBackOfHand,
       });
     } else {
       // Hand lost — hold position for 500ms then hide
