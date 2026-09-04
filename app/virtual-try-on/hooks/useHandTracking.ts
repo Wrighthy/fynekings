@@ -159,7 +159,7 @@ export function useHandTracking(
       // Scale — use cross-wrist width (index MCP ↔ pinky MCP) for a more
       // anatomically accurate size reference.
       const crossWristWidth = dist(indexMCP, pinkyMCP) * cw;
-      const rawScale = (crossWristWidth / WATCH_OVERLAY_SIZE) * 1.2 * uScale;
+      const rawScale = (crossWristWidth / WATCH_OVERLAY_SIZE) * 1.6 * uScale;
       const scale = clamp(rawScale, 0.4, 2.5);
 
       // Apply EMA smoothing
