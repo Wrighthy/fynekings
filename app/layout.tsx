@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import CustomCursor from "@/components/ui/CustomCursor";
 import CookieConsent from "@/components/ui/CookieConsent";
+import CollectorInvite from "@/components/ui/CollectorInvite";
 import AuthModal from "@/components/ui/AuthModal";
 import AnalyticsTracker from "@/components/ui/AnalyticsTracker";
 import Toast from "@/components/ui/Toast";
@@ -23,6 +24,7 @@ export default function RootLayout({
         <CustomCursor />
         {children}
         <CookieConsent />
+        <CollectorInvite />
         <AuthModal />
         <Toast />
       </body>
