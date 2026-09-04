@@ -1,12 +1,14 @@
+import Link from "next/link";
+
 export default function ARTryOn() {
   return (
     <section id="tryon" style={{ background: "var(--black)" }}>
       <div className="sec-inner">
         <div className="ar-grid">
           <div className="reveal">
-            <p className="sec-tag">8th Wall WebXR · No. 04</p>
+            <p className="sec-tag">Virtual Try-On · No. 04</p>
             <h2 className="sec-title">Virtual <em>Try-On</em></h2>
-            <p className="sec-desc">See any Fynekings piece on your wrist before you buy. Powered by 8th Wall WebAR — no app needed, works directly in iOS Safari and Android Chrome.</p>
+            <p className="sec-desc">See any Fynekings piece on your wrist before you buy. Powered by Google MediaPipe — no app needed, works directly in your browser on iOS Safari and Android Chrome.</p>
             <div className="divider"></div>
             <div className="ar-steps">
               <div className="ar-step">
@@ -22,10 +24,10 @@ export default function ARTryOn() {
                 <div><h4>See It Live</h4><p>The watch renders at true scale with accurate lighting. Rotate your wrist to see every angle, every reflection.</p></div>
               </div>
             </div>
-            <button className="ar-launch-btn">
+            <Link href="/virtual-try-on" className="ar-launch-btn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-              Launch AR Try-On <span className="ar-8w-badge">8th Wall</span>
-            </button>
+              Launch AR Try-On <span className="ar-8w-badge">MediaPipe</span>
+            </Link>
             <div className="ar-compat">
               <span>iOS Safari 13+</span>
               <span>Android Chrome 81+</span>

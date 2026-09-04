@@ -12,6 +12,7 @@
     "seed": "node prisma/seed.js"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "^1.0.1",
     "@prisma/client": "^5.22.0",
     "@vercel/blob": "^2.4.1",
     "cloudinary": "^2.10.0",
