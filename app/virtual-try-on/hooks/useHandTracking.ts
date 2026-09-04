@@ -194,9 +194,15 @@ export function useHandTracking(
       const rotationOffset = isLeftHand ? 180 : 0;
       const rotationDeg = angle * (180 / Math.PI) + rotationOffset;
 
-      // Scale — use cross-wrist width (index MCP ↔ pinky MCP) for a more
-      // anatomically accurate size reference.
-      const crossWristWidth = dist(indexMCP, pinkyMCP) * cw;
+      // Scale — use cross-wrist width (index MCP ↔ pinky MCP) as a depth-
+      // and size-aware reference. The hand naturally appears larger when
+      // closer to the camera, so the watch scales automatically.
+      // Convert each axis to pixel space BEFORE computing distance so the
+      // result is orientation-independent (fixes inflated scale when
+      // horizontal — normalised y is larger than x on non-square video).
+      const dxPx = (indexMCP.x - pinkyMCP.x) * cw;
+      const dyPx = (indexMCP.y - pinkyMCP.y) * ch;
+      const crossWristWidth = Math.sqrt(dxPx * dxPx + dyPx * dyPx);
       const rawScale = (crossWristWidth / WATCH_OVERLAY_SIZE) * 1.6 * uScale;
       const scale = clamp(rawScale, 0.4, 2.5);
 
