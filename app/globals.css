@@ -3343,3 +3343,746 @@ footer {
     grid-template-columns: 1fr !important;
   }
 }
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   VIRTUAL TRY-ON  â€”  /virtual-try-on
+   z-index stack: video 1 Â· watch 10 Â· instructions 12 Â· hud 15
+                  controls 20 Â· loading 30 Â· shot 40 Â· flash 50
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+.tryon-page {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  background: var(--black);
+  overflow: hidden;
+  z-index: 0;
+}
+
+.tryon-experience {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Camera feed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.tryon-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  background: var(--black);
+}
+
+.tryon-video.mirrored {
+  transform: scaleX(-1);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Watch overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.tryon-watch-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  will-change: transform;
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, .5));
+  transition: opacity .3s ease;
+  z-index: 10;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Instructions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.tryon-instructions {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--muted);
+  z-index: 12;
+  padding: 0 24px;
+  animation: tryon-fade-in .5s ease;
+  pointer-events: none;
+}
+
+.tryon-instructions-icon {
+  margin-bottom: 18px;
+  animation: tryon-float 2.8s ease-in-out infinite;
+}
+
+.tryon-instructions h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: var(--white);
+  margin-bottom: 10px;
+  font-weight: 300;
+}
+
+.tryon-instructions p {
+  font-size: .55rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ HUD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.tryon-hud {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+  padding: 20px;
+  padding-top: calc(20px + env(safe-area-inset-top, 0px));
+}
+
+.tryon-hud button,
+.tryon-hud a {
+  pointer-events: auto;
+}
+
+.tryon-hud-tl {
+  position: absolute;
+  top: calc(20px + env(safe-area-inset-top, 0px));
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tryon-hud-tr {
+  position: absolute;
+  top: calc(20px + env(safe-area-inset-top, 0px));
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  text-align: right;
+}
+
+.tryon-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Raleway', sans-serif;
+  font-size: .5rem;
+  font-weight: 400;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: rgba(10, 10, 10, .6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--dark4);
+  padding: 10px 16px;
+  cursor: none;
+  transition: border-color .3s, color .3s, background .3s;
+}
+
+.tryon-back-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.tryon-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .5rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: rgba(10, 10, 10, .6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--dark3);
+  padding: 8px 12px;
+}
+
+.tryon-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tryon-status-dot.searching {
+  background: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, .6);
+  animation: tryon-pulse 1.5s ease-in-out infinite;
+}
+
+.tryon-status-dot.locked {
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, .6);
+}
+
+.tryon-status-dot.lost {
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, .6);
+}
+
+.tryon-fps {
+  font-family: 'Raleway', sans-serif;
+  font-size: .45rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: none;
+  transition: color .3s;
+}
+
+.tryon-fps:hover {
+  color: var(--gold-dk);
+}
+
+.tryon-debug {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  max-width: 220px;
+  font-size: .42rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tryon-watch-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: rgba(10, 10, 10, .6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--dark3);
+  padding: 10px 14px;
+}
+
+.tryon-watch-info-name {
+  font-family: 'Playfair Display', serif;
+  font-size: .75rem;
+  font-weight: 300;
+  color: var(--white);
+}
+
+.tryon-watch-info-price {
+  font-size: .5rem;
+  letter-spacing: .2em;
+  color: var(--gold);
+}
+
+.tryon-flip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--gold);
+  background: rgba(10, 10, 10, .6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--dark4);
+  cursor: none;
+  transition: border-color .3s, background .3s;
+}
+
+.tryon-flip-btn:hover {
+  border-color: var(--gold);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Controls bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.tryon-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 10, 10, .85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--dark3);
+  padding: 16px 20px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.tryon-watch-picker {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  min-width: 0;
+  padding: 4px 0;
+}
+
+.tryon-watch-picker::-webkit-scrollbar {
+  display: none;
+}
+
+.tryon-watch-thumb {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  padding: 2px;
+  border: 1px solid var(--dark3);
+  background: var(--dark2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  border-radius: 4px;
+  transition: border-color .3s, transform .2s, box-shadow .3s;
+}
+
+.tryon-watch-thumb:hover {
+  border-color: var(--gold-dk);
+}
+
+.tryon-watch-thumb.active {
+  border-color: var(--gold);
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(196, 169, 98, .3);
+}
+
+/* Size slider */
+
+.tryon-size-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+  width: 160px;
+}
+
+.tryon-size-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: .45rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tryon-size-value {
+  color: var(--gold);
+}
+
+.tryon-size-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--dark4);
+  outline: none;
+  cursor: none;
+}
+
+.tryon-size-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: none;
+  box-shadow: 0 0 8px rgba(196, 169, 98, .5);
+  cursor: none;
+}
+
+.tryon-size-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: none;
+  box-shadow: 0 0 8px rgba(196, 169, 98, .5);
+  cursor: none;
+}
+
+.tryon-size-slider:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--gold-lt);
+  outline-offset: 2px;
+}
+
+/* Capture */
+
+.tryon-capture-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid var(--gold);
+  cursor: none;
+  transition: background .3s, color .3s, opacity .3s;
+}
+
+.tryon-capture-btn:hover:not(:disabled) {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.tryon-capture-btn:disabled {
+  opacity: .45;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Loading screen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.tryon-loading {
+  position: fixed;
+  inset: 0;
+  background: var(--black);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 24px;
+  text-align: center;
+  z-index: 30;
+  opacity: 1;
+  transition: opacity .5s ease;
+}
+
+.tryon-loading.fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tryon-loading-brand {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.9rem;
+  letter-spacing: .12em;
+  color: var(--gold);
+}
+
+.tryon-loading-ring {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--dark3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: tryon-spin 1s linear infinite;
+}
+
+.tryon-loading-status {
+  font-size: .55rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.tryon-loading-detail {
+  font-size: .45rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: -12px;
+}
+
+.tryon-loading-sub {
+  font-size: .45rem;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: var(--muted2);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Screenshot flash + preview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.tryon-flash {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 50;
+  pointer-events: none;
+  animation: tryon-flash-anim .32s ease-out forwards;
+}
+
+.tryon-shot {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 5, .94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: tryon-fade-in .3s ease;
+}
+
+.tryon-shot-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  max-width: 520px;
+  width: 100%;
+}
+
+.tryon-shot-tag {
+  font-size: .5rem;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.tryon-shot-img {
+  max-width: 100%;
+  max-height: 58dvh;
+  object-fit: contain;
+  border: 1px solid var(--dark4);
+}
+
+.tryon-shot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.tryon-shot-btn {
+  font-family: 'Raleway', sans-serif;
+  font-size: .5rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  background: transparent;
+  border: 1px solid var(--dark4);
+  color: var(--text);
+  text-decoration: none;
+  cursor: none;
+  transition: border-color .3s, color .3s, background .3s;
+}
+
+.tryon-shot-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.tryon-shot-btn.primary {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.tryon-shot-btn.primary:hover {
+  background: var(--gold);
+  color: var(--black);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Camera error / page error â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.tryon-camera-error {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px;
+  text-align: center;
+  background: var(--black);
+}
+
+.tryon-camera-error-icon {
+  margin-bottom: 6px;
+}
+
+.tryon-camera-error h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--white);
+}
+
+.tryon-camera-error p {
+  max-width: 380px;
+  font-size: .6rem;
+  line-height: 2.2;
+  letter-spacing: .1em;
+  color: var(--muted);
+}
+
+.tryon-retry-btn {
+  font-family: 'Raleway', sans-serif;
+  font-size: .5rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  padding: 16px 34px;
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  cursor: none;
+  transition: background .3s, color .3s;
+}
+
+.tryon-retry-btn:hover {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.tryon-error-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tryon-error-inner {
+  max-width: 440px;
+  padding: 32px;
+  text-align: center;
+}
+
+.tryon-error-tag {
+  font-size: .5rem;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+
+.tryon-error-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem;
+  font-weight: 300;
+  color: var(--white);
+  margin-bottom: 18px;
+}
+
+.tryon-error-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.tryon-error-msg {
+  font-size: .62rem;
+  line-height: 2.2;
+  letter-spacing: .1em;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.tryon-error-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.tryon-error-link {
+  font-size: .5rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold-dk);
+  text-decoration: none;
+  transition: color .3s;
+}
+
+.tryon-error-link:hover {
+  color: var(--gold);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Keyframes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+@keyframes tryon-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.8); }
+}
+
+@keyframes tryon-flash-anim {
+  0% { opacity: .85; }
+  100% { opacity: 0; }
+}
+
+@keyframes tryon-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes tryon-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes tryon-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+@media (max-width: 768px) {
+  .tryon-controls {
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .tryon-watch-picker {
+    order: 1;
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .tryon-size-control {
+    order: 2;
+    width: auto;
+    flex: 1;
+  }
+
+  .tryon-capture-btn {
+    order: 3;
+    width: 46px;
+    height: 46px;
+  }
+
+  .tryon-hud-tl,
+  .tryon-hud-tr {
+    gap: 10px;
+  }
+
+  .tryon-hud-tl { left: 14px; }
+  .tryon-hud-tr { right: 14px; }
+
+  .tryon-watch-info-name { font-size: .65rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tryon-instructions-icon,
+  .tryon-status-dot.searching,
+  .tryon-loading-ring {
+    animation: none;
+  }
+}
+
+
+/* The AR launch CTA is a <Link> (anchor) now, not a <button> */
+.ar-launch-btn {
+  text-decoration: none;
+}
