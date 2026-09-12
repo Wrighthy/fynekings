@@ -17,6 +17,8 @@ model User {
   shippingAddress String?
   city            String?
   country         String?        @default("Nigeria")
+  isInnerCircle   Boolean        @default(false)
+  innerCircleJoinedAt DateTime?
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   orders          Order[]
@@ -66,6 +68,7 @@ model Product {
   orders            Order[]
   wishlist          WishlistItem[]
   comments          ProductComment[]
+  tryOnWatches      TryOnWatch[]
 }
 
 model LimitedEdition {
@@ -161,6 +164,22 @@ enum CommentStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+model TryOnWatch {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  series       String
+  price        Int
+  overlayUrl   String
+  thumbnailUrl String?
+  productId    String?
+  sortOrder    Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  product      Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 }
 
 model Customization {
