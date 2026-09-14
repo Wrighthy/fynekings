@@ -3285,12 +3285,14 @@ footer {
     position: sticky;
     top: 100px;
   }
+
   .customizer-step2-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 80px;
     align-items: start;
   }
+
   .customizer-preview-col {
     position: sticky;
     top: 100px;
