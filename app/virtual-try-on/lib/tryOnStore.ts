@@ -77,7 +77,7 @@ export function resetLiveFrame(): void {
 type TryOnState = {
   // State
   selectedWatch: TryOnProduct | null;
-  watchScale: number;               // 0.6 – 1.4, default 1.0
+  watchScale: number;               // 0.6 – 1.4, default 1.0 (temporary testing slider)
   trackingStatus: TrackingStatus;
   isCameraReady: boolean;
   isFrontCamera: boolean;
@@ -101,7 +101,7 @@ type TryOnState = {
 
 const INITIAL_STATE = {
   selectedWatch: null as TryOnProduct | null,
-  watchScale: 1.0,
+  watchScale: 0.75,
   trackingStatus: "initializing" as TrackingStatus,
   isCameraReady: false,
   isFrontCamera: false,

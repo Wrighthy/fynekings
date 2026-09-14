@@ -115,7 +115,7 @@ export default function TryOnControls({ products }: TryOnControlsProps) {
           })}
         </div>
 
-        {/* ── Size slider ── */}
+        {/* ── Size slider (temporary — for testing) ── */}
         <div className="tryon-size-control">
           <label htmlFor="tryon-size" className="tryon-size-label">
             Size
