@@ -163,9 +163,13 @@ export function useHandTracking(
       // "Right" hand (camera POV): back faces camera when crossZ > 0.
       // "Left"  hand (camera POV): back faces camera when crossZ < 0.
       // A small dead-zone (0.002) avoids flicker when the hand is edge-on.
-      const isBackOfHand = rawLabel === "Right"
+      //
+      // With the rear camera the image is NOT mirrored, so the cross-product
+      // sign for "back of hand" is the opposite of the front camera.
+      const isBackOfHandRaw = rawLabel === "Right"
         ? crossZ > 0.002
         : crossZ < -0.002;
+      const isBackOfHand = front ? isBackOfHandRaw : !isBackOfHandRaw;
 
       // Mirror X if front camera
       if (front) {
@@ -190,8 +194,15 @@ export function useHandTracking(
       // For the RIGHT hand the wrist→fingers vector points away from the
       // body, so we add 180° to flip the watch dial toward the wearer.
       // For the LEFT hand the geometry is mirrored and no offset is needed.
+      //
+      // IMPORTANT: with the rear camera (mobile) the hand is viewed from the
+      // opposite side, so the offset that applies to the left hand on the
+      // front camera applies to the right hand on the rear camera, and vice
+      // versa.
       const angle = Math.atan2(dirY, dirX);
-      const rotationOffset = isLeftHand ? 180 : 0;
+      const rotationOffset = front
+        ? (isLeftHand ? 180 : 0)   // front camera
+        : (isLeftHand ? 0 : 180);  // rear camera — inverted
       const rotationDeg = angle * (180 / Math.PI) + rotationOffset;
 
       // Scale — use cross-wrist width (index MCP ↔ pinky MCP) as a depth-
