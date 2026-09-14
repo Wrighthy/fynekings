@@ -208,14 +208,32 @@ export function useHandTracking(
       // Scale — use cross-wrist width (index MCP ↔ pinky MCP) as a depth-
       // and size-aware reference. The hand naturally appears larger when
       // closer to the camera, so the watch scales automatically.
-      // Convert each axis to pixel space BEFORE computing distance so the
-      // result is orientation-independent (fixes inflated scale when
-      // horizontal — normalised y is larger than x on non-square video).
-      const dxPx = (indexMCP.x - pinkyMCP.x) * cw;
-      const dyPx = (indexMCP.y - pinkyMCP.y) * ch;
+      //
+      // Convert normalised coords to TRUE on-screen pixels via the same
+      // cover-scale the CSS `object-fit: cover` applies. Using the raw
+      // container dimensions (cw/ch) inflates one axis when the container
+      // and video have different aspect ratios, making the watch too big
+      // in the direction that "overflows".
+      const coverScale = Math.max(cw / video.videoWidth, ch / video.videoHeight);
+      const dxPx = (indexMCP.x - pinkyMCP.x) * video.videoWidth * coverScale;
+      const dyPx = (indexMCP.y - pinkyMCP.y) * video.videoHeight * coverScale;
       const crossWristWidth = Math.sqrt(dxPx * dxPx + dyPx * dyPx);
-      const rawScale = (crossWristWidth / WATCH_OVERLAY_SIZE) * 1.6 * uScale;
-      const scale = clamp(rawScale, 0.4, 2.5);
+
+      // Dampened scaling — a pure linear ratio makes the watch balloon when
+      // the hand is close to the camera.  We use a sqrt curve above a
+      // reference width to compress the growth at close range while keeping
+      // far-range (small widths) essentially linear.
+      //
+      //   referenceWidth ≈ the cross-wrist pixel width at a "normal" viewing
+      //   distance.  Below it the ratio grows linearly; above it, growth is
+      //   progressively softened via sqrt.
+      const referenceWidth = 100;
+      const ratio = crossWristWidth / referenceWidth;
+      const dampedRatio = ratio <= 1
+        ? ratio                                // linear at normal/far range
+        : 1 + Math.sqrt(ratio - 1);            // sqrt compression at close range
+      const rawScale = (dampedRatio * referenceWidth / WATCH_OVERLAY_SIZE) * 1.35 * uScale;
+      const scale = clamp(rawScale, 0.4, 2.0);
 
       // Apply EMA smoothing
       if (!smooth.initialised) {
