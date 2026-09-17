@@ -213,34 +213,24 @@ export function useHandTracking(
       // const crossWristWidth = Math.sqrt(dxPx * dxPx + dyPx * dyPx);
       // -----------------------------------------
 
-      // Scale — derive wrist width from landmarks 0 (wrist) and 1 (thumb CMC)
-      // using trigonometry.
+      // Scale — derive wrist width from landmarks 0 (wrist), 1 (thumb CMC),
+      // and 17 (pinky MCP) using trigonometry.
       //
-      // The distance between landmark 0 and landmark 1 is treated as the
+      // The distance from landmark 0 to a reference landmark is the
       // hypotenuse of a right-angled triangle. The angle θ is measured
-      // between the wrist→thumb_cmc vector and the wrist's cross-section
-      // axis (perpendicular to the arm direction wrist→middleMCP).
+      // between that vector and the arm axis (wrist→middleMCP). The
+      // component perpendicular to the arm axis (hypotenuse × sin θ)
+      // gives half the wrist width.
       //
-      // adjacent = hypotenuse × cos(θ) gives half the wrist width, so:
-      //   wristWidth = 2 × adjacent
-      //
-      // This is more anatomically stable than the index–pinky knuckle span
-      // which varies with hand openness.
+      // For the RIGHT hand, the thumb CMC (landmark 1) projects well
+      // laterally. For the LEFT hand, it collapses onto the arm axis in
+      // 2D, so we also compute the projection from pinky MCP (landmark 17)
+      // and take whichever is larger. Same trigonometry, automatically
+      // robust for both hands.
       //
       // Convert normalised coords to TRUE on-screen pixels via the same
       // cover-scale the CSS `object-fit: cover` applies.
       const coverScale = Math.max(cw / video.videoWidth, ch / video.videoHeight);
-
-      // Also grab landmark 1 (thumb CMC), with the same front-camera mirror
-      const thumbCMC: NormalizedLandmark = { ...landmarks[1] };
-      if (front) {
-        thumbCMC.x = 1 - thumbCMC.x;
-      }
-
-      // Hypotenuse: pixel distance from wrist (0) to thumb CMC (1)
-      const hypDx = (thumbCMC.x - wrist.x) * video.videoWidth * coverScale;
-      const hypDy = (thumbCMC.y - wrist.y) * video.videoHeight * coverScale;
-      const hypotenuse = Math.sqrt(hypDx * hypDx + hypDy * hypDy);
 
       // Arm axis angle (wrist → middle MCP) — used as the reference direction
       const armAngle = Math.atan2(
@@ -248,17 +238,27 @@ export function useHandTracking(
         (middleMCP.x - wrist.x) * video.videoWidth * coverScale
       );
 
-      // Angle of the wrist → thumb CMC vector
-      const thumbAngle = Math.atan2(hypDy, hypDx);
+      // --- Landmark 1 (thumb CMC) ---
+      const thumbCMC: NormalizedLandmark = { ...landmarks[1] };
+      if (front) {
+        thumbCMC.x = 1 - thumbCMC.x;
+      }
+      const hypDx1 = (thumbCMC.x - wrist.x) * video.videoWidth * coverScale;
+      const hypDy1 = (thumbCMC.y - wrist.y) * video.videoHeight * coverScale;
+      const hypotenuse1 = Math.sqrt(hypDx1 * hypDx1 + hypDy1 * hypDy1);
+      const theta1 = Math.atan2(hypDy1, hypDx1) - armAngle;
+      const halfWidth1 = Math.abs(hypotenuse1 * Math.sin(theta1));
 
-      // θ = angle between the wrist→thumb vector and the arm axis
-      const theta = thumbAngle - armAngle;
+      // --- Landmark 17 (pinky MCP) ---
+      const hypDx17 = (pinkyMCP.x - wrist.x) * video.videoWidth * coverScale;
+      const hypDy17 = (pinkyMCP.y - wrist.y) * video.videoHeight * coverScale;
+      const hypotenuse17 = Math.sqrt(hypDx17 * hypDx17 + hypDy17 * hypDy17);
+      const theta17 = Math.atan2(hypDy17, hypDx17) - armAngle;
+      const halfWidth17 = Math.abs(hypotenuse17 * Math.sin(theta17));
 
-      // The component of the hypotenuse perpendicular to the arm axis
-      // (i.e. along the wrist cross-section) is hypotenuse × sin(θ).
-      // This gives half the wrist width.
-      const halfWristWidth = Math.abs(hypotenuse * Math.sin(theta));
-      const crossWristWidth = (2 * halfWristWidth) * 1.1;
+      // Use whichever landmark projects more laterally from the arm axis
+      const halfWristWidth = Math.max(halfWidth1, halfWidth17);
+      const crossWristWidth = (2 * halfWristWidth);
 
       // Dampened scaling — a pure linear ratio makes the watch balloon when
       // the hand is close to the camera.  We use a sqrt curve above a
