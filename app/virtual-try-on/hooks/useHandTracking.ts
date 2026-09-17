@@ -205,19 +205,60 @@ export function useHandTracking(
         : (isLeftHand ? 0 : 180);  // rear camera — inverted
       const rotationDeg = angle * (180 / Math.PI) + rotationOffset;
 
-      // Scale — use cross-wrist width (index MCP ↔ pinky MCP) as a depth-
-      // and size-aware reference. The hand naturally appears larger when
-      // closer to the camera, so the watch scales automatically.
+      // OLD CALCULATION (index MCP ↔ pinky MCP):
+      // -----------------------------------------
+      // const coverScale = Math.max(cw / video.videoWidth, ch / video.videoHeight);
+      // const dxPx = (indexMCP.x - pinkyMCP.x) * video.videoWidth * coverScale;
+      // const dyPx = (indexMCP.y - pinkyMCP.y) * video.videoHeight * coverScale;
+      // const crossWristWidth = Math.sqrt(dxPx * dxPx + dyPx * dyPx);
+      // -----------------------------------------
+
+      // Scale — derive wrist width from landmarks 0 (wrist) and 1 (thumb CMC)
+      // using trigonometry.
+      //
+      // The distance between landmark 0 and landmark 1 is treated as the
+      // hypotenuse of a right-angled triangle. The angle θ is measured
+      // between the wrist→thumb_cmc vector and the wrist's cross-section
+      // axis (perpendicular to the arm direction wrist→middleMCP).
+      //
+      // adjacent = hypotenuse × cos(θ) gives half the wrist width, so:
+      //   wristWidth = 2 × adjacent
+      //
+      // This is more anatomically stable than the index–pinky knuckle span
+      // which varies with hand openness.
       //
       // Convert normalised coords to TRUE on-screen pixels via the same
-      // cover-scale the CSS `object-fit: cover` applies. Using the raw
-      // container dimensions (cw/ch) inflates one axis when the container
-      // and video have different aspect ratios, making the watch too big
-      // in the direction that "overflows".
+      // cover-scale the CSS `object-fit: cover` applies.
       const coverScale = Math.max(cw / video.videoWidth, ch / video.videoHeight);
-      const dxPx = (indexMCP.x - pinkyMCP.x) * video.videoWidth * coverScale;
-      const dyPx = (indexMCP.y - pinkyMCP.y) * video.videoHeight * coverScale;
-      const crossWristWidth = Math.sqrt(dxPx * dxPx + dyPx * dyPx);
+
+      // Also grab landmark 1 (thumb CMC), with the same front-camera mirror
+      const thumbCMC: NormalizedLandmark = { ...landmarks[1] };
+      if (front) {
+        thumbCMC.x = 1 - thumbCMC.x;
+      }
+
+      // Hypotenuse: pixel distance from wrist (0) to thumb CMC (1)
+      const hypDx = (thumbCMC.x - wrist.x) * video.videoWidth * coverScale;
+      const hypDy = (thumbCMC.y - wrist.y) * video.videoHeight * coverScale;
+      const hypotenuse = Math.sqrt(hypDx * hypDx + hypDy * hypDy);
+
+      // Arm axis angle (wrist → middle MCP) — used as the reference direction
+      const armAngle = Math.atan2(
+        (middleMCP.y - wrist.y) * video.videoHeight * coverScale,
+        (middleMCP.x - wrist.x) * video.videoWidth * coverScale
+      );
+
+      // Angle of the wrist → thumb CMC vector
+      const thumbAngle = Math.atan2(hypDy, hypDx);
+
+      // θ = angle between the wrist→thumb vector and the arm axis
+      const theta = thumbAngle - armAngle;
+
+      // The component of the hypotenuse perpendicular to the arm axis
+      // (i.e. along the wrist cross-section) is hypotenuse × sin(θ).
+      // This gives half the wrist width.
+      const halfWristWidth = Math.abs(hypotenuse * Math.sin(theta));
+      const crossWristWidth = (2 * halfWristWidth) * 1.1;
 
       // Dampened scaling — a pure linear ratio makes the watch balloon when
       // the hand is close to the camera.  We use a sqrt curve above a
