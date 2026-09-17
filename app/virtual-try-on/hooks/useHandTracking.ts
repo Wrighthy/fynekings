@@ -186,8 +186,8 @@ export function useHandTracking(
       // Position (pixels) — offset AWAY from fingers, toward the forearm.
       // A larger multiplier pushes the watch further down the arm so it sits
       // where a real watch would be (below the wrist joint, not on top of it).
-      const rawX = wrist.x * cw - dirX * cw * 0.35 - 0.11;
-      const rawY = wrist.y * ch - dirY * ch * 0.35;
+      const rawX = wrist.x * cw - dirX * cw * 0.50 - 0.11;
+      const rawY = wrist.y * ch - dirY * ch * 0.50;
 
       // Rotation (degrees) — the watch image has straps at 12/6 o'clock,
       // so strap direction == arm axis.
@@ -258,7 +258,7 @@ export function useHandTracking(
 
       // Use whichever landmark projects more laterally from the arm axis
       const halfWristWidth = Math.max(halfWidth1, halfWidth17);
-      const crossWristWidth = (2 * halfWristWidth);
+      const crossWristWidth = (2 * halfWristWidth) / 1.09;
 
       // Dampened scaling — a pure linear ratio makes the watch balloon when
       // the hand is close to the camera.  We use a sqrt curve above a
