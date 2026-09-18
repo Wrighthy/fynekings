@@ -186,8 +186,8 @@ export function useHandTracking(
       // Position (pixels) — offset AWAY from fingers, toward the forearm.
       // A larger multiplier pushes the watch further down the arm so it sits
       // where a real watch would be (below the wrist joint, not on top of it).
-      const rawX = wrist.x * cw - dirX * cw * 0.35 - 0.11;
-      const rawY = wrist.y * ch - dirY * ch * 0.35;
+      const rawX = wrist.x * cw - dirX * cw * 0.50 - 0.11;
+      const rawY = wrist.y * ch - dirY * ch * 0.50;
 
       // Rotation (degrees) — the watch image has straps at 12/6 o'clock,
       // so strap direction == arm axis.
@@ -205,19 +205,60 @@ export function useHandTracking(
         : (isLeftHand ? 0 : 180);  // rear camera — inverted
       const rotationDeg = angle * (180 / Math.PI) + rotationOffset;
 
-      // Scale — use cross-wrist width (index MCP ↔ pinky MCP) as a depth-
-      // and size-aware reference. The hand naturally appears larger when
-      // closer to the camera, so the watch scales automatically.
+      // OLD CALCULATION (index MCP ↔ pinky MCP):
+      // -----------------------------------------
+      // const coverScale = Math.max(cw / video.videoWidth, ch / video.videoHeight);
+      // const dxPx = (indexMCP.x - pinkyMCP.x) * video.videoWidth * coverScale;
+      // const dyPx = (indexMCP.y - pinkyMCP.y) * video.videoHeight * coverScale;
+      // const crossWristWidth = Math.sqrt(dxPx * dxPx + dyPx * dyPx);
+      // -----------------------------------------
+
+      // Scale — derive wrist width from landmarks 0 (wrist), 1 (thumb CMC),
+      // and 17 (pinky MCP) using trigonometry.
+      //
+      // The distance from landmark 0 to a reference landmark is the
+      // hypotenuse of a right-angled triangle. The angle θ is measured
+      // between that vector and the arm axis (wrist→middleMCP). The
+      // component perpendicular to the arm axis (hypotenuse × sin θ)
+      // gives half the wrist width.
+      //
+      // For the RIGHT hand, the thumb CMC (landmark 1) projects well
+      // laterally. For the LEFT hand, it collapses onto the arm axis in
+      // 2D, so we also compute the projection from pinky MCP (landmark 17)
+      // and take whichever is larger. Same trigonometry, automatically
+      // robust for both hands.
       //
       // Convert normalised coords to TRUE on-screen pixels via the same
-      // cover-scale the CSS `object-fit: cover` applies. Using the raw
-      // container dimensions (cw/ch) inflates one axis when the container
-      // and video have different aspect ratios, making the watch too big
-      // in the direction that "overflows".
+      // cover-scale the CSS `object-fit: cover` applies.
       const coverScale = Math.max(cw / video.videoWidth, ch / video.videoHeight);
-      const dxPx = (indexMCP.x - pinkyMCP.x) * video.videoWidth * coverScale;
-      const dyPx = (indexMCP.y - pinkyMCP.y) * video.videoHeight * coverScale;
-      const crossWristWidth = Math.sqrt(dxPx * dxPx + dyPx * dyPx);
+
+      // Arm axis angle (wrist → middle MCP) — used as the reference direction
+      const armAngle = Math.atan2(
+        (middleMCP.y - wrist.y) * video.videoHeight * coverScale,
+        (middleMCP.x - wrist.x) * video.videoWidth * coverScale
+      );
+
+      // --- Landmark 1 (thumb CMC) ---
+      const thumbCMC: NormalizedLandmark = { ...landmarks[1] };
+      if (front) {
+        thumbCMC.x = 1 - thumbCMC.x;
+      }
+      const hypDx1 = (thumbCMC.x - wrist.x) * video.videoWidth * coverScale;
+      const hypDy1 = (thumbCMC.y - wrist.y) * video.videoHeight * coverScale;
+      const hypotenuse1 = Math.sqrt(hypDx1 * hypDx1 + hypDy1 * hypDy1);
+      const theta1 = Math.atan2(hypDy1, hypDx1) - armAngle;
+      const halfWidth1 = Math.abs(hypotenuse1 * Math.sin(theta1));
+
+      // --- Landmark 17 (pinky MCP) ---
+      const hypDx17 = (pinkyMCP.x - wrist.x) * video.videoWidth * coverScale;
+      const hypDy17 = (pinkyMCP.y - wrist.y) * video.videoHeight * coverScale;
+      const hypotenuse17 = Math.sqrt(hypDx17 * hypDx17 + hypDy17 * hypDy17);
+      const theta17 = Math.atan2(hypDy17, hypDx17) - armAngle;
+      const halfWidth17 = Math.abs(hypotenuse17 * Math.sin(theta17));
+
+      // Use whichever landmark projects more laterally from the arm axis
+      const halfWristWidth = Math.max(halfWidth1, halfWidth17);
+      const crossWristWidth = (2 * halfWristWidth) / 1.09;
 
       // Dampened scaling — a pure linear ratio makes the watch balloon when
       // the hand is close to the camera.  We use a sqrt curve above a
