@@ -28,6 +28,7 @@ export type Order = {
   discountAmount: number;
   promoCode?: string;
   paystackRef?: string;
+  paymentMethod?: string;
   createdAt: string;
   // Priced cart items recorded at checkout ({name, series, amount, fee, custom})
   customConfig?: unknown;

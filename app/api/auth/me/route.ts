@@ -23,8 +23,13 @@ export async function GET() {
         shippingAddress: true,
         city: true,
         country: true,
+        isInnerCircle: true,
+        innerCircleJoinedAt: true,
         orders: {
           orderBy: { createdAt: "desc" },
+          include: { product: true },
+        },
+        wishlist: {
           include: { product: true },
         },
       },

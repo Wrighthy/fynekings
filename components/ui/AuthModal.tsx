@@ -38,6 +38,13 @@ export default function AuthModal() {
       const data = await res.json();
       if (res.ok && data.user) {
         setUser(data.user);
+        const { syncWithServer, addToWishlist } = (await import("@/lib/wishlistStore")).useWishlist.getState();
+        await syncWithServer();
+        const pendingSlug = useAuth.getState().pendingWishlistSlug;
+        if (pendingSlug) {
+          await addToWishlist(pendingSlug, true);
+          useAuth.getState().setPendingWishlistSlug(null);
+        }
         setAuthOpen(false);
       } else {
         setError(data.error || "Authentication failed.");

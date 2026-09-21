@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
-import AuthModal from "@/components/ui/AuthModal";
+import ProtectedRoute from "@/components/ui/ProtectedRoute";
 import { useAuth } from "@/lib/authStore";
 import { fmt } from "@/lib/store";
 
@@ -23,65 +23,22 @@ type OrderItem = {
   } | null;
 };
 
-export default function AccountPage() {
-  const { user, setUser, logout, setAuthOpen } = useAuth();
-  const [loading, setLoading] = useState(true);
+function AccountContent() {
+  const { user, logout } = useAuth();
   const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    fetch("/api/orders/me")
       .then((r) => r.json())
       .then((data) => {
-        if (data && data.user) {
-          setUser(data.user);
-          if (data.user.orders) {
-            setOrders(data.user.orders);
-          }
-        } else {
-          setUser(null);
+        if (data && Array.isArray(data.orders)) {
+          setOrders(data.orders);
         }
-        setLoading(false);
+        setLoadingOrders(false);
       })
-      .catch(() => {
-        setLoading(false);
-      });
-  }, [setUser]);
-
-  if (loading) {
-    return (
-      <div style={{ background: "var(--black)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ fontFamily: "Playfair Display, serif", color: "var(--gold)" }}>Loading Account Portal...</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
-        <Nav />
-        <div style={{ padding: "180px 24px 100px", maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: ".5rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
-            Collector Vault Access
-          </div>
-          <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.8rem", color: "var(--white)", fontWeight: 300, marginBottom: "20px" }}>
-            Sign In Required
-          </h1>
-          <p style={{ fontSize: ".7rem", lineHeight: 2, color: "var(--muted)", marginBottom: "32px" }}>
-            Please sign in to view your watch orders, 5-Year warranty status, and saved shipping preferences.
-          </p>
-          <button
-            onClick={() => setAuthOpen(true, "login")}
-            className="btn-primary"
-            style={{ margin: "0 auto" }}
-          >
-            <span>Sign In / Create Account →</span>
-          </button>
-        </div>
-        <AuthModal />
-        <Footer />
-      </div>
-    );
-  }
+      .catch(() => setLoadingOrders(false));
+  }, []);
 
   return (
     <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
@@ -91,28 +48,62 @@ export default function AccountPage() {
       <div style={{ padding: "160px 24px 60px", maxWidth: "1200px", margin: "0 auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
           <div>
-            <div style={{ fontSize: ".5rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
-              Collector Portal
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
+              <span style={{ fontSize: ".5rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase" }}>
+                Collector Portal
+              </span>
+              {user?.isInnerCircle && (
+                <span
+                  style={{
+                    background: "var(--gold)",
+                    color: "var(--black)",
+                    fontSize: ".45rem",
+                    fontWeight: 700,
+                    letterSpacing: ".2em",
+                    padding: "3px 8px",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  ★ Inner Circle Enlisted
+                </span>
+              )}
             </div>
             <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.2rem, 5vw, 3.5rem)", color: "var(--white)", fontWeight: 300 }}>
-              Welcome back, <em style={{ fontStyle: "italic", color: "var(--gold)" }}>{user.name}</em>
+              Welcome back, <em style={{ fontStyle: "italic", color: "var(--gold)" }}>{user?.name}</em>
             </h1>
           </div>
-          <button
-            onClick={() => logout()}
-            style={{
-              padding: "10px 20px",
-              background: "transparent",
-              border: "1px solid var(--dark4)",
-              color: "var(--muted)",
-              fontSize: ".52rem",
-              letterSpacing: ".2em",
-              textTransform: "uppercase",
-              cursor: "pointer",
-            }}
-          >
-            Sign Out
-          </button>
+
+          <div style={{ display: "flex", gap: "12px" }}>
+            <Link
+              href="/profile"
+              style={{
+                padding: "10px 18px",
+                border: "1px solid var(--dark3)",
+                color: "var(--gold)",
+                fontSize: ".52rem",
+                letterSpacing: ".2em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+              }}
+            >
+              Edit Profile
+            </Link>
+            <button
+              onClick={() => logout()}
+              style={{
+                padding: "10px 18px",
+                background: "transparent",
+                border: "1px solid var(--dark4)",
+                color: "var(--muted)",
+                fontSize: ".52rem",
+                letterSpacing: ".2em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+              }}
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
 
@@ -120,11 +111,20 @@ export default function AccountPage() {
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px 100px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", gap: "40px", alignItems: "start" }}>
         {/* Left: Orders */}
         <div style={{ gridColumn: "span 2" }}>
-          <div style={{ fontSize: ".55rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "20px" }}>
-            Acquisition History ({orders.length})
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+            <div style={{ fontSize: ".55rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase" }}>
+              Acquisition History ({orders.length})
+            </div>
+            <Link href="/wishlist" style={{ fontSize: ".52rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", textDecoration: "none" }}>
+              View Saved Wishlist →
+            </Link>
           </div>
 
-          {orders.length === 0 ? (
+          {loadingOrders ? (
+            <div style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "40px", textAlign: "center", color: "var(--gold)" }}>
+              Retrieving timepiece records...
+            </div>
+          ) : orders.length === 0 ? (
             <div style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "40px", textAlign: "center" }}>
               <p style={{ fontSize: ".7rem", color: "var(--muted)", marginBottom: "20px" }}>You have no watch orders recorded yet.</p>
               <Link href="/collection" className="btn-primary" style={{ display: "inline-flex" }}>
@@ -180,25 +180,37 @@ export default function AccountPage() {
 
         {/* Right: Profile details */}
         <div style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "32px" }}>
-          <div style={{ fontSize: ".55rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "20px" }}>
-            Collector Profile
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+            <div style={{ fontSize: ".55rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase" }}>
+              Collector Profile
+            </div>
+            <Link href="/profile" style={{ fontSize: ".5rem", color: "var(--gold)", textDecoration: "underline" }}>
+              Edit
+            </Link>
           </div>
+
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", fontSize: ".7rem" }}>
             <div>
               <div style={{ fontSize: ".45rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".2em" }}>Full Name</div>
-              <div style={{ color: "var(--white)", marginTop: "2px" }}>{user.name}</div>
+              <div style={{ color: "var(--white)", marginTop: "2px" }}>{user?.name}</div>
             </div>
             <div>
               <div style={{ fontSize: ".45rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".2em" }}>Email Address</div>
-              <div style={{ color: "var(--white)", marginTop: "2px" }}>{user.email}</div>
+              <div style={{ color: "var(--white)", marginTop: "2px" }}>{user?.email}</div>
             </div>
             <div>
               <div style={{ fontSize: ".45rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".2em" }}>Phone / WhatsApp</div>
-              <div style={{ color: "var(--white)", marginTop: "2px" }}>{user.phone || "Not provided"}</div>
+              <div style={{ color: "var(--white)", marginTop: "2px" }}>{user?.phone || "Not provided"}</div>
             </div>
             <div>
               <div style={{ fontSize: ".45rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".2em" }}>Delivery Address</div>
-              <div style={{ color: "var(--white)", marginTop: "2px" }}>{user.shippingAddress || "Not provided"}</div>
+              <div style={{ color: "var(--white)", marginTop: "2px" }}>{user?.shippingAddress || "Not provided"}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: ".45rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".2em" }}>Inner Circle Status</div>
+              <div style={{ color: user?.isInnerCircle ? "var(--gold)" : "var(--muted)", marginTop: "2px" }}>
+                {user?.isInnerCircle ? "Enlisted Member" : <Link href="/inner-circle" style={{ color: "var(--gold)", textDecoration: "underline" }}>Enlist Now (Complimentary)</Link>}
+              </div>
             </div>
           </div>
         </div>
@@ -206,5 +218,13 @@ export default function AccountPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <ProtectedRoute>
+      <AccountContent />
+    </ProtectedRoute>
   );
 }

@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/authStore";
 
 const NAV_LINKS = [
     { label: "Collection", href: "/collection" },
+    { label: "Inner Circle", href: "/inner-circle" },
     { label: "The Craft", href: "/journal" },
     { label: "Wishlist", href: "/wishlist" },
     { label: "Compare Models", href: "/compare" },

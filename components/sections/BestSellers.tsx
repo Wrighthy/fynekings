@@ -103,6 +103,8 @@ function WatchCardImage({ p }: { p: Product }) {
   );
 }
 
+import { useWishlistAction } from "@/lib/wishlistAction";
+
 export default function BestSellers() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -110,7 +112,7 @@ export default function BestSellers() {
   const [activeFilter, setActiveFilter] = useState("All");
 
   const addToCart = useCart((s) => s.addToCart);
-  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { handleWishlistClick, isInWishlist } = useWishlistAction();
   const { toggleCompare, isInCompare } = useCompare();
 
   useEffect(() => {
@@ -181,10 +183,7 @@ export default function BestSellers() {
                   {/* Wishlist & Compare Quick Action Buttons */}
                   <div style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10, display: "flex", gap: "6px" }}>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleWishlist(p.id);
-                      }}
+                      onClick={(e) => handleWishlistClick(e, p.slug || p.id)}
                       style={{
                         background: "rgba(12, 12, 12, 0.75)",
                         backdropFilter: "blur(4px)",

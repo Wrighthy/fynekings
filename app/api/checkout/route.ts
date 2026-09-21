@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { verifyUserToken } from "@/lib/sessionAuth";
 import { customPrice, paystackFee } from "@/lib/pricing";
 import { limitOr429 } from "@/lib/rateLimit";
+import { FYNEKINGS_BANK_DETAILS } from "@/lib/bankConfig";
 
 type IncomingItem = {
   name?: unknown;
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
     if (limited) return limited;
 
     const body = await req.json();
-    const { items, customerName, customerEmail, customerPhone, shippingAddress, city, country, promoCode } = body;
+    const { items, customerName, customerEmail, customerPhone, shippingAddress, city, country, promoCode, paymentMethod } = body;
 
     if (!items || !items.length || !customerName || !customerEmail || !shippingAddress || !city) {
       return NextResponse.json({ error: "Missing required checkout fields." }, { status: 400 });
@@ -113,8 +114,9 @@ export async function POST(req: Request) {
       }
     }
 
+    const isBankTransfer = paymentMethod === "bank_transfer";
     const itemsSum = pricedItems.reduce((acc, i) => acc + i.amount, 0);
-    const totalFees = pricedItems.reduce((acc, i) => acc + i.fee, 0);
+    const totalFees = isBankTransfer ? 0 : pricedItems.reduce((acc, i) => acc + i.fee, 0);
     const calculatedSubtotal = itemsSum + totalFees;
 
     // ——— Server-side discount recomputation ———
@@ -149,9 +151,11 @@ export async function POST(req: Request) {
 
     const finalTotal = Math.max(0, calculatedSubtotal - appliedDiscount);
 
-    const paystackRef = `FYN-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+    const paymentRef = isBankTransfer
+      ? `FYN-BT-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
+      : `FYN-PAY-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
 
-    // Create order record
+    // Create order record with default PENDING status
     const order = await db.order.create({
       data: {
         customerName,
@@ -164,10 +168,23 @@ export async function POST(req: Request) {
         totalAmount: finalTotal,
         discountAmount: appliedDiscount,
         promoCode: appliedPromoCode,
-        paystackRef,
+        paystackRef: paymentRef,
+        paymentMethod: isBankTransfer ? "BANK_TRANSFER" : "PAYSTACK",
         userId,
         // Prisma requires JsonNull (not plain null) to store NULL in a Json column
         customConfig: pricedItems.some((i) => i.custom) ? pricedItems : Prisma.JsonNull,
+      },
+    });
+
+    // Create linked Payment record
+    const payment = await db.payment.create({
+      data: {
+        orderId: order.id,
+        reference: paymentRef,
+        amount: finalTotal,
+        currency: "NGN",
+        method: isBankTransfer ? "BANK_TRANSFER" : "PAYSTACK",
+        status: "PENDING",
       },
     });
 
@@ -183,45 +200,69 @@ export async function POST(req: Request) {
       }
     }
 
-    // Initialize a real Paystack transaction so the customer is charged
-    const secretKey = process.env.PAYSTACK_SECRET_KEY;
+    // Direct Bank Transfer flow: order remains PENDING until concierge manually confirms receipt
+    if (isBankTransfer) {
+      return NextResponse.json({
+        orderId: order.id,
+        paymentReference: paymentRef,
+        paymentMethod: "BANK_TRANSFER",
+        totalAmount: order.totalAmount,
+        bankDetails: FYNEKINGS_BANK_DETAILS,
+      });
+    }
+
+    // Paystack payment flow: initialize real Paystack transaction
+    const secretKey = process.env.PAYSTACK_SECRET_KEY || process.env.TEST_SECRET_KEY;
+    if (!secretKey) {
+      await db.payment.update({
+        where: { id: payment.id },
+        data: { status: "FAILED", gatewayResponse: "Paystack secret key not configured" },
+      });
+      return NextResponse.json(
+        { error: "Payment gateway is not configured on the server." },
+        { status: 500 }
+      );
+    }
+
     const origin = req.headers.get("origin") || new URL(req.url).origin;
 
-    let authorizationUrl: string | null = null;
-    if (secretKey) {
-      const initRes = await fetch("https://api.paystack.co/transaction/initialize", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${secretKey}`,
-          "Content-Type": "application/json",
+    const initRes = await fetch("https://api.paystack.co/transaction/initialize", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${secretKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: customerEmail,
+        amount: finalTotal * 100, // Paystack expects kobo
+        currency: "NGN",
+        reference: paymentRef,
+        callback_url: `${origin}/checkout/success?orderId=${order.id}`,
+        metadata: {
+          orderId: order.id,
+          paymentId: payment.id,
         },
-        body: JSON.stringify({
-          email: customerEmail,
-          amount: finalTotal * 100, // Paystack expects kobo
-          currency: "NGN",
-          reference: paystackRef,
-          callback_url: `${origin}/checkout/success?orderId=${order.id}`,
-          metadata: { orderId: order.id },
-        }),
-      });
+        // Channels explicitly restricted: no USSD, no Flutterwave
+        channels: ["card", "bank_transfer", "bank"],
+      }),
+    });
 
-      const initData = await initRes.json().catch(() => null);
-      if (!initRes.ok || !initData?.data?.authorization_url) {
-        return NextResponse.json(
-          { error: "Failed to initialize payment. Please try again." },
-          { status: 502 }
-        );
-      }
-      authorizationUrl = initData.data.authorization_url;
+    const initData = await initRes.json().catch(() => null);
+    if (!initRes.ok || !initData?.data?.authorization_url) {
+      const errMsg = initData?.message || "Failed to initialize Paystack payment. Please try again.";
+      await db.payment.update({
+        where: { id: payment.id },
+        data: { status: "FAILED", gatewayResponse: errMsg },
+      });
+      return NextResponse.json({ error: errMsg }, { status: 502 });
     }
 
     return NextResponse.json({
       orderId: order.id,
-      paystackRef: order.paystackRef,
+      paymentReference: paymentRef,
+      paymentMethod: "PAYSTACK",
       totalAmount: order.totalAmount,
-      authorizationUrl,
-      // Mock mode is only ever used when running locally without Paystack keys
-      mock: !secretKey && process.env.NODE_ENV !== "production",
+      authorizationUrl: initData.data.authorization_url,
     });
   } catch (error) {
     console.error("Checkout creation error:", error);

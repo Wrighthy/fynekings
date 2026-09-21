@@ -28,10 +28,10 @@ function orderItems(order: Order): PricedItem[] {
     const custom =
       c && typeof c === "object" && !Array.isArray(c)
         ? {
-            strapName: String((c as Record<string, unknown>).strapName || ""),
-            caseName: String((c as Record<string, unknown>).caseName || ""),
-            dialName: String((c as Record<string, unknown>).dialName || ""),
-          }
+          strapName: String((c as Record<string, unknown>).strapName || ""),
+          caseName: String((c as Record<string, unknown>).caseName || ""),
+          dialName: String((c as Record<string, unknown>).dialName || ""),
+        }
         : null;
 
     items.push({
@@ -46,10 +46,18 @@ function orderItems(order: Order): PricedItem[] {
 }
 
 // Marks the order PAID exactly once: the conditional updateMany means the
-// webhook and the redirect verify can race and only one of them performs
-// the side effects. Returns the updated order, or null when the order was
-// already PAID (idempotent no-op).
-export async function markOrderPaid(orderId: string): Promise<Order | null> {
+// webhook, admin approval, and the redirect verify can race and only one
+// performs the side effects. Returns the updated order, or null when the order
+// was already PAID (idempotent no-op).
+export async function markOrderPaid(
+  orderId: string,
+  paymentDetails?: {
+    reference?: string;
+    channel?: string;
+    gatewayResponse?: string;
+    paystackPayload?: unknown;
+  }
+): Promise<Order | null> {
   const result = await db.order.updateMany({
     where: { id: orderId, status: "PENDING" },
     data: { status: "PAID" },
@@ -58,6 +66,26 @@ export async function markOrderPaid(orderId: string): Promise<Order | null> {
 
   const order = await db.order.findUnique({ where: { id: orderId } });
   if (!order) return null;
+
+  // Mark associated Payment record as SUCCESS
+  try {
+    const whereClause = paymentDetails?.reference
+      ? { reference: paymentDetails.reference }
+      : { orderId: orderId, status: "PENDING" as const };
+
+    await db.payment.updateMany({
+      where: whereClause,
+      data: {
+        status: "SUCCESS",
+        paidAt: new Date(),
+        ...(paymentDetails?.channel ? { channel: paymentDetails.channel } : {}),
+        ...(paymentDetails?.gatewayResponse ? { gatewayResponse: paymentDetails.gatewayResponse } : {}),
+        ...(paymentDetails?.paystackPayload ? { paystackPayload: paymentDetails.paystackPayload as any } : {}),
+      },
+    });
+  } catch (paymentErr) {
+    console.error(`Payment record update error for order ${orderId}:`, paymentErr);
+  }
 
   // Inventory and the receipt are best-effort — a failure in either must
   // never undo or block the payment confirmation itself.
@@ -133,8 +161,8 @@ async function sendOrderConfirmation(order: Order) {
   const items = orderItems(order);
   const itemsHtml = items.length
     ? items
-        .map(
-          (i) => `
+      .map(
+        (i) => `
             <tr style="border-bottom: 1px solid #2a2a2a;">
               <td style="padding: 12px 0; color: #F4EFE4; font-size: 0.85rem;">
                 ${i.name}
@@ -142,8 +170,8 @@ async function sendOrderConfirmation(order: Order) {
               </td>
               <td style="padding: 12px 0; color: #F4EFE4; text-align: right; font-size: 0.85rem;">₦${i.amount.toLocaleString()}</td>
             </tr>`
-        )
-        .join("")
+      )
+      .join("")
     : `
             <tr style="border-bottom: 1px solid #2a2a2a;">
               <td style="padding: 12px 0; color: #F4EFE4; font-size: 0.85rem;">Fynekings timepiece</td>

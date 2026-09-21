@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCart, fmt } from "@/lib/store";
 
 export default function Cart() {
@@ -72,14 +73,19 @@ export default function Cart() {
             <span style={{ textTransform: "uppercase", letterSpacing: ".18em" }}>Total</span>
             <span>{fmt(subtotal + totalFee)}</span>
           </div>
-          <button className="checkout-btn">
-            Proceed to Checkout
+          <Link
+            href="/checkout"
+            onClick={() => setCartOpen(false)}
+            className="checkout-btn"
+            style={{ textDecoration: "none" }}
+          >
+            <span>Proceed to Checkout</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M13 5l7 7-7 7"/>
             </svg>
-          </button>
+          </Link>
           <div className="cart-payment-icons">
-            <span>Paystack</span><span>•</span><span>Flutterwave</span><span>•</span><span>Bank Transfer</span>
+            <span>Paystack</span><span>•</span><span>Bank Transfer</span>
           </div>
         </div>
       </div>

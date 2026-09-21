@@ -37,6 +37,7 @@ export default function Nav() {
 
         <ul className="nav-links">
           <li><Link href="/collection">Collection</Link></li>
+          <li><Link href="/inner-circle">Inner Circle</Link></li>
           <li><Link href="/about">About</Link></li>
           <li><Link href="/contact">Contact</Link></li>
           <li><Link href="/faq">FAQ</Link></li>
@@ -176,6 +177,7 @@ export default function Nav() {
           {user ? (
             <Link
               href="/account"
+              className="nav-btn-desktop-only"
               style={{
                 border: "1px solid var(--gold-dk)",
                 color: "var(--gold)",
@@ -184,7 +186,6 @@ export default function Nav() {
                 letterSpacing: ".2em",
                 textTransform: "uppercase",
                 textDecoration: "none",
-                display: "flex",
                 alignItems: "center",
                 gap: "6px",
               }}
@@ -197,6 +198,7 @@ export default function Nav() {
           ) : (
             <button
               onClick={() => setAuthOpen(true, "login")}
+              className="nav-btn-desktop-only"
               style={{
                 background: "none",
                 border: "1px solid var(--dark4)",

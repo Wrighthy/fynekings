@@ -160,9 +160,7 @@ export default function Countdown() {
           </button>
           <div className="payment-icons">
             <span className="payment-icon gold">Paystack</span>
-            <span className="payment-icon">Flutterwave</span>
             <span className="payment-icon">Bank Transfer</span>
-            <span className="payment-icon">USSD</span>
           </div>
         </div>
       </div>

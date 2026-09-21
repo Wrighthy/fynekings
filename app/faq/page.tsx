@@ -15,7 +15,7 @@ const FAQS: FAQItem[] = [
   {
     category: "Ordering & Payment",
     q: "What payment methods do you accept?",
-    a: "We accept all major debit & credit cards, bank transfers, USSD, and Paystack payments in Nigerian Naira (NGN) and USD equivalent. High-value bespoke orders can also be settled via direct bank transfer to our corporate account.",
+    a: "We accept all major debit & credit cards, Paystack payments, and direct corporate bank transfers in Nigerian Naira (NGN) and USD equivalent. Bespoke and high-value orders can also be settled directly via our official corporate bank account.",
   },
   {
     category: "Ordering & Payment",

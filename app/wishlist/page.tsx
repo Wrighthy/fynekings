@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
+import ProtectedRoute from "@/components/ui/ProtectedRoute";
 import { useWishlist } from "@/lib/wishlistStore";
 import { useCart, fmt } from "@/lib/store";
 
@@ -17,11 +18,15 @@ type Product = {
   images: string[];
 };
 
-export default function WishlistPage() {
-  const { items, removeFromWishlist, clearWishlist } = useWishlist();
+function WishlistContent() {
+  const { items, removeFromWishlist, clearWishlist, syncWithServer } = useWishlist();
   const addToCart = useCart((s) => s.addToCart);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    syncWithServer();
+  }, [syncWithServer]);
 
   useEffect(() => {
     fetch("/api/products")
@@ -90,7 +95,7 @@ export default function WishlistPage() {
                       <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     )}
                     <button
-                      onClick={() => removeFromWishlist(p.id)}
+                      onClick={() => removeFromWishlist(p.id, true)}
                       style={{ position: "absolute", top: "12px", right: "12px", background: "rgba(0,0,0,0.6)", border: "1px solid var(--gold-dk)", color: "var(--gold)", width: "32px", height: "32px", cursor: "pointer" }}
                       title="Remove from wishlist"
                     >
@@ -129,5 +134,13 @@ export default function WishlistPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function WishlistPage() {
+  return (
+    <ProtectedRoute>
+      <WishlistContent />
+    </ProtectedRoute>
   );
 }

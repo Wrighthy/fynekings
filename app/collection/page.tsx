@@ -99,7 +99,10 @@ function WatchCardImage({ p }: { p: Product }) {
     );
 }
 
-export default function CollectionPage() {
+import { Suspense } from "react";
+import { useWishlistAction } from "@/lib/wishlistAction";
+
+function CollectionContent() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
@@ -107,7 +110,7 @@ export default function CollectionPage() {
     const [search, setSearch] = useState("");
 
     const addToCart = useCart(s => s.addToCart);
-    const { toggleWishlist, isInWishlist } = useWishlist();
+    const { handleWishlistClick, isInWishlist } = useWishlistAction();
     const { toggleCompare, isInCompare } = useCompare();
 
     useEffect(() => {
@@ -240,10 +243,7 @@ export default function CollectionPage() {
                                     {/* Wishlist & Compare Buttons */}
                                     <div style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10, display: "flex", gap: "6px" }}>
                                         <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                toggleWishlist(p.id);
-                                            }}
+                                            onClick={(e) => handleWishlistClick(e, p.slug || p.id)}
                                             style={{
                                                 background: "rgba(12, 12, 12, 0.8)",
                                                 backdropFilter: "blur(4px)",
@@ -358,5 +358,13 @@ export default function CollectionPage() {
 
             <Footer />
         </div>
+    );
+}
+
+export default function CollectionPage() {
+    return (
+        <Suspense fallback={<div style={{ background: "var(--black)", minHeight: "100vh" }} />}>
+            <CollectionContent />
+        </Suspense>
     );
 }
