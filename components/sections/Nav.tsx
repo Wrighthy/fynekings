@@ -44,7 +44,7 @@ export default function Nav() {
           <li><Link href="/journal">Craft</Link></li>
         </ul>
 
-        <div className="nav-right" style={{ gap: "12px" }}>
+        <div className="nav-right">
           {/* Search Button */}
           <button
             onClick={() => setSearchOpen(true)}
@@ -59,6 +59,7 @@ export default function Nav() {
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
+              flexShrink: 0,
             }}
             title="Search Timepieces"
           >
@@ -68,7 +69,7 @@ export default function Nav() {
             </svg>
           </button>
 
-          {/* Size Guide Trigger */}
+          {/* Size Guide Trigger - Desktop only */}
           <button
             onClick={() => setSizeGuideOpen(true)}
             style={{
@@ -101,6 +102,7 @@ export default function Nav() {
               alignItems: "center",
               justifyContent: "center",
               textDecoration: "none",
+              flexShrink: 0,
             }}
             title="Wishlist"
           >
@@ -130,7 +132,7 @@ export default function Nav() {
             )}
           </Link>
 
-          {/* Compare Link */}
+          {/* Compare Link - Desktop only */}
           <Link
             href="/compare"
             style={{
@@ -173,7 +175,7 @@ export default function Nav() {
             )}
           </Link>
 
-          {/* Account Button */}
+          {/* Account Button - Desktop only */}
           {user ? (
             <Link
               href="/account"
@@ -215,7 +217,7 @@ export default function Nav() {
             </button>
           )}
 
-          {/* Cart Button */}
+          {/* Desktop Cart Button */}
           <button className="nav-btn" onClick={() => setCartOpen(true)}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
@@ -223,6 +225,52 @@ export default function Nav() {
             Cart <span className="cart-pill">{cart.length}</span>
           </button>
 
+          {/* Mobile Cart Icon Button */}
+          <button
+            onClick={() => setCartOpen(true)}
+            aria-label="View Cart"
+            className="mobile-cart-btn"
+            style={{
+              position: "relative",
+              background: "none",
+              border: "1px solid var(--dark4)",
+              color: "var(--gold)",
+              width: "36px",
+              height: "36px",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+            title="Cart"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
+            </svg>
+            {cart.length > 0 && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "-4px",
+                  right: "-4px",
+                  background: "var(--gold)",
+                  color: "var(--black)",
+                  fontSize: ".45rem",
+                  fontWeight: 700,
+                  width: "14px",
+                  height: "14px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {cart.length}
+              </span>
+            )}
+          </button>
+
+          {/* Mobile Navigation Menu Toggle */}
           <MobileNav />
         </div>
       </nav>
