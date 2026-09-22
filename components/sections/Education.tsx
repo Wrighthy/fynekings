@@ -10,7 +10,7 @@ export default function Education() {
           <div>
             <p className="sec-tag">The Craft · No. 06</p>
             <h2 className="sec-title">Watch <em>Education</em></h2>
-            <p className="sec-desc">Understanding what you wear. The knowledge behind every piece in our collection — written by our master watchmakers.</p>
+            <p className="sec-desc">Understanding what you wear. Expert knowledge behind every piece in our collection — from the specialists who choose them.</p>
           </div>
           <Link
             href="/journal"
