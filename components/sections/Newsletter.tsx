@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useCart } from "@/lib/store";
+import { useAuth } from "@/lib/authStore";
 
 const PERKS = [
   "Early Drop Access",
@@ -10,10 +11,42 @@ const PERKS = [
   "Watch Education Series",
 ];
 
+type EnrolledState = "idle" | "checking" | "enrolled" | "not-enrolled";
+
 export default function Newsletter() {
   const emailRef = useRef<HTMLInputElement>(null);
   const showToast = useCart(s => s.showToast);
   const [loading, setLoading] = useState(false);
+  const [enrolledState, setEnrolledState] = useState<EnrolledState>("idle");
+  const { user, isInitialized } = useAuth();
+
+  // Check enrollment status for a given email against the DB
+  const checkEnrollment = useCallback(async (email: string) => {
+    if (!email || !email.includes("@")) return;
+    setEnrolledState("checking");
+    try {
+      const res = await fetch(
+        `/api/newsletter/check?email=${encodeURIComponent(email.toLowerCase().trim())}`
+      );
+      const data = await res.json();
+      setEnrolledState(data.enrolled ? "enrolled" : "not-enrolled");
+    } catch {
+      setEnrolledState("not-enrolled");
+    }
+  }, []);
+
+  // Auto-check if a logged-in user's email is enrolled
+  useEffect(() => {
+    if (!isInitialized) return;
+    if (user?.isInnerCircle) {
+      // Already marked in the User record — no need to fetch
+      setEnrolledState("enrolled");
+      return;
+    }
+    if (user?.email) {
+      checkEnrollment(user.email);
+    }
+  }, [user, isInitialized, checkEnrollment]);
 
   const subscribe = async () => {
     const email = emailRef.current?.value || "";
@@ -37,6 +70,7 @@ export default function Newsletter() {
       if (res.ok) {
         showToast("Welcome to the Collector Club!");
         if (emailRef.current) emailRef.current.value = "";
+        setEnrolledState("enrolled");
       } else {
         showToast(data.error || "Something went wrong");
       }
@@ -71,23 +105,47 @@ export default function Newsletter() {
             </span>
           ))}
         </div>
-        <div className="email-form">
-          <input
-            ref={emailRef}
-            type="email"
-            className="email-input"
-            placeholder="Your email address"
-            onKeyDown={e => e.key === "Enter" && subscribe()}
-          />
-          <button
-            className="email-btn"
-            onClick={subscribe}
-            disabled={loading}
-            style={{ opacity: loading ? 0.7 : 1 }}
-          >
-            {loading ? "Joining..." : "Join Club →"}
-          </button>
-        </div>
+
+        {enrolledState === "enrolled" ? (
+          <div className="enlisted-badge">
+            <div className="enlisted-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div className="enlisted-text">
+              <span className="enlisted-title">Already in the Circle</span>
+              <span className="enlisted-sub">
+                {user?.email
+                  ? `${user.email} is enlisted in the Collector Club`
+                  : "You're enlisted in the Fynekings Collector Club"}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="email-form">
+            <input
+              ref={emailRef}
+              type="email"
+              className="email-input"
+              placeholder="Your email address"
+              onKeyDown={e => e.key === "Enter" && subscribe()}
+              onBlur={e => {
+                const val = e.target.value;
+                if (val && val.includes("@")) checkEnrollment(val);
+              }}
+            />
+            <button
+              className="email-btn"
+              onClick={subscribe}
+              disabled={loading || enrolledState === "checking"}
+              style={{ opacity: loading || enrolledState === "checking" ? 0.7 : 1 }}
+            >
+              {loading ? "Joining..." : enrolledState === "checking" ? "Checking..." : "Join Club →"}
+            </button>
+          </div>
+        )}
+
         <p className="newsletter-fineprint">No spam · One email per fortnight · Unsubscribe anytime</p>
       </div>
     </section>

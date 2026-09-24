@@ -103,10 +103,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 <div style={{ marginTop: "80px", padding: "40px", border: "1px solid var(--dark3)", background: "var(--dark2)", display: "flex", gap: "24px", alignItems: "flex-start" }}>
                     <div style={{ width: "48px", height: "48px", border: "1px solid var(--gold-dk)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontFamily: "Playfair Display, serif", fontSize: "1.2rem", color: "var(--gold)", fontStyle: "italic" }}>A</div>
                     <div>
-                        <div style={{ fontSize: ".55rem", letterSpacing: ".28em", color: "var(--white)", textTransform: "uppercase", marginBottom: "6px" }}>Adebayo Okafor</div>
-                        <div style={{ fontSize: ".48rem", letterSpacing: ".22em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "12px" }}>Master Watchmaker · Founder, Fynekings International</div>
+                        <div style={{ fontSize: ".55rem", letterSpacing: ".28em", color: "var(--white)", textTransform: "uppercase", marginBottom: "6px" }}>Onukwuri Kingsley</div>
+                        <div style={{ fontSize: ".48rem", letterSpacing: ".22em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "12px" }}>Master Curator · Founder, Fynekings International</div>
                         <p style={{ fontSize: ".6rem", letterSpacing: ".06em", lineHeight: 2, color: "var(--muted)" }}>
-                            With over two decades of horological study across Lagos, Geneva, and Tokyo, Adebayo founded Fynekings International to bring world-class watchmaking craftsmanship to the African collector.
+                            With over two decades of curating experience across Lagos, China, and Dubai, Mr Kingsley founded Fynekings International to bring world-class curating craftsmanship to the African collector.
                         </p>
                     </div>
                 </div>

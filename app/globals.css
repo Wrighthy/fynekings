@@ -2552,6 +2552,65 @@ section {
   text-transform: uppercase
 }
 
+/* ── Enlisted / Already in the Circle state ─────────────────────── */
+@keyframes enlistedIn {
+  from { opacity: 0; transform: translateY(10px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);   }
+}
+
+.enlisted-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 20px 28px;
+  border: 1px solid var(--gold-dk);
+  background: rgba(196, 169, 98, .06);
+  box-shadow: 0 0 32px rgba(196, 169, 98, .08);
+  animation: enlistedIn .45s cubic-bezier(.22,.68,0,1.2) both;
+  text-align: left;
+}
+
+.enlisted-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(196, 169, 98, .12);
+  border: 1px solid var(--gold-dk);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+}
+
+.enlisted-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.enlisted-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.enlisted-title {
+  font-size: .6rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.enlisted-sub {
+  font-size: .55rem;
+  letter-spacing: .1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
 /* ============ FOOTER ============ */
 footer {
   background: var(--black);
