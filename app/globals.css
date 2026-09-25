@@ -223,8 +223,9 @@ nav.scrolled {
 
 .nav-links {
   display: flex;
-  gap: 38px;
-  list-style: none
+  gap: 48px;
+  list-style: none;
+  white-space: nowrap
 }
 
 .nav-links a {
@@ -262,7 +263,8 @@ nav.scrolled {
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 18px
+  gap: 14px;
+  flex-shrink: 0
 }
 
 .lang-switch {
@@ -3280,7 +3282,7 @@ footer {
   display: inline-flex !important;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1120px) {
   nav {
     padding: 12px 20px !important;
   }
