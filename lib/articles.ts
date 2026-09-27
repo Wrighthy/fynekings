@@ -37,7 +37,7 @@ export const ARTICLES: Article[] = [
                     "Price range: Most affordable",
                     "Best for: Daily wear, professional environments, travel",
                 ],
-                tip: "The Fynekings Continent uses a Swiss ETA quartz movement — one of the most respected quartz calibres in the industry.",
+                tip: "The Fynekings Continent is powered by a Swiss ETA quartz movement, a respected calibre known for its reliability and precision.",
             },
             {
                 heading: "Automatic Movement",
@@ -101,7 +101,7 @@ export const ARTICLES: Article[] = [
                     "Skin sensitivity: Hypoallergenic",
                     "Value retention: Good",
                 ],
-                tip: "All Fynekings watches use 316L surgical steel as their base material — the same grade used in medical implants.",
+
             },
             {
                 heading: "Gold PVD Coating",
@@ -139,7 +139,7 @@ export const ARTICLES: Article[] = [
                     "Appearance: Deep, dark matte or satin black",
                     "Value: Premium positioning",
                 ],
-                tip: "The Fynekings Black DLC case option uses a genuine DLC coating — not paint or powder coat.",
+
             },
             {
                 heading: "Ceramic",
@@ -168,7 +168,7 @@ export const ARTICLES: Article[] = [
                     "Suede: Casual and tactile — not suitable for wet environments",
                     "Shell Cordovan: Horsehide, exceptionally durable with a unique sheen",
                 ],
-                tip: "All Fynekings leather straps are hand-stitched alligator or calfskin. We use a contrasting gold stitch on our darker straps — a detail borrowed from Swiss complications watches.",
+
             },
             {
                 heading: "Rubber and Silicone Straps",
@@ -288,7 +288,7 @@ export const ARTICLES: Article[] = [
                     "Vintage watches: Service every 3 years minimum",
                     "Signs you need a service: Running fast/slow, condensation inside crystal, stiff crown, irregular power reserve",
                 ],
-                tip: "All Fynekings watches come with a 5-year warranty that covers manufacturing defects. Our Lagos gallery offers servicing for all Fynekings pieces.",
+
             },
             {
                 heading: "Water Resistance",

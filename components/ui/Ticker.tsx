@@ -4,7 +4,7 @@ export default function Ticker() {
     { text: "12-month international warranty" },
     { text: "Obsidian King — 12 of 50 remaining", trailingGold: true },
     { text: "Try-on in AR before you buy" },
-    { text: "Paystack & Flutterwave secured checkout" },
+    { text: "Paystack & Bank Transfer secured checkout" },
   ];
 
   return (

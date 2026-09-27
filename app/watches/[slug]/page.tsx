@@ -79,7 +79,10 @@ function WatchSVG({ p }: { p: Product }) {
     );
 }
 
-export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+import { Suspense } from "react";
+import { useWishlistAction } from "@/lib/wishlistAction";
+
+function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = use(params);
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
@@ -87,6 +90,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
     const [zoomed, setZoomed] = useState(false);
     const [related, setRelated] = useState<Product[]>([]);
     const addToCart = useCart(s => s.addToCart);
+    const { handleWishlistClick, isInWishlist } = useWishlistAction();
     const [isPaused, setIsPaused] = useState(false);
 
     useEffect(() => {
@@ -309,13 +313,33 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                     </div>
 
                     {/* Buttons */}
-                    <button onClick={() => addToCart(product.name, product.series, product.price)}
-                        style={{ width: "100%", padding: "20px", background: "var(--gold)", color: "var(--black)", border: "none", fontSize: ".6rem", letterSpacing: ".32em", textTransform: "uppercase", fontWeight: 600, fontFamily: "Raleway, sans-serif", cursor: "pointer", marginBottom: "16px", transition: "background .3s", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px" }}
-                        onMouseEnter={e => (e.currentTarget.style.background = "var(--gold-lt)")}
-                        onMouseLeave={e => (e.currentTarget.style.background = "var(--gold)")}>
-                        Add to Cart
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
-                    </button>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "12px", marginBottom: "16px" }}>
+                        <button onClick={() => addToCart(product.name, product.series, product.price)}
+                            style={{ padding: "20px", background: "var(--gold)", color: "var(--black)", border: "none", fontSize: ".6rem", letterSpacing: ".32em", textTransform: "uppercase", fontWeight: 600, fontFamily: "Raleway, sans-serif", cursor: "pointer", transition: "background .3s", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px" }}
+                            onMouseEnter={e => (e.currentTarget.style.background = "var(--gold-lt)")}
+                            onMouseLeave={e => (e.currentTarget.style.background = "var(--gold)")}>
+                            Add to Cart
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+                        </button>
+                        <button
+                            onClick={(e) => handleWishlistClick(e, product.slug || product.id)}
+                            style={{
+                                padding: "0 24px",
+                                background: "var(--dark2)",
+                                border: isInWishlist(product.slug || product.id) ? "1px solid var(--gold)" : "1px solid var(--dark3)",
+                                color: isInWishlist(product.slug || product.id) ? "var(--gold)" : "var(--muted)",
+                                fontSize: "1.2rem",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                transition: "all .3s",
+                            }}
+                            title={isInWishlist(product.slug || product.id) ? "Remove from Wishlist" : "Save to Wishlist"}
+                        >
+                            {isInWishlist(product.slug || product.id) ? "♥" : "♡"}
+                        </button>
+                    </div>
 
                     {/* Specs */}
                     {product.specs && (
@@ -394,3 +418,11 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         </div>
     );
 }
+
+export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+    return (
+        <Suspense fallback={<div style={{ background: "var(--black)", minHeight: "100vh" }} />}>
+            <ProductContent params={params} />
+        </Suspense>
+    );
+}

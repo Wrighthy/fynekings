@@ -1,26 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
+import ProtectedRoute from "@/components/ui/ProtectedRoute";
 import { useCart, fmt } from "@/lib/store";
 import { useAuth } from "@/lib/authStore";
+import { FYNEKINGS_BANK_DETAILS } from "@/lib/bankConfig";
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
   const cart = useCart((s) => s.cart);
   const user = useAuth((s) => s.user);
 
   const [form, setForm] = useState({
-    customerName: user?.name || "",
-    customerEmail: user?.email || "",
-    customerPhone: user?.phone || "",
-    shippingAddress: user?.shippingAddress || "",
-    city: user?.city || "Lagos",
+    customerName: "",
+    customerEmail: "",
+    customerPhone: "",
+    shippingAddress: "",
+    city: "Lagos",
     country: "Nigeria",
   });
+
+  const [paymentMethod, setPaymentMethod] = useState<"paystack" | "bank_transfer">("paystack");
+
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        customerName: user.name || prev.customerName,
+        customerEmail: user.email || prev.customerEmail,
+        customerPhone: user.phone || prev.customerPhone,
+        shippingAddress: user.shippingAddress || prev.shippingAddress,
+        city: user.city || prev.city,
+        country: user.country || prev.country,
+      }));
+    }
+  }, [user]);
 
   const [promoInput, setPromoInput] = useState("");
   const [appliedPromo, setAppliedPromo] = useState<{ code: string; discountAmount: number } | null>(null);
@@ -31,7 +49,7 @@ export default function CheckoutPage() {
   const [error, setError] = useState("");
 
   const subtotal = cart.reduce((a, b) => a + b.amount, 0);
-  const totalFees = cart.reduce((a, b) => a + b.fee, 0);
+  const totalFees = paymentMethod === "paystack" ? cart.reduce((a, b) => a + b.fee, 0) : 0;
   const discountAmount = appliedPromo ? appliedPromo.discountAmount : 0;
   const grandTotal = Math.max(0, subtotal + totalFees - discountAmount);
 
@@ -67,7 +85,7 @@ export default function CheckoutPage() {
     setError("");
 
     try {
-      // Step 1: Create Order in DB
+      // Step 1: Create Order & Initialize Payment on Backend
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -75,7 +93,7 @@ export default function CheckoutPage() {
           items: cart,
           ...form,
           promoCode: appliedPromo?.code || null,
-          discountAmount,
+          paymentMethod,
         }),
       });
 
@@ -87,39 +105,20 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Step 2: Payment
-      if (data.authorizationUrl) {
-        // Real Paystack transaction — send the customer to the hosted
-        // payment page. Verification happens server-side when Paystack
-        // redirects back to /checkout/success with the reference.
-        window.location.href = data.authorizationUrl;
-        return; // stay in loading state while the redirect happens
-      }
-
-      if (data.mock) {
-        // Local development only (no Paystack keys configured)
-        const mockRef = `MOCK-PAYSTACK-${Date.now()}`;
-        const verifyRes = await fetch("/api/checkout/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            reference: mockRef,
-            orderId: data.orderId,
-          }),
-        });
-
-        const verifyData = await verifyRes.json();
-
-        if (verifyRes.ok && verifyData.success) {
-          useCart.setState({ cart: [] });
-          router.push(`/checkout/success?orderId=${data.orderId}`);
+      // Step 2: Payment flow handling
+      if (paymentMethod === "paystack") {
+        if (data.authorizationUrl) {
+          // Send customer to Paystack hosted payment page
+          window.location.href = data.authorizationUrl;
+          return;
         } else {
-          setError(verifyData.error || "Payment verification failed.");
+          setError(data.error || "Paystack authorization URL could not be generated.");
           setLoading(false);
         }
       } else {
-        setError("Payment could not be initialized. Please try again.");
-        setLoading(false);
+        // Bank Transfer flow: Clear cart and route to order confirmation with bank details
+        useCart.setState({ cart: [] });
+        router.push(`/checkout/success?orderId=${data.orderId}&method=transfer`);
       }
     } catch {
       setError("Network error. Please try again.");
@@ -251,13 +250,92 @@ export default function CheckoutPage() {
               </div>
             </div>
 
+            {/* Section 2: Payment Method Selection */}
             <div style={{ marginTop: "20px", borderTop: "1px solid var(--dark3)", paddingTop: "24px" }}>
-              <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", fontWeight: 300, marginBottom: "16px" }}>
-                2. Secure Payment Authorization
-              </h2>
-              <p style={{ fontSize: ".62rem", color: "var(--muted)", lineHeight: 1.8, marginBottom: "20px" }}>
-                Payment processed via 256-bit encrypted Paystack payment gateway with instant backend verification.
-              </p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "16px" }}>
+                <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", fontWeight: 300, margin: 0 }}>
+                  2. Select Payment Method
+                </h2>
+                <span style={{ fontSize: ".5rem", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase" }}>
+                  Secured &amp; Verified
+                </span>
+              </div>
+
+              {/* Payment Method Selector Cards */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px", marginBottom: "20px" }}>
+                {/* Option 1: Paystack */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("paystack")}
+                  style={{
+                    padding: "16px",
+                    background: paymentMethod === "paystack" ? "rgba(196, 169, 98, 0.08)" : "var(--dark)",
+                    border: `1px solid ${paymentMethod === "paystack" ? "var(--gold)" : "var(--dark4)"}`,
+                    textAlign: "left",
+                    cursor: "pointer",
+                    transition: "all .2s ease",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+                    <span style={{ fontSize: ".72rem", fontWeight: 600, color: paymentMethod === "paystack" ? "var(--gold)" : "var(--white)", letterSpacing: ".05em" }}>
+                      Paystack
+                    </span>
+                    <span style={{ width: "12px", height: "12px", borderRadius: "50%", border: `1px solid ${paymentMethod === "paystack" ? "var(--gold)" : "var(--muted)"}`, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                      {paymentMethod === "paystack" && <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--gold)" }}></span>}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: ".55rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                    Instant debit/credit cards (Mastercard, Visa, Verve) &amp; Apple Pay
+                  </div>
+                </button>
+
+                {/* Option 2: Bank Transfer */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("bank_transfer")}
+                  style={{
+                    padding: "16px",
+                    background: paymentMethod === "bank_transfer" ? "rgba(196, 169, 98, 0.08)" : "var(--dark)",
+                    border: `1px solid ${paymentMethod === "bank_transfer" ? "var(--gold)" : "var(--dark4)"}`,
+                    textAlign: "left",
+                    cursor: "pointer",
+                    transition: "all .2s ease",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+                    <span style={{ fontSize: ".72rem", fontWeight: 600, color: paymentMethod === "bank_transfer" ? "var(--gold)" : "var(--white)", letterSpacing: ".05em" }}>
+                      Bank Transfer
+                    </span>
+                    <span style={{ width: "12px", height: "12px", borderRadius: "50%", border: `1px solid ${paymentMethod === "bank_transfer" ? "var(--gold)" : "var(--muted)"}`, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                      {paymentMethod === "bank_transfer" && <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--gold)" }}></span>}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: ".55rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                    Direct corporate bank transfer with instant concierge invoice confirmation
+                  </div>
+                </button>
+              </div>
+
+              {/* Dynamic Note based on selected method */}
+              {paymentMethod === "paystack" ? (
+                <p style={{ fontSize: ".62rem", color: "var(--muted)", lineHeight: 1.8, marginBottom: "20px" }}>
+                  Payment processed via 256-bit encrypted Paystack payment gateway with instant backend verification.
+                </p>
+              ) : (
+                <div style={{ background: "var(--dark)", border: "1px solid var(--dark4)", padding: "16px", marginBottom: "20px", fontSize: ".62rem", lineHeight: 1.8 }}>
+                  <div style={{ color: "var(--gold)", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".15em", fontSize: ".52rem", marginBottom: "6px" }}>
+                    Corporate Account Wire
+                  </div>
+                  <div style={{ color: "var(--white)" }}>Bank: {FYNEKINGS_BANK_DETAILS.bankName}</div>
+                  <div style={{ color: "var(--white)" }}>Account: {FYNEKINGS_BANK_DETAILS.accountName}</div>
+                  <div style={{ color: "var(--gold)", fontFamily: "monospace", letterSpacing: ".1em", fontSize: ".75rem", margin: "4px 0" }}>
+                    {FYNEKINGS_BANK_DETAILS.accountNumber}
+                  </div>
+                  <div style={{ color: "var(--muted)", fontSize: ".55rem" }}>
+                    Place order to lock allocation. Your unique order reference will be generated for payment narration.
+                  </div>
+                </div>
+              )}
 
               <button
                 type="submit"
@@ -275,7 +353,11 @@ export default function CheckoutPage() {
                   cursor: loading ? "wait" : "pointer",
                 }}
               >
-                {loading ? "Verifying Transaction..." : `Authorize Payment (${fmt(grandTotal)}) →`}
+                {loading
+                  ? "Processing Acquisition..."
+                  : paymentMethod === "paystack"
+                  ? `Pay via Paystack (${fmt(grandTotal)}) →`
+                  : `Confirm Order with Bank Transfer (${fmt(grandTotal)}) →`}
               </button>
             </div>
           </form>
@@ -336,8 +418,10 @@ export default function CheckoutPage() {
               <span style={{ color: "var(--white)" }}>{fmt(subtotal)}</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Paystack & Gateway Fees</span>
-              <span style={{ color: "var(--white)" }}>{fmt(totalFees)}</span>
+              <span>Processing &amp; Gateway Fees</span>
+              <span style={{ color: "var(--white)" }}>
+                {totalFees > 0 ? fmt(totalFees) : "COMPLIMENTARY"}
+              </span>
             </div>
             {discountAmount > 0 && (
               <div style={{ display: "flex", justifyContent: "space-between", color: "var(--gold)" }}>
@@ -359,5 +443,13 @@ export default function CheckoutPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <ProtectedRoute>
+      <CheckoutContent />
+    </ProtectedRoute>
   );
 }

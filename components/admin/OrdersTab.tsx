@@ -171,6 +171,12 @@ export default function OrdersTab() {
                             <span style={{ color: "#fff", fontFamily: "monospace", fontSize: ".58rem" }}>{o.paystackRef || "—"}</span>
                           </div>
                           <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #1e1e1e", paddingBottom: "8px" }}>
+                            <span style={{ color: "#888" }}>Payment method</span>
+                            <span style={{ color: "#C4A962", fontSize: ".58rem", fontWeight: 600 }}>
+                              {o.paymentMethod || (o.paystackRef?.startsWith("FYN-BT") ? "BANK_TRANSFER" : "PAYSTACK")}
+                            </span>
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #1e1e1e", paddingBottom: "8px" }}>
                             <span style={{ color: "#888" }}>Customer account</span>
                             <span style={{ color: o.user ? "#6bd68b" : "#888" }}>{o.user ? o.user.email : "Guest checkout"}</span>
                           </div>

@@ -40,6 +40,8 @@ export async function POST(req: Request) {
         shippingAddress: user.shippingAddress,
         city: user.city,
         country: user.country,
+        isInnerCircle: user.isInnerCircle,
+        innerCircleJoinedAt: user.innerCircleJoinedAt,
       },
     });
 

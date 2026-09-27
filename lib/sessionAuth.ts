@@ -1,4 +1,7 @@
 import crypto from "crypto";
+import { cookies } from "next/headers";
+import { db } from "@/lib/db";
+import { NextResponse } from "next/server";
 
 // HMAC key for signing user session tokens. SESSION_SECRET is recommended;
 // ADMIN_PASSKEY is used as a fallback so one env var secures both. In
@@ -61,3 +64,49 @@ export function verifyUserToken(token: string | undefined): SessionPayload | nul
     return null;
   }
 }
+
+// Retrieves the authenticated User object from incoming request cookies
+export async function getSessionUser() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("fynekings_token")?.value;
+    const session = verifyUserToken(token);
+    if (!session) return null;
+
+    const user = await db.user.findUnique({
+      where: { id: session.userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        shippingAddress: true,
+        city: true,
+        country: true,
+        isInnerCircle: true,
+        innerCircleJoinedAt: true,
+        createdAt: true,
+      },
+    });
+
+    return user;
+  } catch {
+    return null;
+  }
+}
+
+// Reusable server-side route guard
+export async function requireAuth() {
+  const user = await getSessionUser();
+  if (!user) {
+    return {
+      user: null,
+      errorResponse: NextResponse.json(
+        { error: "Unauthorized. Please sign in to access this feature." },
+        { status: 401 }
+      ),
+    };
+  }
+  return { user, errorResponse: null };
+}
+
