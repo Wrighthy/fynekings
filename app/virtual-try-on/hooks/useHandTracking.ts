@@ -163,13 +163,18 @@ export function useHandTracking(
       // "Right" hand (camera POV): back faces camera when crossZ > 0.
       // "Left"  hand (camera POV): back faces camera when crossZ < 0.
       // A small dead-zone (0.002) avoids flicker when the hand is edge-on.
-      //
-      // With the rear camera the image is NOT mirrored, so the cross-product
-      // sign for "back of hand" is the opposite of the front camera.
       const isBackOfHandRaw = rawLabel === "Right"
         ? crossZ > 0.002
         : crossZ < -0.002;
-      const isBackOfHand = front ? isBackOfHandRaw : !isBackOfHandRaw;
+
+      // On desktop, `isFrontCamera` may be false but the only available
+      // camera is still front-facing (webcam), so the raw detection is
+      // correct.  On mobile with a genuine rear camera (`!front`), the
+      // camera physically views the hand from the opposite side, which
+      // flips the cross-product sign — so we invert in that case only.
+      const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const isRealRearCamera = !front && isMobileDevice;
+      const isBackOfHand = isRealRearCamera ? !isBackOfHandRaw : isBackOfHandRaw;
 
       // Mirror X if front camera
       if (front) {
