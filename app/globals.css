@@ -3280,6 +3280,57 @@ footer {
 
 .nav-btn-desktop-only {
   display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Intermediate breakpoint: nav fits comfortably between 1120px and 1400px */
+@media (max-width: 1400px) and (min-width: 1121px) {
+  nav {
+    padding: 14px 28px;
+  }
+
+  nav.scrolled {
+    padding: 10px 28px;
+  }
+
+  .logo {
+    font-size: 1rem;
+    letter-spacing: .32em;
+    gap: 10px;
+  }
+
+  .logo-mark {
+    width: 22px;
+    height: 22px;
+    font-size: .45rem;
+  }
+
+  .nav-links {
+    gap: 18px;
+  }
+
+  .nav-links a {
+    font-size: .48rem;
+    letter-spacing: .15em;
+  }
+
+  .nav-right {
+    gap: 6px;
+  }
+
+  .nav-btn {
+    padding: 8px 12px;
+    font-size: .48rem;
+    letter-spacing: .15em;
+  }
+
+  .nav-btn-desktop-only {
+    padding: 0 8px !important;
+    height: 32px !important;
+    font-size: .44rem !important;
+    letter-spacing: .15em !important;
+  }
 }
 
 @media (max-width: 1120px) {
