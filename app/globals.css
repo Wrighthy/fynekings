@@ -837,22 +837,25 @@ section {
 .products-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--dark3)
+  gap: 20px;
+  background: transparent
 }
 
 .product-card {
   background: var(--dark);
+  border: 1px solid var(--dark4);
   overflow: hidden;
   position: relative;
   cursor: none;
-  transition: background .4s;
+  transition: background .4s, border-color .4s, box-shadow .4s;
   display: flex;
   flex-direction: column
 }
 
 .product-card:hover {
-  background: var(--dark2)
+  background: var(--dark2);
+  border-color: var(--gold-dk);
+  box-shadow: 0 0 0 1px var(--gold-dk), 0 8px 32px rgba(196, 169, 98, .08)
 }
 
 .product-card:hover .prod-img {
@@ -3152,7 +3155,8 @@ footer {
   }
 
   .products-grid {
-    grid-template-columns: repeat(2, 1fr)
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px
   }
 
   .customizer-grid {
@@ -3460,6 +3464,7 @@ footer {
 
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px
   }
 
   .mobile-menu-btn {
