@@ -13,6 +13,28 @@ export type Product = {
   inStock: boolean;
   tag: string;
   images: string[];
+  categories?: string[];
+  movement?: string | null;
+  strapMaterial?: string | null;
+  style?: string | null;
+  isPremium?: boolean;
+  premiumCollection?: string | null;
+};
+
+export type NewProductForm = {
+  name: string;
+  series: string;
+  price: string;
+  tag: string;
+  stockCount: string;
+  description: string;
+  imageUrl: string;
+  categories: string[];
+  movement: string;
+  strapMaterial: string;
+  style: string;
+  isPremium: boolean;
+  premiumCollection: string;
 };
 
 export type Order = {
@@ -127,8 +149,8 @@ export type AdminDashboardContextValue = {
   setMessageFilter: (filter: "NEW" | "HANDLED" | "ALL") => void;
 
   // forms
-  newProduct: { name: string; series: string; price: string; tag: string; stockCount: string; description: string; imageUrl: string };
-  setNewProduct: React.Dispatch<React.SetStateAction<{ name: string; series: string; price: string; tag: string; stockCount: string; description: string; imageUrl: string }>>;
+  newProduct: NewProductForm;
+  setNewProduct: React.Dispatch<React.SetStateAction<NewProductForm>>;
   newPromo: { code: string; discountType: string; discountValue: string; minSpend: string; maxUses: string };
   setNewPromo: React.Dispatch<React.SetStateAction<{ code: string; discountType: string; discountValue: string; minSpend: string; maxUses: string }>>;
   broadcast: { subject: string; html: string };
@@ -157,6 +179,7 @@ export type AdminDashboardContextValue = {
   setMessage: (msg: string) => void;
   updateOrderStatus: (orderId: string, newStatus: string) => Promise<void>;
   updateStock: (productId: string, newStock: number) => Promise<void>;
+  updateProductDetails: (productId: string, data: Record<string, any>) => Promise<void>;
   handleUploadImage: (productId: string, files: FileList | null) => Promise<void>;
   handleDeleteImage: (productId: string, imageUrl: string) => Promise<void>;
   handleDeleteProduct: (productId: string) => Promise<void>;

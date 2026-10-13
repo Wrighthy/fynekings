@@ -4278,3 +4278,14 @@ footer {
 .ar-launch-btn {
   text-decoration: none;
 }
+
+/* Watch Catalog Responsive & Filter Drawer styles */
+@media (max-width: 960px) {
+  .catalog-filter-sidebar {
+    display: none !important;
+  }
+  .catalog-mobile-filter-btn {
+    display: inline-flex !important;
+  }
+}
+

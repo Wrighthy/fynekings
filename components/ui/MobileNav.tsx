@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/store";
 import { useAuth } from "@/lib/authStore";
+import { CATEGORIES, PREMIUM_SUBCATEGORIES } from "@/lib/categories";
 
 const NAV_LINKS = [
   { label: "Collection", href: "/collection" },
@@ -22,6 +23,8 @@ const NAV_LINKS = [
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [premiumOpen, setPremiumOpen] = useState(false);
   const cart = useCart((s) => s.cart);
   const setCartOpen = useCart((s) => s.setCartOpen);
   const { user, setAuthOpen } = useAuth();
@@ -227,34 +230,220 @@ export default function MobileNav() {
             Navigation
           </div>
           <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0", padding: 0, margin: 0 }}>
-            {NAV_LINKS.map((link) => (
-              <li key={link.label}>
-                <Link
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "12px 0",
-                    borderBottom: "1px solid var(--dark3)",
-                    fontFamily: "Playfair Display, serif",
-                    fontSize: "1.05rem",
-                    fontWeight: 300,
-                    color: "var(--white)",
-                    textDecoration: "none",
-                    transition: "color .3s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--white)")}
-                >
-                  {link.label}
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M5 12h14M13 5l7 7-7 7" />
-                  </svg>
-                </Link>
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              if (link.label === "Collection") {
+                return (
+                  <Fragment key="CollectionGroup">
+                    <li key="Collection" style={{ borderBottom: "1px solid var(--dark3)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0" }}>
+                      <Link
+                        href="/collection"
+                        onClick={() => setOpen(false)}
+                        style={{
+                          fontFamily: "Playfair Display, serif",
+                          fontSize: "1.05rem",
+                          fontWeight: 300,
+                          color: "var(--white)",
+                          textDecoration: "none",
+                          flex: 1,
+                        }}
+                      >
+                        Collection
+                      </Link>
+                      <button
+                        onClick={() => setCategoriesOpen(!categoriesOpen)}
+                        aria-label="Toggle categories"
+                        style={{
+                          background: "none",
+                          border: "none",
+                          color: "var(--gold)",
+                          padding: "6px 10px",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          fontSize: ".52rem",
+                          letterSpacing: ".1em",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        Categories
+                        <span style={{ fontSize: ".45rem", transform: categoriesOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
+                          ▼
+                        </span>
+                      </button>
+                    </div>
+
+                    {categoriesOpen && (
+                      <div
+                        style={{
+                          padding: "6px 0 16px",
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: "8px",
+                          borderTop: "1px dashed var(--dark3)",
+                        }}
+                      >
+                        {CATEGORIES.map((cat) => (
+                          <Link
+                            key={cat.slug}
+                            href={`/watches/category/${cat.slug}`}
+                            onClick={() => setOpen(false)}
+                            style={{
+                              fontSize: ".55rem",
+                              letterSpacing: ".1em",
+                              textTransform: "uppercase",
+                              color: "var(--muted)",
+                              textDecoration: "none",
+                              padding: "8px",
+                              background: "rgba(20,20,20,.6)",
+                              borderRadius: "2px",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "6px",
+                            }}
+                          >
+                            <span style={{ color: "var(--gold)", opacity: 0.8 }}>{cat.icon}</span>
+                            <span>{cat.label}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </li>
+                  <li key="PremiumCollection" style={{ borderBottom: "1px solid var(--dark3)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0" }}>
+                      <Link
+                        href="/premium"
+                        onClick={() => setOpen(false)}
+                        style={{
+                          fontFamily: "Playfair Display, serif",
+                          fontSize: "1.05rem",
+                          fontWeight: 300,
+                          color: "var(--gold)",
+                          textDecoration: "none",
+                          flex: 1,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                        }}
+                      >
+                        <span style={{ fontSize: ".7rem" }}>✦</span>
+                        <span>Premium Collection</span>
+                      </Link>
+                      <button
+                        onClick={() => setPremiumOpen(!premiumOpen)}
+                        aria-label="Toggle premium subcategories"
+                        style={{
+                          background: "none",
+                          border: "none",
+                          color: "var(--gold)",
+                          padding: "6px 10px",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          fontSize: ".52rem",
+                          letterSpacing: ".1em",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        Editions
+                        <span style={{ fontSize: ".45rem", transform: premiumOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
+                          ▼
+                        </span>
+                      </button>
+                    </div>
+
+                    {premiumOpen && (
+                      <div
+                        style={{
+                          padding: "6px 0 16px",
+                          display: "grid",
+                          gridTemplateColumns: "1fr",
+                          gap: "8px",
+                          borderTop: "1px dashed rgba(196,169,98,.3)",
+                        }}
+                      >
+                        <Link
+                          href="/premium"
+                          onClick={() => setOpen(false)}
+                          style={{
+                            fontSize: ".55rem",
+                            letterSpacing: ".15em",
+                            textTransform: "uppercase",
+                            color: "var(--gold)",
+                            textDecoration: "none",
+                            padding: "8px 10px",
+                            background: "rgba(196,169,98,.12)",
+                            border: "1px solid rgba(196,169,98,.3)",
+                            borderRadius: "2px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <span>✦</span>
+                          <span>All Premium Timepieces</span>
+                        </Link>
+                        {PREMIUM_SUBCATEGORIES.map((sub) => (
+                          <Link
+                            key={sub.slug}
+                            href={`/premium/${sub.slug}`}
+                            onClick={() => setOpen(false)}
+                            style={{
+                              fontSize: ".55rem",
+                              letterSpacing: ".1em",
+                              textTransform: "uppercase",
+                              color: "var(--muted)",
+                              textDecoration: "none",
+                              padding: "8px 10px",
+                              background: "rgba(20,20,20,.6)",
+                              borderRadius: "2px",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                            }}
+                          >
+                            <span style={{ color: "var(--gold)" }}>{sub.icon}</span>
+                            <span>{sub.label}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </li>
+                </Fragment>
+              );
+            }
+
+              return (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "12px 0",
+                      borderBottom: "1px solid var(--dark3)",
+                      fontFamily: "Playfair Display, serif",
+                      fontSize: "1.05rem",
+                      fontWeight: 300,
+                      color: "var(--white)",
+                      textDecoration: "none",
+                      transition: "color .3s",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--white)")}
+                  >
+                    {link.label}
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M5 12h14M13 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
           {/* Cart button */}

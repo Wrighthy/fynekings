@@ -65,6 +65,12 @@ model Product {
   images            String[]
   slug              String         @unique
   specs             Json?
+  categories        String[]       @default([])
+  movement          String?
+  strapMaterial     String?
+  style             String?
+  isPremium         Boolean        @default(false)
+  premiumCollection String?
   orders            Order[]
   wishlist          WishlistItem[]
   comments          ProductComment[]

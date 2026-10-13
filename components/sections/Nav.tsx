@@ -10,10 +10,13 @@ import MobileNav from "@/components/ui/MobileNav";
 import SearchModal from "@/components/ui/SearchModal";
 import SizeGuideModal from "@/components/ui/SizeGuideModal";
 
+import { CATEGORIES } from "@/lib/categories";
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
+  const [collectionOpen, setCollectionOpen] = useState(false);
 
   const cart = useCart((s) => s.cart);
   const setCartOpen = useCart((s) => s.setCartOpen);
@@ -36,7 +39,248 @@ export default function Nav() {
         </Link>
 
         <ul className="nav-links">
-          <li><Link href="/collection">Collection</Link></li>
+          <li
+            onMouseEnter={() => setCollectionOpen(true)}
+            onMouseLeave={() => setCollectionOpen(false)}
+            style={{ position: "relative" }}
+          >
+            <Link
+              href="/collection"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                color: collectionOpen ? "var(--gold)" : undefined,
+              }}
+            >
+              Collection
+              <svg
+                width="8"
+                height="8"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                style={{
+                  transition: "transform .2s ease",
+                  transform: collectionOpen ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </Link>
+
+            {/* Dropdown Mega-Menu */}
+            {collectionOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: "-40px",
+                  paddingTop: "16px",
+                  zIndex: 1000,
+                }}
+              >
+                <div
+                  style={{
+                    width: "480px",
+                    background: "rgba(12, 12, 12, 0.98)",
+                    backdropFilter: "blur(20px)",
+                    border: "1px solid var(--dark3)",
+                    borderTop: "2px solid var(--gold)",
+                    boxShadow: "0 24px 48px rgba(0,0,0,0.8)",
+                    padding: "24px 28px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "16px",
+                      borderBottom: "1px solid var(--dark3)",
+                      paddingBottom: "10px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: ".5rem",
+                        letterSpacing: ".3em",
+                        textTransform: "uppercase",
+                        color: "var(--gold)",
+                      }}
+                    >
+                      Watch Categories
+                    </span>
+                    <Link
+                      href="/collection"
+                      onClick={() => setCollectionOpen(false)}
+                      style={{
+                        fontSize: ".48rem",
+                        letterSpacing: ".15em",
+                        textTransform: "uppercase",
+                        color: "var(--muted)",
+                        textDecoration: "none",
+                      }}
+                    >
+                      All Watches →
+                    </Link>
+                  </div>
+
+                  {/* The Premium Collection Banner in Mega Menu */}
+                  <Link
+                    href="/premium"
+                    onClick={() => setCollectionOpen(false)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "10px 14px",
+                      marginBottom: "14px",
+                      background: "linear-gradient(90deg, rgba(196,169,98,.18) 0%, rgba(196,169,98,.04) 100%)",
+                      border: "1px solid rgba(196,169,98,.35)",
+                      borderRadius: "2px",
+                      textDecoration: "none",
+                      transition: "border-color .2s, background .2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "var(--gold)";
+                      e.currentTarget.style.background = "linear-gradient(90deg, rgba(196,169,98,.25) 0%, rgba(196,169,98,.08) 100%)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(196,169,98,.35)";
+                      e.currentTarget.style.background = "linear-gradient(90deg, rgba(196,169,98,.18) 0%, rgba(196,169,98,.04) 100%)";
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontSize: ".55rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
+                        ✦ The Premium Collection
+                      </div>
+                      <div style={{ fontSize: ".45rem", color: "rgba(244,239,228,.7)", letterSpacing: ".05em" }}>
+                        Curated Haute Horlogerie & Limited References
+                      </div>
+                    </div>
+                    <span style={{ fontSize: ".6rem", color: "var(--gold)" }}>→</span>
+                  </Link>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "10px 20px",
+                    }}
+                  >
+                    {CATEGORIES.map((cat) => (
+                      <Link
+                        key={cat.slug}
+                        href={`/watches/category/${cat.slug}`}
+                        onClick={() => setCollectionOpen(false)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                          textDecoration: "none",
+                          padding: "8px 10px",
+                          borderRadius: "2px",
+                          transition: "background .2s",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "rgba(196,169,98,.1)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "transparent";
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: ".85rem",
+                            color: "var(--gold)",
+                            width: "20px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {cat.icon}
+                        </span>
+                        <div>
+                          <div
+                            style={{
+                              fontSize: ".6rem",
+                              letterSpacing: ".15em",
+                              textTransform: "uppercase",
+                              color: "var(--white)",
+                              fontWeight: 500,
+                            }}
+                          >
+                            {cat.label}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: ".45rem",
+                              color: "var(--muted)",
+                              letterSpacing: ".05em",
+                            }}
+                          >
+                            {cat.tagline || "Hand-finished timepiece"}
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: "16px",
+                      paddingTop: "14px",
+                      borderTop: "1px solid var(--dark3)",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Link
+                      href="/customize"
+                      onClick={() => setCollectionOpen(false)}
+                      style={{
+                        fontSize: ".48rem",
+                        letterSpacing: ".2em",
+                        textTransform: "uppercase",
+                        color: "var(--gold)",
+                        textDecoration: "none",
+                      }}
+                    >
+                      ✦ Bespoke Customizer
+                    </Link>
+                    <Link
+                      href="/virtual-try-on"
+                      onClick={() => setCollectionOpen(false)}
+                      style={{
+                        fontSize: ".48rem",
+                        letterSpacing: ".2em",
+                        textTransform: "uppercase",
+                        color: "var(--muted)",
+                        textDecoration: "none",
+                      }}
+                    >
+                      AR Virtual Try-On →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+          </li>
+          <li>
+            <Link
+              href="/premium"
+              style={{
+                color: "var(--gold)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+            >
+              <span style={{ fontSize: ".6rem" }}>✦</span> Premium
+            </Link>
+          </li>
           <li><Link href="/inner-circle">Inner Circle</Link></li>
           <li><Link href="/about">About</Link></li>
           <li><Link href="/contact">Contact</Link></li>
