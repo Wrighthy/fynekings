@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/store";
 import { useWishlist } from "@/lib/wishlistStore";
@@ -34,7 +35,14 @@ export default function Nav() {
     <>
       <nav className={scrolled ? "scrolled" : ""}>
         <Link href="/" className="logo">
-          <span className="logo-mark">F</span>
+          <Image
+            src="/fynekings-crest.png"
+            alt="Fyne Kings Crest"
+            width={34}
+            height={34}
+            className="logo-mark"
+            priority
+          />
           FYNE<span>KINGS</span>
         </Link>
 

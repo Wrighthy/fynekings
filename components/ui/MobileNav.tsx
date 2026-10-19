@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Fragment } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useCart } from "@/lib/store";
 import { useAuth } from "@/lib/authStore";
 import { CATEGORIES, PREMIUM_SUBCATEGORIES } from "@/lib/categories";
@@ -134,20 +135,14 @@ export default function MobileNav() {
               gap: "10px",
             }}
           >
-            <span
-              style={{
-                width: "22px",
-                height: "22px",
-                border: "1px solid var(--gold)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: ".45rem",
-                color: "var(--gold)",
-              }}
-            >
-              F
-            </span>
+            <Image
+              src="/fynekings-crest.png"
+              alt="Fyne Kings Crest"
+              width={26}
+              height={26}
+              className="logo-mark"
+              style={{ objectFit: "contain" }}
+            />
             FYNE<span style={{ color: "var(--gold)" }}>KINGS</span>
           </Link>
           <button

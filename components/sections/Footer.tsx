@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 
 const FOOTER_COLS = [
   {
@@ -16,7 +17,7 @@ const FOOTER_COLS = [
       { label: "Track Order", href: "/orders/track" },
       { label: "My Account", href: "/account" },
       { label: "Watch Education", href: "/journal" },
-      { label: "Lagos Gallery & Archive", href: "/#heritage" },
+      { label: "Lagos Gallery & Archive", href: "/about" },
     ]
   },
   {
@@ -41,7 +42,13 @@ export default function Footer() {
       <div className="footer-grid">
         <div className="footer-brand">
           <Link href="/" className="logo">
-            <span className="logo-mark">F</span>
+            <Image
+              src="/fynekings-crest.png"
+              alt="Fyne Kings Crest"
+              width={34}
+              height={34}
+              className="logo-mark"
+            />
             FYNE<span>KINGS</span>
           </Link>
           <p className="footer-tag">Handcrafted timepieces for the African collector. Precision engineered. Prestige defined.</p>

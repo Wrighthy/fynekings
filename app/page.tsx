@@ -9,7 +9,6 @@ import BrandStrip from "@/components/sections/BrandStrip";
 import BestSellers from "@/components/sections/BestSellers";
 import Countdown from "@/components/sections/Countdown";
 import ARTryOn from "@/components/sections/ARTryOn";
-import Heritage from "@/components/sections/Heritage";
 import Reviews from "@/components/sections/Reviews";
 import Education from "@/components/sections/Education";
 import Newsletter from "@/components/sections/Newsletter";
@@ -38,7 +37,6 @@ export default function Home() {
       <BestSellers />
       <Countdown />
       <ARTryOn />
-      <Heritage />
       <Reviews />
       <Education />
       <Newsletter />
