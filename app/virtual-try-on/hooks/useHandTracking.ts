@@ -138,8 +138,8 @@ export function useHandTracking(
       // front-facing camera the image is mirrored, so the label is inverted
       // relative to the user's actual hand.
       let isLeftHand = false;
-      if (results.handednesses && results.handednesses.length > 0) {
-        const label = results.handednesses[0][0]?.categoryName ?? "Right";
+      if (results.handedness && results.handedness.length > 0) {
+        const label = results.handedness[0][0]?.categoryName ?? "Right";
         // MediaPipe label is from camera POV. Front camera flips it.
         isLeftHand = front
           ? label === "Right"   // camera sees "Right" → user's left
@@ -159,7 +159,7 @@ export function useHandTracking(
 
       // Raw MediaPipe label (camera POV, before our front-camera swap).
       const rawLabel =
-        results.handednesses?.[0]?.[0]?.categoryName ?? "Right";
+        results.handedness?.[0]?.[0]?.categoryName ?? "Right";
       // "Right" hand (camera POV): back faces camera when crossZ > 0.
       // "Left"  hand (camera POV): back faces camera when crossZ < 0.
       // A small dead-zone (0.002) avoids flicker when the hand is edge-on.
@@ -167,14 +167,10 @@ export function useHandTracking(
         ? crossZ > 0.002
         : crossZ < -0.002;
 
-      // On desktop, `isFrontCamera` may be false but the only available
-      // camera is still front-facing (webcam), so the raw detection is
-      // correct.  On mobile with a genuine rear camera (`!front`), the
-      // camera physically views the hand from the opposite side, which
-      // flips the cross-product sign — so we invert in that case only.
-      const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      const isRealRearCamera = !front && isMobileDevice;
-      const isBackOfHand = isRealRearCamera ? !isBackOfHandRaw : isBackOfHandRaw;
+      // The cross-product on raw (un-mirrored) landmarks already accounts
+      // for camera perspective via the `rawLabel`, so the detection is
+      // correct for both front and rear cameras without any inversion.
+      const isBackOfHand = isBackOfHandRaw;
 
       // Mirror X if front camera
       if (front) {
