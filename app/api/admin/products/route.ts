@@ -23,7 +23,23 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { name, series, price, tag, description, stockCount, imageUrl, images, specs } = body;
+    const {
+      name,
+      series,
+      price,
+      tag,
+      description,
+      stockCount,
+      imageUrl,
+      images,
+      specs,
+      categories,
+      movement,
+      strapMaterial,
+      style,
+      isPremium,
+      premiumCollection,
+    } = body;
 
     if (!name || !series || !price || !tag) {
       return NextResponse.json({ error: "Name, series, price, and tag are required." }, { status: 400 });
@@ -55,6 +71,12 @@ export async function POST(req: Request) {
         innerStroke: "#1e1e1e",
         strokeWidth: "2.5",
         specs: specs || { movement: "Automatic 25 Jewels", caseDiameter: "40mm", waterResistance: "50m (5ATM)" },
+        categories: Array.isArray(categories) ? categories : [],
+        movement: movement || null,
+        strapMaterial: strapMaterial || null,
+        style: style || null,
+        isPremium: Boolean(isPremium) || false,
+        premiumCollection: premiumCollection || null,
       },
     });
 
@@ -71,7 +93,22 @@ export async function PATCH(req: Request) {
 
   try {
     const body = await req.json();
-    const { productId, price, stockCount, inStock, name, series, tag, description } = body;
+    const {
+      productId,
+      price,
+      stockCount,
+      inStock,
+      name,
+      series,
+      tag,
+      description,
+      categories,
+      movement,
+      strapMaterial,
+      style,
+      isPremium,
+      premiumCollection,
+    } = body;
 
     if (!productId) {
       return NextResponse.json({ error: "productId is required." }, { status: 400 });
@@ -89,6 +126,12 @@ export async function PATCH(req: Request) {
     if (series) updateData.series = series;
     if (tag) updateData.tag = tag;
     if (description !== undefined) updateData.description = description;
+    if (categories !== undefined) updateData.categories = Array.isArray(categories) ? categories : [];
+    if (movement !== undefined) updateData.movement = movement;
+    if (strapMaterial !== undefined) updateData.strapMaterial = strapMaterial;
+    if (style !== undefined) updateData.style = style;
+    if (isPremium !== undefined) updateData.isPremium = Boolean(isPremium);
+    if (premiumCollection !== undefined) updateData.premiumCollection = premiumCollection || null;
 
     const updated = await db.product.update({
       where: { id: productId },

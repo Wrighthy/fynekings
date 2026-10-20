@@ -11,6 +11,7 @@ import type {
   Comment,
   ContactMessage,
   LimitedEditionData,
+  NewProductForm,
 } from "@/components/admin/AdminContext";
 import InventoryTab from "@/components/admin/InventoryTab";
 import OrdersTab from "@/components/admin/OrdersTab";
@@ -72,7 +73,7 @@ export default function UnifiedAdminDashboard() {
 
   // Forms
   const [newPromo, setNewPromo] = useState({ code: "", discountType: "PERCENTAGE", discountValue: "15", minSpend: "0", maxUses: "" });
-  const [newProduct, setNewProduct] = useState({
+  const [newProduct, setNewProduct] = useState<NewProductForm>({
     name: "",
     series: "Midnight Series",
     price: "450000",
@@ -80,6 +81,12 @@ export default function UnifiedAdminDashboard() {
     stockCount: "10",
     description: "",
     imageUrl: "",
+    categories: ["men", "automatic", "classic"],
+    movement: "automatic",
+    strapMaterial: "leather",
+    style: "luxury",
+    isPremium: false,
+    premiumCollection: "",
   });
   const [broadcast, setBroadcast] = useState({ subject: "", html: "" });
 
@@ -178,6 +185,26 @@ export default function UnifiedAdminDashboard() {
       setMessage("✓ Inventory stock updated");
       fetchDashboardData();
       setTimeout(() => setMessage(""), 3000);
+    }
+  };
+
+  const updateProductDetails = async (productId: string, data: Record<string, any>) => {
+    try {
+      const res = await fetch("/api/admin/products", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, ...data }),
+      });
+      if (res.ok) {
+        setMessage("✓ Product details updated");
+        fetchDashboardData();
+        setTimeout(() => setMessage(""), 3000);
+      } else {
+        const err = await res.json();
+        setMessage(`✕ Failed to update: ${err.error || "Unknown error"}`);
+      }
+    } catch {
+      setMessage("✕ Network error updating product");
     }
   };
 
@@ -382,6 +409,12 @@ export default function UnifiedAdminDashboard() {
           stockCount: "10",
           description: "",
           imageUrl: "",
+          categories: ["men", "automatic", "classic"],
+          movement: "automatic",
+          strapMaterial: "leather",
+          style: "luxury",
+          isPremium: false,
+          premiumCollection: "",
         });
         fetchDashboardData();
         setTimeout(() => setMessage(""), 4000);
@@ -606,6 +639,7 @@ export default function UnifiedAdminDashboard() {
           setMessage,
           updateOrderStatus,
           updateStock,
+          updateProductDetails,
           handleUploadImage,
           handleDeleteImage,
           handleDeleteProduct,
