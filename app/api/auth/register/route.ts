@@ -40,6 +40,18 @@ export async function POST(req: Request) {
       },
     });
 
+    // Claim any guest orders placed with the same email address.
+    // Ownership is verified by email match — no token needed.
+    // Only unlinked (userId === null) orders are adopted.
+    try {
+      await db.order.updateMany({
+        where: { customerEmail: user.email, userId: null },
+        data: { userId: user.id },
+      });
+    } catch {
+      // Non-blocking — account is still created even if order linking fails.
+    }
+
     // Create signed session token & set HttpOnly cookie
     const sessionToken = createUserToken(user.id, user.email);
 

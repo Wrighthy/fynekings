@@ -5,6 +5,7 @@ import Link from "next/link";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
 import { useCart, fmt } from "@/lib/store";
+import { useAuth } from "@/lib/authStore";
 import { FYNEKINGS_BANK_DETAILS } from "@/lib/bankConfig";
 
 type PageState = "verifying" | "confirmed" | "pending" | "transfer_pending" | "failed";
@@ -16,6 +17,8 @@ export default function CheckoutSuccessPage({
 }) {
   const { orderId, reference, trxref, method } = use(searchParams);
   const paymentRef = reference || trxref;
+  const user = useAuth((s) => s.user);
+  const isGuest = !user;
 
   const [state, setState] = useState<PageState>(method === "transfer" ? "transfer_pending" : "verifying");
   const [errorMessage, setErrorMessage] = useState("");
@@ -247,6 +250,38 @@ export default function CheckoutSuccessPage({
               <div><strong>2. Signature Packaging:</strong> Sealed in luxury presentation case with 5-Year NFC warranty.</div>
               <div><strong>3. Insured Dispatch:</strong> Armed courier tracking details will be sent via SMS &amp; email.</div>
             </div>
+          </div>
+        )}
+
+        {/* Optional account creation banner for guest users */}
+        {isGuest && (state === "confirmed" || state === "transfer_pending" || state === "pending") && (
+          <div style={{ background: "var(--dark2)", border: "1px solid rgba(196,169,98,0.3)", padding: "28px 32px", marginBottom: "40px", textAlign: "left" }}>
+            <div style={{ fontSize: ".48rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px" }}
+            >
+              Optional · Member Account
+            </div>
+            <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.3rem", color: "var(--white)", fontWeight: 300, marginBottom: "10px" }}>
+              Save your order history
+            </h2>
+            <p style={{ fontSize: ".65rem", color: "var(--muted)", lineHeight: 1.9, marginBottom: "18px" }}>
+              Create your Fynekings account to make future purchases easier and keep track of your orders. Your existing order will be linked automatically.
+            </p>
+            <Link
+              href={`/signup?claimOrder=${orderId || ""}`}
+              style={{
+                display: "inline-block",
+                padding: "12px 28px",
+                background: "transparent",
+                border: "1px solid var(--gold)",
+                color: "var(--gold)",
+                fontSize: ".55rem",
+                letterSpacing: ".25em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+              }}
+            >
+              Create Account →
+            </Link>
           </div>
         )}
 

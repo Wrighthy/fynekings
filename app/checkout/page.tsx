@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
-import ProtectedRoute from "@/components/ui/ProtectedRoute";
 import { useCart, fmt } from "@/lib/store";
 import { useAuth } from "@/lib/authStore";
 import { FYNEKINGS_BANK_DETAILS } from "@/lib/bankConfig";
@@ -167,9 +166,19 @@ function CheckoutContent() {
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px 100px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 460px), 1fr))", gap: "60px", alignItems: "start" }}>
         {/* Form */}
         <div style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "40px" }}>
-          <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", fontWeight: 300, marginBottom: "24px" }}>
+          <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", fontWeight: 300, marginBottom: "12px" }}>
             1. Shipping & Contact Details
           </h2>
+
+          {/* Guest notice with optional sign-in prompt */}
+          {!user && (
+            <div style={{ padding: "12px 16px", background: "rgba(196,169,98,0.06)", border: "1px solid rgba(196,169,98,0.2)", marginBottom: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+              <span style={{ fontSize: ".6rem", color: "var(--muted)", letterSpacing: ".05em" }}>Checking out as guest.</span>
+              <Link href={`/login?redirect=${encodeURIComponent("/checkout")}`} style={{ fontSize: ".58rem", color: "var(--gold)", textDecoration: "none", letterSpacing: ".1em", textTransform: "uppercase" }}>
+                Sign In →
+              </Link>
+            </div>
+          )}
 
           {error && (
             <div style={{ padding: "14px", background: "rgba(139, 32, 32, 0.2)", border: "1px solid var(--crimson)", color: "#ff6b6b", fontSize: ".65rem", marginBottom: "24px" }}>
@@ -446,10 +455,8 @@ function CheckoutContent() {
   );
 }
 
+// Checkout is intentionally open to guests — no ProtectedRoute wrapper.
+// Registered users are detected server-side via cookie in /api/checkout.
 export default function CheckoutPage() {
-  return (
-    <ProtectedRoute>
-      <CheckoutContent />
-    </ProtectedRoute>
-  );
+  return <CheckoutContent />;
 }
