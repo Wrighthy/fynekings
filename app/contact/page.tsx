@@ -166,13 +166,13 @@ export default function ContactPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
           <div style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "32px" }}>
             <div style={{ fontSize: ".5rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Horological Headquarters</div>
-            <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.5rem", color: "var(--white)", fontWeight: 300, marginBottom: "16px" }}>Victoria Island Gallery & Archive</h3>
+            <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.5rem", color: "var(--white)", fontWeight: 300, marginBottom: "16px" }}>Lagos Island Gallery & Archive</h3>
             <p style={{ fontSize: ".68rem", lineHeight: 2, color: "var(--text)", marginBottom: "16px" }}>
-              Ahmadu Bello Way, Victoria Island<br />
+              35/37 Isale Agbade street, off Idumagbo Avenue, Lagos Island<br />
               Lagos, Nigeria
             </p>
             <div style={{ fontSize: ".6rem", color: "var(--muted)", lineHeight: 1.8 }}>
-              <div><strong>Hours:</strong> Mon – Sat, 10:00 AM – 6:00 PM WAT</div>
+              <div><strong>Hours:</strong> Mon – Sat, 9:00 AM – 6:00 PM WAT</div>
               <div><strong>Private Appointments:</strong> By Reservation Only</div>
             </div>
           </div>

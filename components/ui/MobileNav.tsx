@@ -230,185 +230,185 @@ export default function MobileNav() {
                 return (
                   <Fragment key="CollectionGroup">
                     <li key="Collection" style={{ borderBottom: "1px solid var(--dark3)" }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0" }}>
-                      <Link
-                        href="/collection"
-                        onClick={() => setOpen(false)}
-                        style={{
-                          fontFamily: "Playfair Display, serif",
-                          fontSize: "1.05rem",
-                          fontWeight: 300,
-                          color: "var(--white)",
-                          textDecoration: "none",
-                          flex: 1,
-                        }}
-                      >
-                        Collection
-                      </Link>
-                      <button
-                        onClick={() => setCategoriesOpen(!categoriesOpen)}
-                        aria-label="Toggle categories"
-                        style={{
-                          background: "none",
-                          border: "none",
-                          color: "var(--gold)",
-                          padding: "6px 10px",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "4px",
-                          fontSize: ".52rem",
-                          letterSpacing: ".1em",
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        Categories
-                        <span style={{ fontSize: ".45rem", transform: categoriesOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
-                          ▼
-                        </span>
-                      </button>
-                    </div>
-
-                    {categoriesOpen && (
-                      <div
-                        style={{
-                          padding: "6px 0 16px",
-                          display: "grid",
-                          gridTemplateColumns: "1fr 1fr",
-                          gap: "8px",
-                          borderTop: "1px dashed var(--dark3)",
-                        }}
-                      >
-                        {CATEGORIES.map((cat) => (
-                          <Link
-                            key={cat.slug}
-                            href={`/watches/category/${cat.slug}`}
-                            onClick={() => setOpen(false)}
-                            style={{
-                              fontSize: ".55rem",
-                              letterSpacing: ".1em",
-                              textTransform: "uppercase",
-                              color: "var(--muted)",
-                              textDecoration: "none",
-                              padding: "8px",
-                              background: "rgba(20,20,20,.6)",
-                              borderRadius: "2px",
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "6px",
-                            }}
-                          >
-                            <span style={{ color: "var(--gold)", opacity: 0.8 }}>{cat.icon}</span>
-                            <span>{cat.label}</span>
-                          </Link>
-                        ))}
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0" }}>
+                        <Link
+                          href="/collection"
+                          onClick={() => setOpen(false)}
+                          style={{
+                            fontFamily: "Playfair Display, serif",
+                            fontSize: "1.05rem",
+                            fontWeight: 300,
+                            color: "var(--white)",
+                            textDecoration: "none",
+                            flex: 1,
+                          }}
+                        >
+                          Collection
+                        </Link>
+                        <button
+                          onClick={() => setCategoriesOpen(!categoriesOpen)}
+                          aria-label="Toggle categories"
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: "var(--gold)",
+                            padding: "6px 10px",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            fontSize: ".52rem",
+                            letterSpacing: ".1em",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          Categories
+                          <span style={{ fontSize: ".45rem", transform: categoriesOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
+                            ▼
+                          </span>
+                        </button>
                       </div>
-                    )}
-                  </li>
-                  <li key="PremiumCollection" style={{ borderBottom: "1px solid var(--dark3)" }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0" }}>
-                      <Link
-                        href="/premium"
-                        onClick={() => setOpen(false)}
-                        style={{
-                          fontFamily: "Playfair Display, serif",
-                          fontSize: "1.05rem",
-                          fontWeight: 300,
-                          color: "var(--gold)",
-                          textDecoration: "none",
-                          flex: 1,
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "6px",
-                        }}
-                      >
-                        <span style={{ fontSize: ".7rem" }}>✦</span>
-                        <span>Premium Collection</span>
-                      </Link>
-                      <button
-                        onClick={() => setPremiumOpen(!premiumOpen)}
-                        aria-label="Toggle premium subcategories"
-                        style={{
-                          background: "none",
-                          border: "none",
-                          color: "var(--gold)",
-                          padding: "6px 10px",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "4px",
-                          fontSize: ".52rem",
-                          letterSpacing: ".1em",
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        Editions
-                        <span style={{ fontSize: ".45rem", transform: premiumOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
-                          ▼
-                        </span>
-                      </button>
-                    </div>
 
-                    {premiumOpen && (
-                      <div
-                        style={{
-                          padding: "6px 0 16px",
-                          display: "grid",
-                          gridTemplateColumns: "1fr",
-                          gap: "8px",
-                          borderTop: "1px dashed rgba(196,169,98,.3)",
-                        }}
-                      >
+                      {categoriesOpen && (
+                        <div
+                          style={{
+                            padding: "6px 0 16px",
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                            gap: "8px",
+                            borderTop: "1px dashed var(--dark3)",
+                          }}
+                        >
+                          {CATEGORIES.map((cat) => (
+                            <Link
+                              key={cat.slug}
+                              href={`/watches/category/${cat.slug}`}
+                              onClick={() => setOpen(false)}
+                              style={{
+                                fontSize: ".55rem",
+                                letterSpacing: ".1em",
+                                textTransform: "uppercase",
+                                color: "var(--muted)",
+                                textDecoration: "none",
+                                padding: "8px",
+                                background: "rgba(20,20,20,.6)",
+                                borderRadius: "2px",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "6px",
+                              }}
+                            >
+                              <span style={{ color: "var(--gold)", opacity: 0.8 }}>{cat.icon}</span>
+                              <span>{cat.label}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </li>
+                    <li key="PremiumCollection" style={{ borderBottom: "1px solid var(--dark3)" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0" }}>
                         <Link
                           href="/premium"
                           onClick={() => setOpen(false)}
                           style={{
-                            fontSize: ".55rem",
-                            letterSpacing: ".15em",
-                            textTransform: "uppercase",
+                            fontFamily: "Playfair Display, serif",
+                            fontSize: "1.05rem",
+                            fontWeight: 300,
                             color: "var(--gold)",
                             textDecoration: "none",
-                            padding: "8px 10px",
-                            background: "rgba(196,169,98,.12)",
-                            border: "1px solid rgba(196,169,98,.3)",
-                            borderRadius: "2px",
+                            flex: 1,
                             display: "flex",
                             alignItems: "center",
-                            gap: "8px",
+                            gap: "6px",
                           }}
                         >
-                          <span>✦</span>
-                          <span>All Premium Timepieces</span>
+                          <span style={{ fontSize: ".7rem" }}>✦</span>
+                          <span>Premium Collection</span>
                         </Link>
-                        {PREMIUM_SUBCATEGORIES.map((sub) => (
+                        <button
+                          onClick={() => setPremiumOpen(!premiumOpen)}
+                          aria-label="Toggle premium subcategories"
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: "var(--gold)",
+                            padding: "6px 10px",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            fontSize: ".52rem",
+                            letterSpacing: ".1em",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          Editions
+                          <span style={{ fontSize: ".45rem", transform: premiumOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
+                            ▼
+                          </span>
+                        </button>
+                      </div>
+
+                      {premiumOpen && (
+                        <div
+                          style={{
+                            padding: "6px 0 16px",
+                            display: "grid",
+                            gridTemplateColumns: "1fr",
+                            gap: "8px",
+                            borderTop: "1px dashed rgba(196,169,98,.3)",
+                          }}
+                        >
                           <Link
-                            key={sub.slug}
-                            href={`/premium/${sub.slug}`}
+                            href="/premium"
                             onClick={() => setOpen(false)}
                             style={{
                               fontSize: ".55rem",
-                              letterSpacing: ".1em",
+                              letterSpacing: ".15em",
                               textTransform: "uppercase",
-                              color: "var(--muted)",
+                              color: "var(--gold)",
                               textDecoration: "none",
                               padding: "8px 10px",
-                              background: "rgba(20,20,20,.6)",
+                              background: "rgba(196,169,98,.12)",
+                              border: "1px solid rgba(196,169,98,.3)",
                               borderRadius: "2px",
                               display: "flex",
                               alignItems: "center",
                               gap: "8px",
                             }}
                           >
-                            <span style={{ color: "var(--gold)" }}>{sub.icon}</span>
-                            <span>{sub.label}</span>
+                            <span>✦</span>
+                            <span>All Premium Timepieces</span>
                           </Link>
-                        ))}
-                      </div>
-                    )}
-                  </li>
-                </Fragment>
-              );
-            }
+                          {PREMIUM_SUBCATEGORIES.map((sub) => (
+                            <Link
+                              key={sub.slug}
+                              href={`/premium/${sub.slug}`}
+                              onClick={() => setOpen(false)}
+                              style={{
+                                fontSize: ".55rem",
+                                letterSpacing: ".1em",
+                                textTransform: "uppercase",
+                                color: "var(--muted)",
+                                textDecoration: "none",
+                                padding: "8px 10px",
+                                background: "rgba(20,20,20,.6)",
+                                borderRadius: "2px",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                              }}
+                            >
+                              <span style={{ color: "var(--gold)" }}>{sub.icon}</span>
+                              <span>{sub.label}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </li>
+                  </Fragment>
+                );
+              }
 
               return (
                 <li key={link.label}>
@@ -497,16 +497,16 @@ export default function MobileNav() {
                     <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" />
                   </svg>
                 ),
-                href: "https://instagram.com/fynekings",
+                href: "https://www.instagram.com/fynekings.intltd?psln=MW5kc2dycDh1cXFlNA%3D%3D&utm_source=qr",
               },
               {
-                label: "Twitter",
+                label: "Facebook",
                 icon: (
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                   </svg>
                 ),
-                href: "https://twitter.com/fynekings",
+                href: "https://www.facebook.com/share/18neq4aC9N/?mibextid=wwXIfr",
               },
               {
                 label: "WhatsApp",
@@ -515,7 +515,7 @@ export default function MobileNav() {
                     <path d="M21 11.5a8.4 8.4 0 01-1.2 4.3 8.5 8.5 0 01-7.3 4.2 8.4 8.4 0 01-4.3-1.2L3 21l2.3-5.2a8.4 8.4 0 01-1.2-4.3 8.5 8.5 0 014.2-7.3 8.4 8.4 0 014.3-1.2A8.5 8.5 0 0121 11.5z" />
                   </svg>
                 ),
-                href: "https://wa.me/2348000000000",
+                href: "https://wa.me/2348033376287",
               },
             ].map((s) => (
               <a
