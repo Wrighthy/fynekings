@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, Fragment } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/lib/store";
@@ -24,11 +25,16 @@ const NAV_LINKS = [
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [premiumOpen, setPremiumOpen] = useState(false);
   const cart = useCart((s) => s.cart);
   const setCartOpen = useCart((s) => s.setCartOpen);
   const { user, setAuthOpen } = useAuth();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -55,12 +61,13 @@ export default function MobileNav() {
     <>
       {/* Hamburger button — only visible on mobile/tablet */}
       <button
-        onClick={() => setOpen(true)}
-        aria-label="Open navigation menu"
+        onClick={() => setOpen((prev) => !prev)}
+        aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={open}
         className="mobile-menu-btn"
         style={{
-          background: "none",
-          border: "1px solid var(--dark4)",
+          background: open ? "rgba(196,169,98,0.12)" : "none",
+          border: open ? "1px solid var(--gold)" : "1px solid var(--dark4)",
           color: "var(--gold)",
           width: "36px",
           height: "36px",
@@ -68,49 +75,63 @@ export default function MobileNav() {
           justifyContent: "center",
           cursor: "pointer",
           flexShrink: 0,
+          transition: "all .2s ease",
         }}
-        title="Open Navigation"
+        title={open ? "Close Navigation" : "Open Navigation"}
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
+        {open ? (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        ) : (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        )}
       </button>
 
-      {/* Overlay */}
-      {open && (
-        <div
-          onClick={() => setOpen(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,.75)",
-            backdropFilter: "blur(6px)",
-            zIndex: 900,
-            animation: "fadeIn .3s ease",
-          }}
-        />
-      )}
+      {/* Portal overlay and drawer to document.body so they are never trapped by nav.scrolled backdrop-filter */}
+      {mounted &&
+        createPortal(
+          <>
+            {/* Overlay */}
+            {open && (
+              <div
+                onClick={() => setOpen(false)}
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  background: "rgba(0,0,0,.75)",
+                  backdropFilter: "blur(6px)",
+                  WebkitBackdropFilter: "blur(6px)",
+                  zIndex: 1050,
+                  animation: "fadeIn .3s ease",
+                }}
+              />
+            )}
 
-      {/* Slide-in panel */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: "min(380px, 88vw)",
-          background: "#080808",
-          borderLeft: "1px solid var(--dark3)",
-          zIndex: 950,
-          transform: open ? "translateX(0)" : "translateX(100%)",
-          transition: "transform .35s cubic-bezier(.7,0,.3,1)",
-          display: "flex",
-          flexDirection: "column",
-          overflowY: "auto",
-        }}
-      >
+            {/* Slide-in panel */}
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                right: 0,
+                bottom: 0,
+                width: "min(380px, 88vw)",
+                height: "100%",
+                maxHeight: "100dvh",
+                background: "#080808",
+                borderLeft: "1px solid var(--dark3)",
+                zIndex: 1100,
+                transform: open ? "translateX(0)" : "translateX(100%)",
+                transition: "transform .35s cubic-bezier(.7,0,.3,1)",
+                display: "flex",
+                flexDirection: "column",
+                overflowY: "auto",
+              }}
+            >
         {/* Panel header */}
         <div
           style={{
@@ -550,6 +571,9 @@ export default function MobileNav() {
           </div>
         </div>
       </div>
-    </>
-  );
+    </>,
+    document.body
+  )}
+</>
+);
 }
