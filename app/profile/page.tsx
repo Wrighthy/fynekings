@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
-import ProtectedRoute from "@/components/ui/ProtectedRoute";
 import { useAuth } from "@/lib/authStore";
 
 function ProfileContent() {
@@ -57,6 +56,51 @@ function ProfileContent() {
       setSaving(false);
     }
   };
+
+  if (!user) {
+    return (
+      <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
+        <Nav />
+
+        <div style={{ padding: "160px 24px 100px", maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: ".52rem", letterSpacing: ".35em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
+            Collector Profile
+          </div>
+          <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.4rem", color: "var(--white)", fontWeight: 300, marginBottom: "20px" }}>
+            Account Sign-In <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Required</em>
+          </h1>
+          <p style={{ fontSize: ".75rem", color: "var(--muted)", lineHeight: 1.8, marginBottom: "36px" }}>
+            To view and update your personal collector credentials, telephone, and delivery address preferences, please sign in or register an account.
+          </p>
+          <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
+            <Link
+              href="/login?redirect=/profile"
+              className="btn-primary"
+              style={{ padding: "14px 28px", fontSize: ".6rem", textDecoration: "none" }}
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/account"
+              style={{
+                border: "1px solid var(--gold-dk)",
+                color: "var(--gold)",
+                padding: "14px 28px",
+                fontSize: ".6rem",
+                letterSpacing: ".2em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+              }}
+            >
+              ← Back to Portal
+            </Link>
+          </div>
+        </div>
+
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
@@ -264,9 +308,5 @@ function ProfileContent() {
 }
 
 export default function ProfilePage() {
-  return (
-    <ProtectedRoute>
-      <ProfileContent />
-    </ProtectedRoute>
-  );
+  return <ProfileContent />;
 }

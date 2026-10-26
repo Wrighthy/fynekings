@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
-import ProtectedRoute from "@/components/ui/ProtectedRoute";
 import { useAuth } from "@/lib/authStore";
 
 function InnerCircleContent() {
@@ -240,20 +239,53 @@ function InnerCircleContent() {
             >
               Join your fellow collectors today. Enlistment grants immediate recognition across the FYNEKINGS boutique network.
             </p>
-            <button
-              onClick={handleJoin}
-              disabled={enlisting}
-              className="btn-primary"
-              style={{
-                padding: "18px 48px",
-                fontSize: ".75rem",
-                letterSpacing: ".25em",
-                cursor: enlisting ? "not-allowed" : "pointer",
-                opacity: enlisting ? 0.7 : 1,
-              }}
-            >
-              {enlisting ? "ENLISTING CLIENT..." : "ENLIST IN THE INNER CIRCLE"}
-            </button>
+            {!user ? (
+              <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
+                <Link
+                  href="/signup?redirect=/inner-circle"
+                  className="btn-primary"
+                  style={{
+                    padding: "16px 36px",
+                    fontSize: ".72rem",
+                    letterSpacing: ".2em",
+                    textDecoration: "none",
+                    display: "inline-block",
+                  }}
+                >
+                  CREATE ACCOUNT TO ENLIST
+                </Link>
+                <Link
+                  href="/login?redirect=/inner-circle"
+                  style={{
+                    border: "1px solid var(--gold-dk)",
+                    color: "var(--gold)",
+                    padding: "16px 36px",
+                    fontSize: ".72rem",
+                    letterSpacing: ".2em",
+                    textTransform: "uppercase",
+                    textDecoration: "none",
+                    display: "inline-block",
+                  }}
+                >
+                  SIGN IN
+                </Link>
+              </div>
+            ) : (
+              <button
+                onClick={handleJoin}
+                disabled={enlisting}
+                className="btn-primary"
+                style={{
+                  padding: "18px 48px",
+                  fontSize: ".75rem",
+                  letterSpacing: ".25em",
+                  cursor: enlisting ? "not-allowed" : "pointer",
+                  opacity: enlisting ? 0.7 : 1,
+                }}
+              >
+                {enlisting ? "ENLISTING CLIENT..." : "ENLIST IN THE INNER CIRCLE"}
+              </button>
+            )}
           </div>
         )}
       </section>
@@ -308,9 +340,5 @@ function InnerCircleContent() {
 }
 
 export default function InnerCirclePage() {
-  return (
-    <ProtectedRoute>
-      <InnerCircleContent />
-    </ProtectedRoute>
-  );
+  return <InnerCircleContent />;
 }

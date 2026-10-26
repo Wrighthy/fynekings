@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
-import ProtectedRoute from "@/components/ui/ProtectedRoute";
 import { useAuth } from "@/lib/authStore";
 import { fmt } from "@/lib/store";
 
@@ -29,6 +28,11 @@ function AccountContent() {
   const [loadingOrders, setLoadingOrders] = useState(true);
 
   useEffect(() => {
+    if (!user) {
+      setLoadingOrders(false);
+      return;
+    }
+
     fetch("/api/orders/me")
       .then((r) => r.json())
       .then((data) => {
@@ -38,7 +42,118 @@ function AccountContent() {
         setLoadingOrders(false);
       })
       .catch(() => setLoadingOrders(false));
-  }, []);
+  }, [user]);
+
+  if (!user) {
+    return (
+      <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
+        <Nav />
+
+        <div style={{ padding: "160px 24px 100px", maxWidth: "800px", margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: ".52rem", letterSpacing: ".45em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
+            Collector Portal
+          </div>
+          <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.4rem, 5vw, 3.8rem)", color: "var(--white)", fontWeight: 300, marginBottom: "20px" }}>
+            Welcome, <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Collector</em>
+          </h1>
+          <p style={{ fontSize: ".75rem", color: "var(--muted)", maxWidth: "560px", margin: "0 auto 40px", lineHeight: 1.9 }}>
+            Sign in or create an account to view your private acquisition ledger, register timepieces for horological warranty, and manage concierge preferences. Or continue exploring all boutique features as a guest.
+          </p>
+
+          {/* Voluntary Sign-in Actions */}
+          <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap", marginBottom: "60px" }}>
+            <Link
+              href="/login?redirect=/account"
+              className="btn-primary"
+              style={{ padding: "16px 36px", fontSize: ".65rem", letterSpacing: ".2em", textDecoration: "none" }}
+            >
+              Sign In to Account
+            </Link>
+            <Link
+              href="/signup?redirect=/account"
+              style={{
+                border: "1px solid var(--gold-dk)",
+                color: "var(--gold)",
+                padding: "16px 36px",
+                fontSize: ".65rem",
+                letterSpacing: ".2em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+                display: "inline-block",
+              }}
+            >
+              Create Account
+            </Link>
+          </div>
+
+          {/* Guest Quick Access Matrix */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px", textAlign: "left" }}>
+            <Link
+              href="/orders"
+              style={{
+                background: "var(--dark2)",
+                border: "1px solid var(--dark3)",
+                padding: "24px",
+                textDecoration: "none",
+                transition: "border-color .3s",
+                display: "block",
+              }}
+            >
+              <div style={{ fontSize: "1.3rem", color: "var(--gold)", marginBottom: "8px" }}>📦</div>
+              <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.1rem", color: "var(--white)", marginBottom: "6px" }}>
+                Order Tracking
+              </div>
+              <div style={{ fontSize: ".62rem", color: "var(--muted)", lineHeight: 1.6 }}>
+                Track any timepiece delivery instantly using your Order ID or Email.
+              </div>
+            </Link>
+
+            <Link
+              href="/wishlist"
+              style={{
+                background: "var(--dark2)",
+                border: "1px solid var(--dark3)",
+                padding: "24px",
+                textDecoration: "none",
+                transition: "border-color .3s",
+                display: "block",
+              }}
+            >
+              <div style={{ fontSize: "1.3rem", color: "var(--gold)", marginBottom: "8px" }}>♡</div>
+              <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.1rem", color: "var(--white)", marginBottom: "6px" }}>
+                Saved Wishlist
+              </div>
+              <div style={{ fontSize: ".62rem", color: "var(--muted)", lineHeight: 1.6 }}>
+                Review pieces saved locally in your browser anytime.
+              </div>
+            </Link>
+
+            <Link
+              href="/collection"
+              style={{
+                background: "var(--dark2)",
+                border: "1px solid var(--dark3)",
+                padding: "24px",
+                textDecoration: "none",
+                transition: "border-color .3s",
+                display: "block",
+              }}
+            >
+              <div style={{ fontSize: "1.3rem", color: "var(--gold)", marginBottom: "8px" }}>✦</div>
+              <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.1rem", color: "var(--white)", marginBottom: "6px" }}>
+                Full Collection
+              </div>
+              <div style={{ fontSize: ".62rem", color: "var(--muted)", lineHeight: 1.6 }}>
+                Explore all handcrafted Nigerian luxury horological masterworks.
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
@@ -222,9 +337,5 @@ function AccountContent() {
 }
 
 export default function AccountPage() {
-  return (
-    <ProtectedRoute>
-      <AccountContent />
-    </ProtectedRoute>
-  );
+  return <AccountContent />;
 }

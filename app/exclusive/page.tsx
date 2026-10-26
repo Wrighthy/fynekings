@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
-import ProtectedRoute from "@/components/ui/ProtectedRoute";
 import { useAuth } from "@/lib/authStore";
 
 function ExclusiveContent() {
@@ -95,9 +94,5 @@ function ExclusiveContent() {
 }
 
 export default function ExclusivePage() {
-  return (
-    <ProtectedRoute>
-      <ExclusiveContent />
-    </ProtectedRoute>
-  );
+  return <ExclusiveContent />;
 }
