@@ -1,6 +1,5 @@
 "use client";
 
-import LuxuryWatch from "@/components/ui/LuxuryWatch";
 
 export default function Hero() {
   return (
@@ -41,15 +40,20 @@ export default function Hero() {
         </div>
 
         <div className="hero-watch-stage">
-          <div className="hero-orbit-2"></div>
-          <div className="hero-orbit"></div>
           <div className="hero-glow"></div>
-          <div className="hero-spec s1"><div className="hero-spec-dot"></div><span>Cal. F-2401 · 25 Jewels</span></div>
-          <div className="hero-spec s2"><span>316L Steel · 40mm</span><div className="hero-spec-dot"></div></div>
-          <div className="hero-spec s3"><div className="hero-spec-line"></div><span>Sapphire Crystal</span></div>
 
-          <div className="hero-watch">
-            <LuxuryWatch showBezelGradient={true} />
+          <div className="hero-watch-video-portal">
+            <video
+              className="hero-watch-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+            >
+              <source src="/watch-assembly.mp4" type="video/mp4" />
+            </video>
+            <div className="hero-watch-glass"></div>
           </div>
         </div>
       </div>

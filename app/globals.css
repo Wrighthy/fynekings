@@ -556,6 +556,51 @@ nav.scrolled {
   animation: floatWatch 6s ease-in-out infinite
 }
 
+.hero-watch-video-portal {
+  width: 440px;
+  height: 440px;
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 
+    0 0 0 2px rgba(196, 169, 98, 0.45),
+    0 0 0 10px rgba(18, 18, 18, 0.95),
+    0 0 0 12px rgba(196, 169, 98, 0.25),
+    0 25px 60px rgba(0, 0, 0, 0.85),
+    0 0 45px rgba(196, 169, 98, 0.18);
+  animation: floatWatch 6s ease-in-out infinite;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-watch-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.06);
+  filter: contrast(1.08) brightness(0.96);
+  pointer-events: none;
+}
+
+.hero-watch-glass {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.18) 0%, transparent 45%),
+              radial-gradient(circle at 50% 50%, transparent 56%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.65);
+}
+
+@media (max-width: 1024px) {
+  .hero-watch-video-portal {
+    width: 320px;
+    height: 320px;
+  }
+}
+
 .hero-glow {
   position: absolute;
   inset: -100px;
