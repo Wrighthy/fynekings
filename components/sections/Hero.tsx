@@ -1,9 +1,43 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 
 export default function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      video.defaultMuted = true;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Fallback if browser requires interaction
+        });
+      }
+    }
+  }, []);
+
   return (
     <section id="hero">
+      {/* Full-bleed Video Background */}
+      <div className="hero-video-bg">
+        <video
+          ref={videoRef}
+          className="hero-video"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          src="/watch-assembly.mp4"
+        >
+          <source src="/watch-assembly.mp4" type="video/mp4" />
+        </video>
+        <div className="hero-video-overlay"></div>
+      </div>
+
       <div className="hero-bg"></div>
       <div className="hero-grid-lines"></div>
       <div className="hero-corner tl"></div>
@@ -12,7 +46,7 @@ export default function Hero() {
       <div className="hero-corner br"></div>
 
       <div className="hero-inner">
-        <div>
+        <div className="hero-content">
           <div className="hero-meta">
             <div className="hero-meta-line"></div>
             <span className="hero-meta-text">Est. 2014 · Lagos · Nigeria</span>
@@ -36,24 +70,6 @@ export default function Hero() {
             <div className="trust-item"><div className="num">412</div><div className="label">Hand-curated timepieces</div></div>
             <div className="trust-item"><div className="num">24hr</div><div className="label">Power reserve</div></div>
             <div className="trust-item"><div className="num">2yr</div><div className="label">National warranty</div></div>
-          </div>
-        </div>
-
-        <div className="hero-watch-stage">
-          <div className="hero-glow"></div>
-
-          <div className="hero-watch-video-portal">
-            <video
-              className="hero-watch-video"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-            >
-              <source src="/watch-assembly.mp4" type="video/mp4" />
-            </video>
-            <div className="hero-watch-glass"></div>
           </div>
         </div>
       </div>
