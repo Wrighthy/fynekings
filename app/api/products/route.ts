@@ -7,6 +7,7 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category")?.toLowerCase().trim();
+    const gender = searchParams.get("gender")?.toLowerCase().trim();
     const movement = searchParams.get("movement")?.toLowerCase().trim();
     const strap = searchParams.get("strap")?.toLowerCase().trim();
     const style = searchParams.get("style")?.toLowerCase().trim();
@@ -18,12 +19,16 @@ export async function GET(req: Request) {
     const series = searchParams.get("series")?.trim();
     const premium = searchParams.get("premium")?.toLowerCase().trim();
     const premiumCollection = searchParams.get("premiumCollection")?.toLowerCase().trim();
+    const availability = searchParams.get("availability")?.toLowerCase().trim();
 
     // Build base where clause
-    const whereClause: Record<string, any> = { inStock: true };
+    const whereClause: Record<string, any> = {};
+    if (availability === "in-stock") {
+      whereClause.inStock = true;
+    }
     if (premium === "true") whereClause.isPremium = true;
 
-    // Fetch products that are in stock
+    // Fetch products
     const products = await db.product.findMany({
       where: whereClause,
       orderBy: { createdAt: "asc" },
@@ -35,11 +40,26 @@ export async function GET(req: Request) {
 
     // Filter in-memory for flexibility across multiple filter combinations & smart fallbacks
     let filtered = products.filter((p) => {
+      const pCats = Array.isArray(p.categories) ? p.categories.map((c: string) => c.toLowerCase()) : [];
+
+      // Availability check
+      if (availability === "in-stock" && (p.inStock === false || p.stockCount === 0)) {
+        return false;
+      }
+
+      // Gender filter (supports standalone gender param or category)
+      const targetGender = gender && gender !== "all" ? gender : undefined;
+      if (targetGender) {
+        const matchesGender =
+          pCats.includes(targetGender) ||
+          pCats.includes("unisex") ||
+          (targetGender === "men" && !pCats.includes("women"));
+        if (!matchesGender) return false;
+      }
+
       // 1. Category Filter
       if (category && category !== "all") {
-        const hasDirectCat =
-          Array.isArray(p.categories) &&
-          p.categories.some((c: string) => c.toLowerCase() === category);
+        const hasDirectCat = pCats.includes(category);
 
         if (!hasDirectCat) {
           let fallbackMatch = false;
@@ -49,7 +69,13 @@ export async function GET(req: Request) {
           const pBadge = (p.badge || "").toLowerCase();
           const pName = (p.name || "").toLowerCase();
 
-          if (category === "automatic") {
+          if (category === "men") {
+            fallbackMatch = pCats.includes("unisex") || (!pCats.includes("women") && !pName.includes("women"));
+          } else if (category === "women") {
+            fallbackMatch = pCats.includes("unisex") || pSeries.includes("women") || pName.includes("rose") || pName.includes("classic");
+          } else if (category === "unisex") {
+            fallbackMatch = pCats.includes("men") || pCats.includes("women");
+          } else if (category === "automatic") {
             fallbackMatch = pMovement.includes("auto") || pTag.includes("auto");
           } else if (category === "quartz") {
             fallbackMatch = pMovement.includes("quartz") || pTag.includes("quartz");
@@ -163,6 +189,12 @@ export async function GET(req: Request) {
         filtered.sort((a, b) => a.name.localeCompare(b.name));
       } else if (sort === "newest") {
         filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      } else if (sort === "popularity" || sort === "bestsellers") {
+        filtered.sort((a, b) => {
+          const aScore = (a.featured ? 10 : 0) + ((a.badge || "").toLowerCase().includes("best") ? 5 : 0);
+          const bScore = (b.featured ? 10 : 0) + ((b.badge || "").toLowerCase().includes("best") ? 5 : 0);
+          return bScore - aScore;
+        });
       }
     }
 

@@ -84,20 +84,21 @@ export default function Nav() {
                 style={{
                   position: "absolute",
                   top: "100%",
-                  left: "-40px",
-                  paddingTop: "16px",
+                  left: "-60px",
+                  paddingTop: "14px",
                   zIndex: 1000,
                 }}
               >
                 <div
                   style={{
-                    width: "480px",
-                    background: "rgba(12, 12, 12, 0.98)",
-                    backdropFilter: "blur(20px)",
+                    width: "720px",
+                    background: "rgba(10, 10, 10, 0.98)",
+                    backdropFilter: "blur(24px)",
+                    WebkitBackdropFilter: "blur(24px)",
                     border: "1px solid var(--dark3)",
                     borderTop: "2px solid var(--gold)",
-                    boxShadow: "0 24px 48px rgba(0,0,0,0.8)",
-                    padding: "24px 28px",
+                    boxShadow: "0 28px 60px rgba(0,0,0,0.85)",
+                    padding: "26px 30px",
                   }}
                 >
                   <div
@@ -105,37 +106,42 @@ export default function Nav() {
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      marginBottom: "16px",
+                      marginBottom: "18px",
                       borderBottom: "1px solid var(--dark3)",
-                      paddingBottom: "10px",
+                      paddingBottom: "12px",
                     }}
                   >
                     <span
                       style={{
-                        fontSize: ".5rem",
-                        letterSpacing: ".3em",
+                        fontSize: ".7rem",
+                        letterSpacing: ".25em",
                         textTransform: "uppercase",
                         color: "var(--gold)",
+                        fontWeight: 600,
                       }}
                     >
-                      Watch Categories
+                      Timepiece Discovery
                     </span>
                     <Link
                       href="/collection"
                       onClick={() => setCollectionOpen(false)}
                       style={{
-                        fontSize: ".48rem",
+                        fontSize: ".68rem",
                         letterSpacing: ".15em",
                         textTransform: "uppercase",
                         color: "var(--muted)",
                         textDecoration: "none",
+                        fontWeight: 500,
+                        transition: "color .2s",
                       }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
                     >
-                      All Watches →
+                      View All Watches (Complete Catalog) →
                     </Link>
                   </div>
 
-                  {/* The Premium Collection Banner in Mega Menu */}
+                  {/* The Premium Collection Banner */}
                   <Link
                     href="/premium"
                     onClick={() => setCollectionOpen(false)}
@@ -143,102 +149,189 @@ export default function Nav() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "10px 14px",
-                      marginBottom: "14px",
+                      padding: "12px 18px",
+                      marginBottom: "20px",
                       background: "linear-gradient(90deg, rgba(196,169,98,.18) 0%, rgba(196,169,98,.04) 100%)",
-                      border: "1px solid rgba(196,169,98,.35)",
-                      borderRadius: "2px",
+                      border: "1px solid rgba(196,169,98,.4)",
                       textDecoration: "none",
                       transition: "border-color .2s, background .2s",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = "var(--gold)";
-                      e.currentTarget.style.background = "linear-gradient(90deg, rgba(196,169,98,.25) 0%, rgba(196,169,98,.08) 100%)";
+                      e.currentTarget.style.background = "linear-gradient(90deg, rgba(196,169,98,.26) 0%, rgba(196,169,98,.08) 100%)";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(196,169,98,.35)";
+                      e.currentTarget.style.borderColor = "rgba(196,169,98,.4)";
                       e.currentTarget.style.background = "linear-gradient(90deg, rgba(196,169,98,.18) 0%, rgba(196,169,98,.04) 100%)";
                     }}
                   >
                     <div>
-                      <div style={{ fontSize: ".55rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
+                      <div style={{ fontSize: ".72rem", letterSpacing: ".15em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 700 }}>
                         ✦ The Premium Collection
                       </div>
-                      <div style={{ fontSize: ".45rem", color: "rgba(244,239,228,.7)", letterSpacing: ".05em" }}>
-                        Curated Haute Horlogerie & Limited References
+                      <div style={{ fontSize: ".68rem", color: "rgba(244,239,228,.8)", letterSpacing: ".02em", marginTop: "2px" }}>
+                        Curated Haute Horlogerie, numbered references & collector editions
                       </div>
                     </div>
-                    <span style={{ fontSize: ".6rem", color: "var(--gold)" }}>→</span>
+                    <span style={{ fontSize: ".85rem", color: "var(--gold)", fontWeight: 600 }}>Explore →</span>
                   </Link>
 
+                  {/* 3-Column Structured Categories */}
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "10px 20px",
+                      gridTemplateColumns: "1fr 1fr 1fr",
+                      gap: "24px",
                     }}
                   >
-                    {CATEGORIES.map((cat) => (
-                      <Link
-                        key={cat.slug}
-                        href={`/watches/category/${cat.slug}`}
-                        onClick={() => setCollectionOpen(false)}
+                    {/* Column 1: By Gender */}
+                    <div>
+                      <div
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                          textDecoration: "none",
-                          padding: "8px 10px",
-                          borderRadius: "2px",
-                          transition: "background .2s",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgba(196,169,98,.1)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "transparent";
+                          fontSize: ".65rem",
+                          letterSpacing: ".2em",
+                          textTransform: "uppercase",
+                          color: "var(--gold)",
+                          marginBottom: "12px",
+                          fontWeight: 600,
+                          paddingBottom: "6px",
+                          borderBottom: "1px solid rgba(196,169,98,.2)",
                         }}
                       >
-                        <span
-                          style={{
-                            fontSize: ".85rem",
-                            color: "var(--gold)",
-                            width: "20px",
-                            textAlign: "center",
-                          }}
-                        >
-                          {cat.icon}
-                        </span>
-                        <div>
-                          <div
+                        By Gender
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                        {[
+                          { slug: "men", label: "Men's Watches", desc: "Commanding luxury profiles" },
+                          { slug: "women", label: "Women's Watches", desc: "Radiant & refined finishing" },
+                          { slug: "unisex", label: "Unisex Watches", desc: "Universal iconic proportions" },
+                        ].map((cat) => (
+                          <Link
+                            key={cat.slug}
+                            href={`/watches/category/${cat.slug}`}
+                            onClick={() => setCollectionOpen(false)}
                             style={{
-                              fontSize: ".6rem",
-                              letterSpacing: ".15em",
-                              textTransform: "uppercase",
-                              color: "var(--white)",
-                              fontWeight: 500,
+                              textDecoration: "none",
+                              padding: "8px 10px",
+                              borderRadius: "2px",
+                              transition: "background .2s",
+                              display: "block",
                             }}
+                            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(196,169,98,.1)")}
+                            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                           >
-                            {cat.label}
-                          </div>
-                          <div
+                            <div style={{ fontSize: ".78rem", color: "var(--white)", fontWeight: 500 }}>
+                              {cat.label}
+                            </div>
+                            <div style={{ fontSize: ".65rem", color: "#a5a5a5", marginTop: "2px" }}>
+                              {cat.desc}
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Column 2: By Movement */}
+                    <div>
+                      <div
+                        style={{
+                          fontSize: ".65rem",
+                          letterSpacing: ".2em",
+                          textTransform: "uppercase",
+                          color: "var(--gold)",
+                          marginBottom: "12px",
+                          fontWeight: 600,
+                          paddingBottom: "6px",
+                          borderBottom: "1px solid rgba(196,169,98,.2)",
+                        }}
+                      >
+                        By Movement
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                        {[
+                          { slug: "automatic", label: "Automatic Watches", desc: "Mechanical self-winding" },
+                          { slug: "quartz", label: "Quartz Watches", desc: "Laser-sharp battery precision" },
+                          { slug: "chronograph", label: "Chronograph", desc: "Multi-subdial complications" },
+                        ].map((cat) => (
+                          <Link
+                            key={cat.slug}
+                            href={`/watches/category/${cat.slug}`}
+                            onClick={() => setCollectionOpen(false)}
                             style={{
-                              fontSize: ".45rem",
-                              color: "var(--muted)",
-                              letterSpacing: ".05em",
+                              textDecoration: "none",
+                              padding: "8px 10px",
+                              borderRadius: "2px",
+                              transition: "background .2s",
+                              display: "block",
                             }}
+                            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(196,169,98,.1)")}
+                            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                           >
-                            {cat.tagline || "Hand-finished timepiece"}
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
+                            <div style={{ fontSize: ".78rem", color: "var(--white)", fontWeight: 500 }}>
+                              {cat.label}
+                            </div>
+                            <div style={{ fontSize: ".65rem", color: "#a5a5a5", marginTop: "2px" }}>
+                              {cat.desc}
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Column 3: Curated Collections */}
+                    <div>
+                      <div
+                        style={{
+                          fontSize: ".65rem",
+                          letterSpacing: ".2em",
+                          textTransform: "uppercase",
+                          color: "var(--gold)",
+                          marginBottom: "12px",
+                          fontWeight: 600,
+                          paddingBottom: "6px",
+                          borderBottom: "1px solid rgba(196,169,98,.2)",
+                        }}
+                      >
+                        Curations & Styles
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                        {[
+                          { slug: "new-arrivals", label: "New Arrivals", desc: "Fresh from the atelier" },
+                          { slug: "bestsellers", label: "Best Sellers", desc: "Most coveted references" },
+                          { slug: "classic", label: "Classic & Dress", desc: "Timeless formal heritage" },
+                          { slug: "sport", label: "Sport Timepieces", desc: "High water resistance" },
+                        ].map((cat) => (
+                          <Link
+                            key={cat.slug}
+                            href={`/watches/category/${cat.slug}`}
+                            onClick={() => setCollectionOpen(false)}
+                            style={{
+                              textDecoration: "none",
+                              padding: "8px 10px",
+                              borderRadius: "2px",
+                              transition: "background .2s",
+                              display: "block",
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(196,169,98,.1)")}
+                            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                          >
+                            <div style={{ fontSize: ".78rem", color: "var(--white)", fontWeight: 500 }}>
+                              {cat.label}
+                            </div>
+                            <div style={{ fontSize: ".65rem", color: "#a5a5a5", marginTop: "2px" }}>
+                              {cat.desc}
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
+                  {/* Mega Menu Footer Actions */}
                   <div
                     style={{
-                      marginTop: "16px",
-                      paddingTop: "14px",
+                      marginTop: "22px",
+                      paddingTop: "16px",
                       borderTop: "1px solid var(--dark3)",
                       display: "flex",
                       justifyContent: "space-between",
@@ -249,24 +342,32 @@ export default function Nav() {
                       href="/customize"
                       onClick={() => setCollectionOpen(false)}
                       style={{
-                        fontSize: ".48rem",
-                        letterSpacing: ".2em",
+                        fontSize: ".68rem",
+                        letterSpacing: ".15em",
                         textTransform: "uppercase",
                         color: "var(--gold)",
                         textDecoration: "none",
+                        fontWeight: 600,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
                       }}
                     >
-                      ✦ Bespoke Customizer
+                      ✦ Bespoke Atelier Customizer
                     </Link>
                     <Link
                       href="/virtual-try-on"
                       onClick={() => setCollectionOpen(false)}
                       style={{
-                        fontSize: ".48rem",
-                        letterSpacing: ".2em",
+                        fontSize: ".68rem",
+                        letterSpacing: ".15em",
                         textTransform: "uppercase",
-                        color: "var(--muted)",
+                        color: "var(--white)",
                         textDecoration: "none",
+                        fontWeight: 500,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
                       }}
                     >
                       AR Virtual Try-On →

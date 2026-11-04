@@ -12,7 +12,21 @@ type ProductResult = {
   price: number;
   tag: string;
   images: string[];
+  inStock?: boolean;
+  stockCount?: number;
 };
+
+const SUGGESTIONS = [
+  "Automatic Watches",
+  "Men's Watches",
+  "Women's Watches",
+  "Quartz Watches",
+  "Royal Heritage",
+  "Tourbillon",
+  "Chronograph",
+  "Gold Edition",
+  "Midnight",
+];
 
 export default function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [query, setQuery] = useState("");
@@ -22,7 +36,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
 
   useEffect(() => {
     if (open) {
-      setTimeout(() => inputRef.current?.focus(), 100);
+      setTimeout(() => inputRef.current?.focus(), 80);
     } else {
       setQuery("");
       setResults([]);
@@ -45,7 +59,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
     }
     setLoading(true);
     const timer = setTimeout(() => {
-      fetch(`/api/search?q=${encodeURIComponent(query)}`)
+      fetch(`/api/search?q=${encodeURIComponent(query.trim())}`)
         .then((r) => r.json())
         .then((data) => {
           if (data && Array.isArray(data.products)) {
@@ -59,7 +73,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
           setResults([]);
           setLoading(false);
         });
-    }, 250);
+    }, 220);
 
     return () => clearTimeout(timer);
   }, [query]);
@@ -72,149 +86,272 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(5, 5, 5, 0.92)",
-        backdropFilter: "blur(16px)",
-        zIndex: 9990,
+        background: "rgba(5, 5, 5, 0.94)",
+        backdropFilter: "blur(18px)",
+        zIndex: 9999,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         padding: "80px 24px 40px",
         animation: "fadeIn .25s ease",
+        overflowY: "auto",
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          maxWidth: "800px",
+          maxWidth: "820px",
           width: "100%",
           display: "flex",
           flexDirection: "column",
           gap: "24px",
         }}
       >
-        {/* Header bar */}
+        {/* Header Bar */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ fontSize: ".55rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase" }}>
-            Search Timepieces
+          <div>
+            <div style={{ fontSize: "0.74rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", fontWeight: 600 }}>
+              Discover Timepieces
+            </div>
+            <div style={{ fontSize: "0.82rem", color: "var(--muted)", marginTop: "2px" }}>
+              Search across movements, series, genders, and calibers
+            </div>
           </div>
           <button
             onClick={onClose}
+            aria-label="Close search"
             style={{
-              background: "none",
-              border: "1px solid var(--gold-dk)",
+              background: "var(--dark2)",
+              border: "1px solid var(--dark4)",
               color: "var(--gold)",
-              width: "36px",
-              height: "36px",
-              fontSize: ".9rem",
+              width: "42px",
+              height: "42px",
+              fontSize: "1.1rem",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              transition: "all .2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "var(--gold)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "var(--dark4)";
             }}
           >
             ✕
           </button>
         </div>
 
-        {/* Input box */}
+        {/* Input Box */}
         <div style={{ position: "relative", width: "100%" }}>
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by name, series, movement, tag..."
+            placeholder="Search by model, series, movement (e.g. Automatic, Tourbillon, Men's)..."
             style={{
               width: "100%",
-              padding: "20px 24px",
+              padding: "20px 54px 20px 24px",
               background: "var(--dark2)",
-              border: "1px solid var(--gold-dk)",
+              border: "1px solid var(--gold)",
               color: "var(--white)",
-              fontSize: "1.1rem",
-              fontFamily: "Playfair Display, serif",
+              fontSize: "1.15rem",
+              fontFamily: "Raleway, sans-serif",
               outline: "none",
-              letterSpacing: ".05em",
+              letterSpacing: ".02em",
+              boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
             }}
           />
-          {loading && (
-            <div style={{ position: "absolute", right: "20px", top: "50%", transform: "translateY(-50%)", fontSize: ".6rem", color: "var(--gold)" }}>
-              Searching...
-            </div>
-          )}
-        </div>
-
-        {/* Quick Suggestion Tags */}
-        {!query && (
-          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center", marginTop: "8px" }}>
-            <span style={{ fontSize: ".5rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase" }}>Popular:</span>
-            {["Royal Heritage", "Chronograph", "Automatic", "Tourbillon", "Skeleton", "Rose Gold"].map((tag) => (
-              <button
-                key={tag}
-                onClick={() => setQuery(tag)}
-                style={{
-                  padding: "6px 14px",
-                  background: "var(--dark3)",
-                  border: "1px solid var(--dark4)",
-                  color: "var(--text)",
-                  fontSize: ".55rem",
-                  letterSpacing: ".15em",
-                  textTransform: "uppercase",
-                  cursor: "pointer",
-                }}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Results List */}
-        <div style={{ maxHeight: "60vh", overflowY: "auto", display: "flex", flexDirection: "column", gap: "12px" }}>
-          {results.map((p) => (
-            <Link
-              key={p.id}
-              href={`/watches/${p.slug}`}
-              onClick={onClose}
+          {query ? (
+            <button
+              onClick={() => {
+                setQuery("");
+                inputRef.current?.focus();
+              }}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "20px",
-                padding: "14px 20px",
-                background: "var(--dark)",
-                border: "1px solid var(--dark3)",
-                textDecoration: "none",
-                transition: "border-color .3s, background .3s",
+                position: "absolute",
+                right: "18px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "none",
+                border: "none",
+                color: "var(--muted)",
+                cursor: "pointer",
+                fontSize: "1rem",
+                padding: "6px",
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "var(--dark2)";
-                e.currentTarget.style.borderColor = "var(--gold-dk)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "var(--dark)";
-                e.currentTarget.style.borderColor = "var(--dark3)";
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          ) : loading ? (
+            <div
+              style={{
+                position: "absolute",
+                right: "20px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                fontSize: "0.75rem",
+                color: "var(--gold)",
+                letterSpacing: ".1em",
               }}
             >
-              <div style={{ width: "64px", height: "64px", background: "var(--dark2)", flexShrink: 0, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {p.images && p.images.length > 0 ? (
-                  <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                ) : (
-                  <span style={{ fontSize: "1.2rem", color: "var(--gold)" }}>⌚</span>
-                )}
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: ".45rem", letterSpacing: ".3em", color: "var(--gold-dk)", textTransform: "uppercase" }}>{p.series}</div>
-                <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.1rem", color: "var(--white)", margin: "2px 0" }}>{p.name}</div>
-                <div style={{ fontSize: ".55rem", letterSpacing: ".1em", color: "var(--muted)", textTransform: "uppercase" }}>{p.tag}</div>
-              </div>
-              <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.1rem", color: "var(--gold)" }}>
-                {fmt(p.price)}
-              </div>
-            </Link>
+              Searching...
+            </div>
+          ) : null}
+        </div>
+
+        {/* Suggestion Chips */}
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+          <span style={{ fontSize: "0.72rem", letterSpacing: ".15em", color: "var(--muted)", textTransform: "uppercase", marginRight: "4px" }}>
+            Suggested:
+          </span>
+          {SUGGESTIONS.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => setQuery(tag)}
+              style={{
+                padding: "7px 14px",
+                background: query === tag ? "var(--gold)" : "var(--dark2)",
+                border: query === tag ? "1px solid var(--gold)" : "1px solid var(--dark4)",
+                color: query === tag ? "var(--black)" : "var(--text)",
+                fontSize: "0.74rem",
+                letterSpacing: ".1em",
+                cursor: "pointer",
+                transition: "all .2s ease",
+                fontFamily: "Raleway, sans-serif",
+                fontWeight: query === tag ? 700 : 500,
+              }}
+              onMouseEnter={(e) => {
+                if (query !== tag) e.currentTarget.style.borderColor = "var(--gold)";
+              }}
+              onMouseLeave={(e) => {
+                if (query !== tag) e.currentTarget.style.borderColor = "var(--dark4)";
+              }}
+            >
+              {tag}
+            </button>
           ))}
+        </div>
+
+        {/* Results List */}
+        <div style={{ maxHeight: "58vh", overflowY: "auto", display: "flex", flexDirection: "column", gap: "12px", paddingRight: "4px" }}>
+          {results.map((p) => {
+            const isSoldOut = p.stockCount === 0 || p.inStock === false;
+            return (
+              <Link
+                key={p.id}
+                href={`/watches/${p.slug}`}
+                onClick={onClose}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "20px",
+                  padding: "16px 20px",
+                  background: "var(--dark2)",
+                  border: "1px solid var(--dark3)",
+                  textDecoration: "none",
+                  transition: "border-color .25s, background .25s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "var(--dark)";
+                  e.currentTarget.style.borderColor = "var(--gold)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "var(--dark2)";
+                  e.currentTarget.style.borderColor = "var(--dark3)";
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
+                  <div
+                    style={{
+                      width: "68px",
+                      height: "76px",
+                      background: "var(--dark3)",
+                      flexShrink: 0,
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "4px",
+                    }}
+                  >
+                    {p.images && p.images.length > 0 ? (
+                      <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                    ) : (
+                      <span style={{ fontSize: "1.4rem", color: "var(--gold)" }}>⌚</span>
+                    )}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "0.7rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase", fontWeight: 600 }}>
+                      {p.series}
+                    </div>
+                    <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.2rem", color: "var(--white)", margin: "4px 0" }}>
+                      {p.name}
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.74rem", color: "var(--muted)" }}>
+                      <span>{p.tag}</span>
+                      {isSoldOut ? (
+                        <span style={{ color: "#ff6b6b", fontWeight: 600 }}>· Sold Out</span>
+                      ) : (
+                        <span style={{ color: "#4abd7e", fontWeight: 600 }}>· In Stock</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ textAlign: "right", flexShrink: 0 }}>
+                  <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.25rem", color: "var(--white)", fontWeight: 500 }}>
+                    {fmt(p.price)}
+                  </div>
+                  <div style={{ fontSize: "0.72rem", color: "var(--gold)", marginTop: "4px", letterSpacing: ".05em" }}>
+                    View Timepiece →
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
 
           {query && !loading && results.length === 0 && (
-            <div style={{ padding: "40px", color: "var(--muted)", textAlign: "center", fontSize: ".7rem", letterSpacing: ".15em" }}>
-              No timepieces found matching &ldquo;{query}&rdquo;
+            <div
+              style={{
+                padding: "60px 20px",
+                color: "var(--muted)",
+                textAlign: "center",
+                fontSize: "0.88rem",
+                background: "var(--dark2)",
+                border: "1px solid var(--dark3)",
+              }}
+            >
+              <p style={{ color: "var(--white)", fontSize: "1rem", marginBottom: "8px" }}>
+                No timepieces found for &ldquo;{query}&rdquo;
+              </p>
+              <p style={{ margin: 0 }}>
+                Try searching for broader terms such as <span style={{ color: "var(--gold)" }}>Automatic</span>,{" "}
+                <span style={{ color: "var(--gold)" }}>Men</span>, or explore our full collection.
+              </p>
+              <Link
+                href="/collection"
+                onClick={onClose}
+                style={{
+                  display: "inline-block",
+                  marginTop: "20px",
+                  padding: "10px 24px",
+                  border: "1px solid var(--gold)",
+                  color: "var(--gold)",
+                  textDecoration: "none",
+                  fontSize: "0.76rem",
+                  letterSpacing: ".2em",
+                  textTransform: "uppercase",
+                  fontWeight: 600,
+                }}
+              >
+                Browse All Timepieces
+              </Link>
             </div>
           )}
         </div>

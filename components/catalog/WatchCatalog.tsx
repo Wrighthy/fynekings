@@ -8,6 +8,8 @@ import { useWishlistAction } from "@/lib/wishlistAction";
 import { useCompare } from "@/lib/compareStore";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
+import ProductCard from "@/components/ui/ProductCard";
+import QuickViewModal from "@/components/ui/QuickViewModal";
 import {
   CATEGORIES,
   MOVEMENT_OPTIONS,
@@ -42,6 +44,7 @@ export type Product = {
   strokeWidth: string;
   stockCount?: number;
   inStock?: boolean;
+  description?: string | null;
   specs?: Record<string, string> | null;
   categories?: string[];
   movement?: string | null;
@@ -54,6 +57,7 @@ export type Product = {
 
 const SORT_OPTIONS = [
   { id: "default", label: "Curated (Default)" },
+  { id: "popularity", label: "Popularity (Best Sellers)" },
   { id: "newest", label: "Newest Arrivals" },
   { id: "price_asc", label: "Price: Low to High" },
   { id: "price_desc", label: "Price: High to Low" },
@@ -175,10 +179,14 @@ export default function WatchCatalog({
   const paramPrice = searchParams.get("price") || "all";
   const paramSort = searchParams.get("sort") || "default";
   const paramSearch = searchParams.get("search") || "";
+  const paramGender = searchParams.get("gender") || "all";
+  const paramAvailability = searchParams.get("availability") || "all";
 
   // Component state
   const [activeCategory, setActiveCategory] = useState(paramCategory);
   const [activePremiumSub, setActivePremiumSub] = useState(paramPremiumSub);
+  const [activeGender, setActiveGender] = useState(paramGender);
+  const [activeAvailability, setActiveAvailability] = useState(paramAvailability);
   const [activeMovement, setActiveMovement] = useState(paramMovement);
   const [activeStrap, setActiveStrap] = useState(paramStrap);
   const [activeStyle, setActiveStyle] = useState(paramStyle);
@@ -186,6 +194,7 @@ export default function WatchCatalog({
   const [activeSort, setActiveSort] = useState(paramSort);
   const [search, setSearch] = useState(paramSearch);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   // Products state
   const [products, setProducts] = useState<Product[]>([]);
@@ -231,6 +240,8 @@ export default function WatchCatalog({
     } else {
       if (activeCategory && activeCategory !== "all") query.set("category", activeCategory);
     }
+    if (activeGender && activeGender !== "all") query.set("gender", activeGender);
+    if (activeAvailability && activeAvailability !== "all") query.set("availability", activeAvailability);
     if (activeMovement && activeMovement !== "all") query.set("movement", activeMovement);
     if (activeStrap && activeStrap !== "all") query.set("strap", activeStrap);
     if (activeStyle && activeStyle !== "all") query.set("style", activeStyle);
@@ -253,7 +264,7 @@ export default function WatchCatalog({
         setProducts([]);
         setLoading(false);
       });
-  }, [isPremiumOnly, activePremiumSub, activeCategory, activeMovement, activeStrap, activeStyle, activePrice, activeSort, search]);
+  }, [isPremiumOnly, activePremiumSub, activeCategory, activeGender, activeAvailability, activeMovement, activeStrap, activeStyle, activePrice, activeSort, search]);
 
   // Handle category change
   const handleSelectCategory = (slug: string) => {
@@ -279,6 +290,8 @@ export default function WatchCatalog({
   };
 
   const handleResetFilters = () => {
+    setActiveGender("all");
+    setActiveAvailability("all");
     setActiveMovement("all");
     setActiveStrap("all");
     setActiveStyle("all");
@@ -287,6 +300,8 @@ export default function WatchCatalog({
   };
 
   const hasActiveFilters =
+    activeGender !== "all" ||
+    activeAvailability !== "all" ||
     activeMovement !== "all" ||
     activeStrap !== "all" ||
     activeStyle !== "all" ||
@@ -647,9 +662,61 @@ export default function WatchCatalog({
         {/* Active Filter Pills */}
         {hasActiveFilters && (
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px", marginBottom: "28px" }}>
-            <span style={{ fontSize: ".5rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--muted)", marginRight: "4px" }}>
+            <span style={{ fontSize: ".65rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--muted)", marginRight: "4px", fontWeight: 600 }}>
               Active Filters:
             </span>
+
+            {activeGender !== "all" && (
+              <span
+                style={{
+                  fontSize: ".65rem",
+                  background: "rgba(196,169,98,.12)",
+                  border: "1px solid var(--gold)",
+                  color: "var(--gold)",
+                  padding: "5px 12px",
+                  borderRadius: "2px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  textTransform: "uppercase",
+                  fontWeight: 600,
+                }}
+              >
+                Gender: {activeGender}
+                <button
+                  onClick={() => setActiveGender("all")}
+                  style={{ background: "none", border: "none", color: "var(--gold)", cursor: "pointer", padding: 0 }}
+                >
+                  ✕
+                </button>
+              </span>
+            )}
+
+            {activeAvailability !== "all" && (
+              <span
+                style={{
+                  fontSize: ".65rem",
+                  background: "rgba(46, 213, 115, 0.12)",
+                  border: "1px solid rgba(46, 213, 115, 0.5)",
+                  color: "#2ed573",
+                  padding: "5px 12px",
+                  borderRadius: "2px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  textTransform: "uppercase",
+                  fontWeight: 600,
+                }}
+              >
+                In Stock Only
+                <button
+                  onClick={() => setActiveAvailability("all")}
+                  style={{ background: "none", border: "none", color: "#2ed573", cursor: "pointer", padding: 0 }}
+                >
+                  ✕
+                </button>
+              </span>
+            )}
 
             {activeMovement !== "all" && (
               <span
@@ -813,8 +880,58 @@ export default function WatchCatalog({
               )}
             </div>
 
-            {/* Movement Filter */}
+            {/* Availability Filter */}
             <div>
+              <div style={{ fontSize: ".68rem", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px", fontWeight: 600 }}>
+                Availability
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {[
+                  { id: "all", label: "All Watches" },
+                  { id: "in-stock", label: "In Stock Only" },
+                ].map((av) => (
+                  <label key={av.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeAvailability === av.id ? "var(--gold)" : "#b5b5b5", cursor: "pointer", fontWeight: activeAvailability === av.id ? 600 : 400 }}>
+                    <input
+                      type="radio"
+                      name="availability"
+                      checked={activeAvailability === av.id}
+                      onChange={() => setActiveAvailability(av.id)}
+                      style={{ accentColor: "var(--gold)" }}
+                    />
+                    <span>{av.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Gender Filter */}
+            <div style={{ borderTop: "1px solid var(--dark3)", paddingTop: "20px" }}>
+              <div style={{ fontSize: ".68rem", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px", fontWeight: 600 }}>
+                Gender
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {[
+                  { id: "all", label: "All Timepieces" },
+                  { id: "men", label: "Men's Watches" },
+                  { id: "women", label: "Women's Watches" },
+                  { id: "unisex", label: "Unisex Watches" },
+                ].map((g) => (
+                  <label key={g.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeGender === g.id ? "var(--gold)" : "#b5b5b5", cursor: "pointer", fontWeight: activeGender === g.id ? 600 : 400 }}>
+                    <input
+                      type="radio"
+                      name="gender"
+                      checked={activeGender === g.id}
+                      onChange={() => setActiveGender(g.id)}
+                      style={{ accentColor: "var(--gold)" }}
+                    />
+                    <span>{g.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Movement Filter */}
+            <div style={{ borderTop: "1px solid var(--dark3)", paddingTop: "20px" }}>
               <div style={{ fontSize: ".5rem", letterSpacing: ".25em", color: "var(--white)", textTransform: "uppercase", marginBottom: "12px" }}>
                 Movement
               </div>
@@ -991,222 +1108,14 @@ export default function WatchCatalog({
                 </button>
               </div>
             ) : (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: isPremiumOnly ? "20px" : "10px" }}>
-                {products.map((p) => {
-                  const inWishlist = isInWishlist(p.id);
-                  const inCompare = isInCompare(p.id);
-
-                  return (
-                    <div
-                      key={p.id}
-                      style={{
-                        background: isPremiumOnly ? "rgba(14, 14, 14, 0.95)" : "var(--dark)",
-                        border: isPremiumOnly ? "1px solid rgba(196, 169, 98, 0.28)" : "1px solid var(--dark3)",
-                        boxShadow: isPremiumOnly ? "0 8px 24px rgba(0,0,0,0.5)" : "none",
-                        position: "relative",
-                        cursor: "pointer",
-                        transition: "border-color .3s, transform .3s, background .3s, box-shadow .3s",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = "var(--gold)";
-                        e.currentTarget.style.background = isPremiumOnly ? "rgba(20, 20, 20, 0.98)" : "var(--dark2)";
-                        if (isPremiumOnly) e.currentTarget.style.boxShadow = "0 12px 32px rgba(196,169,98,0.12)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = isPremiumOnly ? "rgba(196, 169, 98, 0.28)" : "var(--dark3)";
-                        e.currentTarget.style.background = isPremiumOnly ? "rgba(14, 14, 14, 0.95)" : "var(--dark)";
-                        if (isPremiumOnly) e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.5)";
-                      }}
-                    >
-                      {/* Badges */}
-                      {p.isPremium && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "12px",
-                            left: "12px",
-                            zIndex: 10,
-                            background: "rgba(10, 10, 10, 0.9)",
-                            border: "1px solid var(--gold)",
-                            color: "var(--gold)",
-                            fontSize: ".46rem",
-                            letterSpacing: ".2em",
-                            padding: "3px 8px",
-                            textTransform: "uppercase",
-                            fontWeight: 600,
-                            backdropFilter: "blur(6px)",
-                            borderRadius: "2px",
-                            boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "4px",
-                          }}
-                        >
-                          <span style={{ fontSize: ".5rem" }}>✦</span>
-                          <span>
-                            {p.premiumCollection === "limited-edition"
-                              ? "Limited Edition"
-                              : p.premiumCollection === "premium-automatic"
-                              ? "Premium Automatic"
-                              : p.premiumCollection === "premium-chronograph"
-                              ? "Premium Chrono"
-                              : p.premiumCollection === "premium-men"
-                              ? "Premium Men"
-                              : p.premiumCollection === "premium-women"
-                              ? "Premium Women"
-                              : "Premium"}
-                          </span>
-                        </div>
-                      )}
-                      {p.badge && <div className="badge-sold">{p.badge}</div>}
-                      {p.badgeNew && <div className="badge-new">{p.badgeNew}</div>}
-
-                      {/* Wishlist & Compare Buttons */}
-                      <div style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10, display: "flex", gap: "6px" }}>
-                        <button
-                          onClick={(e) => handleWishlistClick(e, p.slug || p.id)}
-                          style={{
-                            background: "rgba(12, 12, 12, 0.8)",
-                            backdropFilter: "blur(4px)",
-                            border: inWishlist ? "1px solid var(--gold)" : "1px solid var(--dark4)",
-                            color: inWishlist ? "var(--gold)" : "var(--muted)",
-                            width: "32px",
-                            height: "32px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            cursor: "pointer",
-                            fontSize: ".75rem",
-                          }}
-                          title={inWishlist ? "Remove from Wishlist" : "Save to Wishlist"}
-                        >
-                          {inWishlist ? "♥" : "♡"}
-                        </button>
-
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleCompare({
-                              id: p.id,
-                              name: p.name,
-                              slug: p.slug,
-                              series: p.series,
-                              price: p.price,
-                              strapColor: p.strapColor,
-                              caseColor: p.caseColor,
-                              caseStroke: p.caseStroke,
-                              images: p.images,
-                              specs: p.specs || null,
-                            });
-                          }}
-                          style={{
-                            background: "rgba(12, 12, 12, 0.8)",
-                            backdropFilter: "blur(4px)",
-                            border: inCompare ? "1px solid var(--gold)" : "1px solid var(--dark4)",
-                            color: inCompare ? "var(--gold)" : "var(--muted)",
-                            width: "32px",
-                            height: "32px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            cursor: "pointer",
-                            fontSize: ".65rem",
-                          }}
-                          title={inCompare ? "Remove from Compare Matrix" : "Add to Watch Comparison"}
-                        >
-                          ⚖
-                        </button>
-                      </div>
-
-                      {/* Image Preview / SVG */}
-                      <Link href={`/watches/${p.slug}`} style={{ display: "block", textDecoration: "none" }}>
-                        <div
-                          style={{
-                            aspectRatio: "1",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            padding: "30px",
-                            background: "linear-gradient(135deg, var(--dark2) 0%, var(--dark) 100%)",
-                            position: "relative",
-                            overflow: "hidden",
-                          }}
-                        >
-                          <WatchCardImage p={p} />
-                        </div>
-                      </Link>
-
-                      {/* Info & Details */}
-                      <div style={{ padding: "20px 22px", borderTop: "1px solid var(--dark3)" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-                          <p style={{ fontSize: ".45rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--gold)" }}>
-                            {p.tag}
-                          </p>
-                          {p.movement && (
-                            <span style={{ fontSize: ".42rem", letterSpacing: ".15em", color: "var(--muted)", textTransform: "uppercase" }}>
-                              {p.movement}
-                            </span>
-                          )}
-                        </div>
-
-                        <Link href={`/watches/${p.slug}`} style={{ textDecoration: "none" }}>
-                          <p
-                            style={{
-                              fontFamily: "Playfair Display, serif",
-                              fontSize: "1.15rem",
-                              fontWeight: 400,
-                              color: "var(--white)",
-                              marginBottom: "4px",
-                              letterSpacing: ".01em",
-                              transition: "color .3s",
-                            }}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--white)")}
-                          >
-                            {p.name}
-                          </p>
-                        </Link>
-
-                        <p style={{ fontSize: ".52rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "16px" }}>
-                          {p.series}
-                        </p>
-
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <p style={{ fontSize: ".85rem", color: "var(--gold)", fontFamily: "Playfair Display, serif" }}>
-                            {fmt(p.price)}{" "}
-                            <small style={{ fontSize: ".5rem", color: "var(--muted)", fontFamily: "Raleway, sans-serif", letterSpacing: ".15em" }}>
-                              + fees
-                            </small>
-                          </p>
-                          {p.stockCount === 0 || p.inStock === false ? (
-                            <span style={{ fontSize: ".48rem", letterSpacing: ".2em", color: "#ff6b6b", textTransform: "uppercase", fontWeight: 600 }}>
-                              Sold Out
-                            </span>
-                          ) : (
-                            <button
-                              onClick={() => addToCart(p.name, p.series, p.price)}
-                              style={{
-                                fontSize: ".48rem",
-                                letterSpacing: ".3em",
-                                textTransform: "uppercase",
-                                color: "var(--muted)",
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                fontFamily: "Raleway, sans-serif",
-                                transition: "color .3s",
-                              }}
-                              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
-                              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
-                            >
-                              Add →
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px" }}>
+                {products.map((p) => (
+                  <ProductCard
+                    key={p.id}
+                    product={p}
+                    onQuickView={(prod) => setQuickViewProduct(prod)}
+                  />
+                ))}
               </div>
             )}
           </main>
@@ -1237,30 +1146,68 @@ export default function WatchCatalog({
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--dark3)", paddingBottom: "16px" }}>
-              <span style={{ fontSize: ".6rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--gold)" }}>
+              <span style={{ fontSize: ".72rem", letterSpacing: ".25em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
                 Filter Watches
               </span>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
-                style={{ background: "none", border: "none", color: "var(--white)", fontSize: "1rem", cursor: "pointer" }}
+                style={{ background: "none", border: "none", color: "var(--white)", fontSize: "1.1rem", cursor: "pointer" }}
               >
                 ✕
               </button>
             </div>
 
+            {/* Availability */}
+            <div>
+              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
+                Availability
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {[
+                  { id: "all", label: "All Watches" },
+                  { id: "in-stock", label: "In Stock Only" },
+                ].map((av) => (
+                  <label key={av.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeAvailability === av.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeAvailability === av.id ? 600 : 400 }}>
+                    <input type="radio" name="av-mob" checked={activeAvailability === av.id} onChange={() => setActiveAvailability(av.id)} style={{ accentColor: "var(--gold)" }} />
+                    {av.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Gender */}
+            <div>
+              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
+                Gender
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {[
+                  { id: "all", label: "All Timepieces" },
+                  { id: "men", label: "Men's Watches" },
+                  { id: "women", label: "Women's Watches" },
+                  { id: "unisex", label: "Unisex Watches" },
+                ].map((g) => (
+                  <label key={g.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeGender === g.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeGender === g.id ? 600 : 400 }}>
+                    <input type="radio" name="g-mob" checked={activeGender === g.id} onChange={() => setActiveGender(g.id)} style={{ accentColor: "var(--gold)" }} />
+                    {g.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+
             {/* Movement */}
             <div>
-              <div style={{ fontSize: ".5rem", letterSpacing: ".2em", color: "var(--white)", textTransform: "uppercase", marginBottom: "10px" }}>
+              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                 Movement
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".6rem", color: activeMovement === "all" ? "var(--gold)" : "var(--muted)" }}>
-                  <input type="radio" name="m-mob" checked={activeMovement === "all"} onChange={() => setActiveMovement("all")} />
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeMovement === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activeMovement === "all" ? 600 : 400 }}>
+                  <input type="radio" name="m-mob" checked={activeMovement === "all"} onChange={() => setActiveMovement("all")} style={{ accentColor: "var(--gold)" }} />
                   All Movements
                 </label>
                 {MOVEMENT_OPTIONS.map((m) => (
-                  <label key={m.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".6rem", color: activeMovement === m.id ? "var(--gold)" : "var(--muted)" }}>
-                    <input type="radio" name="m-mob" checked={activeMovement === m.id} onChange={() => setActiveMovement(m.id)} />
+                  <label key={m.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeMovement === m.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeMovement === m.id ? 600 : 400 }}>
+                    <input type="radio" name="m-mob" checked={activeMovement === m.id} onChange={() => setActiveMovement(m.id)} style={{ accentColor: "var(--gold)" }} />
                     {m.label}
                   </label>
                 ))}
@@ -1269,17 +1216,17 @@ export default function WatchCatalog({
 
             {/* Strap */}
             <div>
-              <div style={{ fontSize: ".5rem", letterSpacing: ".2em", color: "var(--white)", textTransform: "uppercase", marginBottom: "10px" }}>
+              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                 Strap Material
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".6rem", color: activeStrap === "all" ? "var(--gold)" : "var(--muted)" }}>
-                  <input type="radio" name="s-mob" checked={activeStrap === "all"} onChange={() => setActiveStrap("all")} />
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeStrap === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activeStrap === "all" ? 600 : 400 }}>
+                  <input type="radio" name="s-mob" checked={activeStrap === "all"} onChange={() => setActiveStrap("all")} style={{ accentColor: "var(--gold)" }} />
                   All Straps
                 </label>
                 {STRAP_OPTIONS.map((s) => (
-                  <label key={s.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".6rem", color: activeStrap === s.id ? "var(--gold)" : "var(--muted)" }}>
-                    <input type="radio" name="s-mob" checked={activeStrap === s.id} onChange={() => setActiveStrap(s.id)} />
+                  <label key={s.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeStrap === s.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeStrap === s.id ? 600 : 400 }}>
+                    <input type="radio" name="s-mob" checked={activeStrap === s.id} onChange={() => setActiveStrap(s.id)} style={{ accentColor: "var(--gold)" }} />
                     {s.label}
                   </label>
                 ))}
@@ -1288,17 +1235,17 @@ export default function WatchCatalog({
 
             {/* Style */}
             <div>
-              <div style={{ fontSize: ".5rem", letterSpacing: ".2em", color: "var(--white)", textTransform: "uppercase", marginBottom: "10px" }}>
+              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                 Watch Style
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".6rem", color: activeStyle === "all" ? "var(--gold)" : "var(--muted)" }}>
-                  <input type="radio" name="st-mob" checked={activeStyle === "all"} onChange={() => setActiveStyle("all")} />
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeStyle === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activeStyle === "all" ? 600 : 400 }}>
+                  <input type="radio" name="st-mob" checked={activeStyle === "all"} onChange={() => setActiveStyle("all")} style={{ accentColor: "var(--gold)" }} />
                   All Styles
                 </label>
                 {STYLE_OPTIONS.map((st) => (
-                  <label key={st.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".6rem", color: activeStyle === st.id ? "var(--gold)" : "var(--muted)" }}>
-                    <input type="radio" name="st-mob" checked={activeStyle === st.id} onChange={() => setActiveStyle(st.id)} />
+                  <label key={st.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeStyle === st.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeStyle === st.id ? 600 : 400 }}>
+                    <input type="radio" name="st-mob" checked={activeStyle === st.id} onChange={() => setActiveStyle(st.id)} style={{ accentColor: "var(--gold)" }} />
                     {st.label}
                   </label>
                 ))}
@@ -1307,33 +1254,33 @@ export default function WatchCatalog({
 
             {/* Price */}
             <div>
-              <div style={{ fontSize: ".5rem", letterSpacing: ".2em", color: "var(--white)", textTransform: "uppercase", marginBottom: "10px" }}>
+              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                 Price Range
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".6rem", color: activePrice === "all" ? "var(--gold)" : "var(--muted)" }}>
-                  <input type="radio" name="p-mob" checked={activePrice === "all"} onChange={() => setActivePrice("all")} />
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activePrice === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activePrice === "all" ? 600 : 400 }}>
+                  <input type="radio" name="p-mob" checked={activePrice === "all"} onChange={() => setActivePrice("all")} style={{ accentColor: "var(--gold)" }} />
                   All Prices
                 </label>
                 {PRICE_RANGES.map((pr) => (
-                  <label key={pr.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".6rem", color: activePrice === pr.id ? "var(--gold)" : "var(--muted)" }}>
-                    <input type="radio" name="p-mob" checked={activePrice === pr.id} onChange={() => setActivePrice(pr.id)} />
+                  <label key={pr.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activePrice === pr.id ? "var(--gold)" : "#d0d0d0", fontWeight: activePrice === pr.id ? 600 : 400 }}>
+                    <input type="radio" name="p-mob" checked={activePrice === pr.id} onChange={() => setActivePrice(pr.id)} style={{ accentColor: "var(--gold)" }} />
                     {pr.label}
                   </label>
                 ))}
               </div>
             </div>
 
-            <div style={{ marginTop: "auto", display: "flex", gap: "10px" }}>
+            <div style={{ marginTop: "auto", display: "flex", gap: "12px", paddingTop: "16px" }}>
               <button
                 onClick={handleResetFilters}
-                style={{ flex: 1, padding: "12px", background: "none", border: "1px solid var(--dark4)", color: "var(--muted)", fontSize: ".55rem", textTransform: "uppercase", cursor: "pointer" }}
+                style={{ flex: 1, padding: "14px", background: "none", border: "1px solid var(--dark4)", color: "var(--muted)", fontSize: ".7rem", textTransform: "uppercase", letterSpacing: ".1em", cursor: "pointer", fontWeight: 600 }}
               >
                 Reset
               </button>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
-                style={{ flex: 2, padding: "12px", background: "var(--gold)", color: "#000", border: "none", fontSize: ".55rem", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}
+                style={{ flex: 2, padding: "14px", background: "var(--gold)", color: "#000", border: "none", fontSize: ".72rem", textTransform: "uppercase", fontWeight: 700, letterSpacing: ".15em", cursor: "pointer" }}
               >
                 Apply Filters
               </button>
@@ -1341,6 +1288,12 @@ export default function WatchCatalog({
           </div>
         </div>
       )}
+
+      {/* Quick View Modal */}
+      <QuickViewModal
+        product={quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+      />
 
       <Footer />
     </div>

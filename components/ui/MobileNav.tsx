@@ -293,36 +293,121 @@ export default function MobileNav() {
                       {categoriesOpen && (
                         <div
                           style={{
-                            padding: "6px 0 16px",
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
-                            gap: "8px",
+                            padding: "10px 0 18px",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "14px",
                             borderTop: "1px dashed var(--dark3)",
                           }}
                         >
-                          {CATEGORIES.map((cat) => (
-                            <Link
-                              key={cat.slug}
-                              href={`/watches/category/${cat.slug}`}
-                              onClick={() => setOpen(false)}
-                              style={{
-                                fontSize: ".55rem",
-                                letterSpacing: ".1em",
-                                textTransform: "uppercase",
-                                color: "var(--muted)",
-                                textDecoration: "none",
-                                padding: "8px",
-                                background: "rgba(20,20,20,.6)",
-                                borderRadius: "2px",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "6px",
-                              }}
-                            >
-                              <span style={{ color: "var(--gold)", opacity: 0.8 }}>{cat.icon}</span>
-                              <span>{cat.label}</span>
-                            </Link>
-                          ))}
+                          {/* By Gender */}
+                          <div>
+                            <div style={{ fontSize: ".62rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "6px", fontWeight: 600 }}>
+                              By Gender
+                            </div>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "6px" }}>
+                              {[
+                                { slug: "men", label: "Men's Watches", icon: "♂" },
+                                { slug: "women", label: "Women's Watches", icon: "♀" },
+                                { slug: "unisex", label: "Unisex Watches", icon: "◎" },
+                              ].map((cat) => (
+                                <Link
+                                  key={cat.slug}
+                                  href={`/watches/category/${cat.slug}`}
+                                  onClick={() => setOpen(false)}
+                                  style={{
+                                    fontSize: ".75rem",
+                                    color: "var(--white)",
+                                    textDecoration: "none",
+                                    padding: "10px 12px",
+                                    background: "rgba(25,25,25,.8)",
+                                    border: "1px solid var(--dark3)",
+                                    borderRadius: "2px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                    minHeight: "42px",
+                                  }}
+                                >
+                                  <span style={{ color: "var(--gold)", fontSize: ".85rem" }}>{cat.icon}</span>
+                                  <span style={{ fontWeight: 500 }}>{cat.label}</span>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* By Movement */}
+                          <div>
+                            <div style={{ fontSize: ".62rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "6px", fontWeight: 600 }}>
+                              By Movement
+                            </div>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "6px" }}>
+                              {[
+                                { slug: "automatic", label: "Automatic Watches", icon: "⚙" },
+                                { slug: "quartz", label: "Quartz Watches", icon: "⚡" },
+                                { slug: "chronograph", label: "Chronograph Watches", icon: "⏱" },
+                              ].map((cat) => (
+                                <Link
+                                  key={cat.slug}
+                                  href={`/watches/category/${cat.slug}`}
+                                  onClick={() => setOpen(false)}
+                                  style={{
+                                    fontSize: ".75rem",
+                                    color: "var(--white)",
+                                    textDecoration: "none",
+                                    padding: "10px 12px",
+                                    background: "rgba(25,25,25,.8)",
+                                    border: "1px solid var(--dark3)",
+                                    borderRadius: "2px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                    minHeight: "42px",
+                                  }}
+                                >
+                                  <span style={{ color: "var(--gold)", fontSize: ".85rem" }}>{cat.icon}</span>
+                                  <span style={{ fontWeight: 500 }}>{cat.label}</span>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Curations */}
+                          <div>
+                            <div style={{ fontSize: ".62rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "6px", fontWeight: 600 }}>
+                              Curations & Styles
+                            </div>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "6px" }}>
+                              {[
+                                { slug: "new-arrivals", label: "New Arrivals", icon: "✦" },
+                                { slug: "bestsellers", label: "Best Sellers", icon: "★" },
+                                { slug: "sport", label: "Sport Timepieces", icon: "◈" },
+                                { slug: "classic", label: "Classic & Dress", icon: "◆" },
+                              ].map((cat) => (
+                                <Link
+                                  key={cat.slug}
+                                  href={`/watches/category/${cat.slug}`}
+                                  onClick={() => setOpen(false)}
+                                  style={{
+                                    fontSize: ".75rem",
+                                    color: "var(--white)",
+                                    textDecoration: "none",
+                                    padding: "10px 12px",
+                                    background: "rgba(25,25,25,.8)",
+                                    border: "1px solid var(--dark3)",
+                                    borderRadius: "2px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                    minHeight: "42px",
+                                  }}
+                                >
+                                  <span style={{ color: "var(--gold)", fontSize: ".85rem" }}>{cat.icon}</span>
+                                  <span style={{ fontWeight: 500 }}>{cat.label}</span>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       )}
                     </li>

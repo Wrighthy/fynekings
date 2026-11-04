@@ -49,35 +49,35 @@ export const PREMIUM_SUBCATEGORIES: PremiumSubcategoryItem[] = [
 export const CATEGORIES: CategoryItem[] = [
   {
     slug: "men",
-    label: "Men",
+    label: "Men's Watches",
     description: "Distinguished luxury timepieces designed with commanding presence and masculine geometry.",
     icon: "♂",
     tagline: "Distinguished Horology for Men",
   },
   {
     slug: "women",
-    label: "Women",
+    label: "Women's Watches",
     description: "Graceful proportions, radiant dials, and hand-finished brilliance crafted for women.",
     icon: "♀",
     tagline: "Elegance & Radiant Craftsmanship",
   },
   {
     slug: "unisex",
-    label: "Unisex",
+    label: "Unisex Watches",
     description: "Versatile, proportioned timepieces engineered to look iconic on every wrist.",
     icon: "◎",
     tagline: "Universal Elegance for Any Wrist",
   },
   {
     slug: "automatic",
-    label: "Automatic",
+    label: "Automatic Watches",
     description: "Mechanical self-winding movements that turn wrist motion into endless precision.",
     icon: "⚙",
     tagline: "Self-Winding Mechanical Precision",
   },
   {
     slug: "quartz",
-    label: "Quartz",
+    label: "Quartz Watches",
     description: "Battery-powered quartz movements delivering laser-sharp accuracy and slender profiles.",
     icon: "⚡",
     tagline: "High-Precision Quartz Movement",
@@ -118,6 +118,25 @@ export const CATEGORIES: CategoryItem[] = [
     tagline: "Most Coveted Collector Favorites",
   },
 ];
+
+export const GENDER_CATEGORIES = [
+  { slug: "men", label: "Men's Watches", icon: "♂", description: "Commanding presence & masculine design" },
+  { slug: "women", label: "Women's Watches", icon: "♀", description: "Graceful proportions & brilliant dials" },
+  { slug: "unisex", label: "Unisex Watches", icon: "◎", description: "Versatile iconic luxury for every wrist" },
+] as const;
+
+export const MOVEMENT_CATEGORIES = [
+  { slug: "automatic", label: "Automatic Watches", icon: "⚙", description: "Self-winding mechanical movements" },
+  { slug: "quartz", label: "Quartz Watches", icon: "⚡", description: "High-precision battery-powered caliber" },
+  { slug: "chronograph", label: "Chronograph", icon: "⏱", description: "Precision elapsed-time complication" },
+] as const;
+
+export const CURATED_CATEGORIES = [
+  { slug: "new-arrivals", label: "New Arrivals", icon: "✦", description: "Fresh creations from our Lagos atelier" },
+  { slug: "bestsellers", label: "Best Sellers", icon: "★", description: "Our most sought-after collector pieces" },
+  { slug: "sport", label: "Sport Timepieces", icon: "◈", description: "High water resistance & durability" },
+  { slug: "classic", label: "Classic & Dress", icon: "◆", description: "Understated formal horology" },
+] as const;
 
 export const MOVEMENT_OPTIONS = [
   { id: "automatic", label: "Automatic" },
