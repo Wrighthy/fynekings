@@ -25,6 +25,15 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
     setAdded(false);
   }, [product]);
 
+  // Auto-scroll through images in the carousel
+  useEffect(() => {
+    if (!product || !product.images || product.images.length <= 1) return;
+    const interval = setInterval(() => {
+      setActiveImg((idx) => (idx + 1) % product.images.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [product]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -142,19 +151,28 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              overflow: "hidden",
             }}
           >
             {product.images && product.images.length > 0 ? (
-              <img
-                src={product.images[activeImg] || product.images[0]}
-                alt={product.name}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  animation: "fadeIn .25s ease",
-                }}
-              />
+              <>
+                {product.images.map((img, i) => (
+                  <img
+                    key={i}
+                    src={img}
+                    alt={`${product.name} view ${i + 1}`}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      opacity: i === activeImg ? 1 : 0,
+                      transition: "opacity 0.5s ease",
+                    }}
+                  />
+                ))}
+              </>
             ) : (
               <div style={{ color: "var(--gold)", fontSize: ".8rem", letterSpacing: ".2em" }}>
                 FYNEKINGS
@@ -188,10 +206,38 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                     cursor: "pointer",
                     overflow: "hidden",
                     flexShrink: 0,
+                    transition: "all .3s ease",
                   }}
                 >
                   <img src={img} alt={`View ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </button>
+              ))}
+            </div>
+          )}
+
+          {/* Carousel Dots Indicator */}
+          {product.images && product.images.length > 1 && (
+            <div
+              style={{
+                display: "flex",
+                gap: "5px",
+                marginTop: "12px",
+                justifyContent: "center",
+              }}
+            >
+              {product.images.map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    width: i === activeImg ? "16px" : "5px",
+                    height: "5px",
+                    background: i === activeImg ? "var(--gold)" : "rgba(255,255,255,0.3)",
+                    borderRadius: "3px",
+                    transition: "all .3s ease",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setActiveImg(i)}
+                />
               ))}
             </div>
           )}

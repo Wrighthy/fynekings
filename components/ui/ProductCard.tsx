@@ -179,90 +179,6 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           )}
         </div>
 
-        {/* Top-Right Quick Action Icons */}
-        <div style={{ position: "absolute", top: "12px", right: "12px", zIndex: 6, display: "flex", gap: "6px" }}>
-          {/* Wishlist Button */}
-          <button
-            onClick={(e) => handleWishlistClick(e, p.slug || p.id)}
-            aria-label={inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
-            style={{
-              background: "rgba(14, 14, 14, 0.85)",
-              backdropFilter: "blur(6px)",
-              border: inWishlist ? "1px solid var(--gold)" : "1px solid var(--dark4)",
-              color: inWishlist ? "var(--gold)" : "var(--white)",
-              width: "34px",
-              height: "34px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              fontSize: "1rem",
-              transition: "all .2s ease",
-            }}
-            title={inWishlist ? "In Wishlist" : "Save to Wishlist"}
-          >
-            {inWishlist ? "♥" : "♡"}
-          </button>
-
-          {/* Quick View Button */}
-          {onQuickView && (
-            <button
-              onClick={handleQuickViewClick}
-              aria-label="Quick View Timepiece"
-              style={{
-                background: "rgba(14, 14, 14, 0.85)",
-                backdropFilter: "blur(6px)",
-                border: "1px solid var(--dark4)",
-                color: "var(--white)",
-                width: "34px",
-                height: "34px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                transition: "all .2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "var(--gold)";
-                e.currentTarget.style.color = "var(--gold)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "var(--dark4)";
-                e.currentTarget.style.color = "var(--white)";
-              }}
-              title="Quick View"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            </button>
-          )}
-
-          {/* Compare Button */}
-          <button
-            onClick={handleCompareClick}
-            aria-label="Compare Timepiece"
-            style={{
-              background: "rgba(14, 14, 14, 0.85)",
-              backdropFilter: "blur(6px)",
-              border: inCompare ? "1px solid var(--gold)" : "1px solid var(--dark4)",
-              color: inCompare ? "var(--gold)" : "var(--muted)",
-              width: "34px",
-              height: "34px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              fontSize: ".72rem",
-              transition: "all .2s ease",
-            }}
-            title={inCompare ? "In Comparison" : "Compare Model"}
-          >
-            ⚖
-          </button>
-        </div>
-
         {/* Product Image Link */}
         <Link href={`/watches/${p.slug}`} style={{ display: "block", width: "100%", height: "100%", position: "relative" }}>
           {p.images && p.images.length > 0 ? (
@@ -333,6 +249,198 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
             </div>
           )}
         </Link>
+
+        {/* Hover Overlay: Gray overlay with action icons + Add to Cart */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0, 0, 0, 0.55)",
+            backdropFilter: "blur(2px)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "14px",
+            zIndex: 7,
+            opacity: hovered ? 1 : 0,
+            pointerEvents: hovered ? "auto" : "none",
+            transition: "opacity 0.3s ease",
+          }}
+        >
+          {/* Quick Action Icons Row */}
+          <div style={{ display: "flex", gap: "8px" }}>
+            {/* Wishlist Button */}
+            <button
+              onClick={(e) => handleWishlistClick(e, p.slug || p.id)}
+              aria-label={inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+              style={{
+                background: "rgba(14, 14, 14, 0.85)",
+                backdropFilter: "blur(6px)",
+                border: inWishlist ? "1px solid var(--gold)" : "1px solid rgba(255,255,255,0.25)",
+                color: inWishlist ? "var(--gold)" : "var(--white)",
+                width: "38px",
+                height: "38px",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                fontSize: "1rem",
+                transition: "all .25s ease",
+                transform: hovered ? "translateY(0)" : "translateY(8px)",
+              }}
+              onMouseEnter={(e) => {
+                if (!inWishlist) {
+                  e.currentTarget.style.borderColor = "var(--gold)";
+                  e.currentTarget.style.color = "var(--gold)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!inWishlist) {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+                  e.currentTarget.style.color = "var(--white)";
+                }
+              }}
+              title={inWishlist ? "In Wishlist" : "Save to Wishlist"}
+            >
+              {inWishlist ? "♥" : "♡"}
+            </button>
+
+            {/* Quick View Button */}
+            {onQuickView && (
+              <button
+                onClick={handleQuickViewClick}
+                aria-label="Quick View Timepiece"
+                style={{
+                  background: "rgba(14, 14, 14, 0.85)",
+                  backdropFilter: "blur(6px)",
+                  border: "1px solid rgba(255,255,255,0.25)",
+                  color: "var(--white)",
+                  width: "38px",
+                  height: "38px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  transition: "all .25s ease",
+                  transform: hovered ? "translateY(0)" : "translateY(8px)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "var(--gold)";
+                  e.currentTarget.style.color = "var(--gold)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+                  e.currentTarget.style.color = "var(--white)";
+                }}
+                title="Quick View"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            )}
+
+            {/* Compare Button */}
+            <button
+              onClick={handleCompareClick}
+              aria-label="Compare Timepiece"
+              style={{
+                background: "rgba(14, 14, 14, 0.85)",
+                backdropFilter: "blur(6px)",
+                border: inCompare ? "1px solid var(--gold)" : "1px solid rgba(255,255,255,0.25)",
+                color: inCompare ? "var(--gold)" : "var(--white)",
+                width: "38px",
+                height: "38px",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                fontSize: ".72rem",
+                transition: "all .25s ease",
+                transform: hovered ? "translateY(0)" : "translateY(8px)",
+              }}
+              onMouseEnter={(e) => {
+                if (!inCompare) {
+                  e.currentTarget.style.borderColor = "var(--gold)";
+                  e.currentTarget.style.color = "var(--gold)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!inCompare) {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+                  e.currentTarget.style.color = "var(--white)";
+                }
+              }}
+              title={inCompare ? "In Comparison" : "Compare Model"}
+            >
+              ⚖
+            </button>
+          </div>
+
+          {/* Add to Cart Button (centered in overlay) */}
+          {isSoldOut ? (
+            <button
+              disabled
+              style={{
+                padding: "10px 28px",
+                background: "rgba(255, 75, 75, 0.12)",
+                border: "1px solid rgba(255, 75, 75, 0.4)",
+                color: "#ff8b8b",
+                fontSize: ".68rem",
+                letterSpacing: ".15em",
+                textTransform: "uppercase",
+                fontWeight: 600,
+                cursor: "not-allowed",
+                borderRadius: "2px",
+                transform: hovered ? "translateY(0)" : "translateY(10px)",
+                transition: "all .25s ease",
+              }}
+            >
+              Sold Out
+            </button>
+          ) : (
+            <button
+              onClick={handleAddToCart}
+              style={{
+                padding: "10px 28px",
+                background: added ? "#2ed573" : "var(--gold)",
+                border: added ? "1px solid #2ed573" : "1px solid var(--gold)",
+                color: "var(--black)",
+                fontSize: ".68rem",
+                letterSpacing: ".18em",
+                textTransform: "uppercase",
+                fontWeight: 700,
+                cursor: "pointer",
+                borderRadius: "2px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
+                transform: hovered ? "translateY(0)" : "translateY(10px)",
+                transition: "all .25s ease",
+              }}
+              onMouseEnter={(e) => {
+                if (!added) {
+                  e.currentTarget.style.background = "var(--white)";
+                  e.currentTarget.style.borderColor = "var(--white)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!added) {
+                  e.currentTarget.style.background = "var(--gold)";
+                  e.currentTarget.style.borderColor = "var(--gold)";
+                }
+              }}
+            >
+              {added ? "Added ✓" : "Add to Cart +"}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Information Section */}
@@ -375,9 +483,9 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           </div>
         </div>
 
-        {/* Pricing & CTA Block */}
+        {/* Pricing Block */}
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "14px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
             <div>
               <span style={{ fontFamily: "Playfair Display, serif", fontSize: "1.15rem", color: "var(--gold)", fontWeight: 600 }}>
                 {fmt(p.price)}
@@ -386,98 +494,6 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
                 + fees
               </span>
             </div>
-          </div>
-
-          {/* Actions: Add to Cart and Quick View */}
-          <div style={{ display: "grid", gridTemplateColumns: onQuickView ? "1fr auto" : "1fr", gap: "8px" }}>
-            {isSoldOut ? (
-              <button
-                disabled
-                style={{
-                  width: "100%",
-                  height: "40px",
-                  background: "rgba(255, 75, 75, 0.08)",
-                  border: "1px solid rgba(255, 75, 75, 0.3)",
-                  color: "#ff8b8b",
-                  fontSize: ".68rem",
-                  letterSpacing: ".15em",
-                  textTransform: "uppercase",
-                  fontWeight: 600,
-                  cursor: "not-allowed",
-                }}
-              >
-                Sold Out
-              </button>
-            ) : (
-              <button
-                onClick={handleAddToCart}
-                style={{
-                  width: "100%",
-                  height: "40px",
-                  background: added ? "#2ed573" : "transparent",
-                  border: added ? "1px solid #2ed573" : "1px solid var(--gold)",
-                  color: added ? "var(--black)" : "var(--gold)",
-                  fontSize: ".72rem",
-                  letterSpacing: ".18em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "all .25s ease",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "6px",
-                }}
-                onMouseEnter={(e) => {
-                  if (!added) {
-                    e.currentTarget.style.background = "var(--gold)";
-                    e.currentTarget.style.color = "var(--black)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!added) {
-                    e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = "var(--gold)";
-                  }
-                }}
-              >
-                {added ? "Added ✓" : "Add to Cart +"}
-              </button>
-            )}
-
-            {onQuickView && (
-              <button
-                onClick={handleQuickViewClick}
-                style={{
-                  height: "40px",
-                  padding: "0 12px",
-                  background: "rgba(22, 22, 22, 0.9)",
-                  border: "1px solid var(--dark4)",
-                  color: "var(--muted)",
-                  fontSize: ".65rem",
-                  letterSpacing: ".12em",
-                  textTransform: "uppercase",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transition: "all .2s ease",
-                  whiteSpace: "nowrap",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "var(--gold-dk)";
-                  e.currentTarget.style.color = "var(--white)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "var(--dark4)";
-                  e.currentTarget.style.color = "var(--muted)";
-                }}
-                title="Quick View details"
-              >
-                Quick View
-              </button>
-            )}
           </div>
         </div>
       </div>
