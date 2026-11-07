@@ -4,12 +4,12 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import TryOnLoading from "./components/TryOnLoading";
-import TryOnExperience from "./components/TryOnExperience";
-import TryOnHUD from "./components/TryOnHUD";
-import TryOnControls from "./components/TryOnControls";
-import { getHandLandmarker, resetHandLandmarker } from "./lib/mediapipe";
+import SnapshotTryOn from "./components/SnapshotTryOn";
+import { getHolisticLandmarker, prefetchSegmenter, resetHolisticLandmarker } from "./lib/tryon/models";
+import { GUIDANCE } from "./lib/tryon/constants";
+import { releaseSnapshotSession } from "./lib/tryon/snapshotSession";
+import { resetDepthWorker } from "./lib/tryon/depthClient";
 import {
-  resetLiveFrame,
   useTryOnStore,
   type TryOnProduct,
 } from "./lib/tryOnStore";
@@ -98,17 +98,16 @@ function VirtualTryOn() {
   useEffect(() => {
     let cancelled = false;
 
-    getHandLandmarker((status) => {
+    getHolisticLandmarker((status) => {
       if (!cancelled) setModelProgress(status);
     })
       .then(() => {
+        prefetchSegmenter();
         if (!cancelled) setIsModelReady(true);
       })
       .catch((err: unknown) => {
         if (cancelled) return;
-        // A failed init must not be cached, or retrying would resolve the same
-        // rejected promise forever.
-        resetHandLandmarker();
+        resetHolisticLandmarker();
         setLoadError(
           err instanceof Error
             ? `Could not load the AR engine: ${err.message}`
@@ -125,8 +124,9 @@ function VirtualTryOn() {
   useEffect(() => {
     return () => {
       useTryOnStore.getState().reset();
-      resetLiveFrame();
-      resetHandLandmarker();
+      resetHolisticLandmarker();
+      resetDepthWorker();
+      releaseSnapshotSession();
     };
   }, []);
 
@@ -144,8 +144,9 @@ function VirtualTryOn() {
   }, [showLoading, isModelReady, isCameraReady, cameraError]);
 
   const handleRetry = useCallback(() => {
-    resetHandLandmarker();
-    resetLiveFrame();
+    resetHolisticLandmarker();
+    resetDepthWorker();
+    releaseSnapshotSession();
     useTryOnStore.getState().reset();
     setLoadError(null);
     setModelProgress(undefined);
@@ -168,20 +169,13 @@ function VirtualTryOn() {
 
   return (
     <div className="tryon-page">
-      {isModelReady && (
-        <>
-          <TryOnExperience />
-          <TryOnHUD />
-          {!cameraError && products.length > 0 && (
-            <TryOnControls products={products} />
-          )}
-        </>
-      )}
+      {isModelReady && <SnapshotTryOn products={products} />}
 
       {showLoading && (
         <TryOnLoading
           statusText={statusText}
           detailText={!isModelReady ? modelProgress : undefined}
+          note={GUIDANCE.privacy}
           isFadingOut={isFadingOut}
         />
       )}
