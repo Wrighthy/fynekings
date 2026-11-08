@@ -94,21 +94,30 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
       }}
     >
       {/* Top Media Container */}
-      <div style={{ position: "relative", width: "100%", aspectRatio: "1", background: "linear-gradient(135deg, #161616 0%, #0a0a0a 100%)", overflow: "hidden" }}>
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          aspectRatio: "1 / 1",
+          background: "#ffffff",
+          overflow: "hidden",
+        }}
+      >
         
         {/* Availability Badge */}
-        <div style={{ position: "absolute", top: "12px", left: "12px", zIndex: 5, display: "flex", flexDirection: "column", gap: "5px" }}>
+        <div style={{ position: "absolute", top: "14px", left: "14px", zIndex: 5, display: "flex", flexDirection: "column", gap: "6px" }}>
           {isSoldOut ? (
             <span
               style={{
-                fontSize: ".58rem",
+                fontSize: ".62rem",
                 letterSpacing: ".15em",
                 textTransform: "uppercase",
-                padding: "3px 8px",
-                background: "rgba(255, 75, 75, 0.15)",
-                border: "1px solid rgba(255, 75, 75, 0.5)",
+                padding: "4px 10px",
+                background: "rgba(10, 10, 10, 0.88)",
+                border: "1px solid rgba(255, 75, 75, 0.7)",
                 color: "#ff6b6b",
                 fontWeight: 600,
+                backdropFilter: "blur(4px)",
               }}
             >
               Sold Out
@@ -116,14 +125,15 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           ) : isLowStock ? (
             <span
               style={{
-                fontSize: ".58rem",
+                fontSize: ".62rem",
                 letterSpacing: ".15em",
                 textTransform: "uppercase",
-                padding: "3px 8px",
-                background: "rgba(196, 169, 98, 0.18)",
+                padding: "4px 10px",
+                background: "rgba(10, 10, 10, 0.88)",
                 border: "1px solid var(--gold)",
                 color: "var(--gold)",
                 fontWeight: 600,
+                backdropFilter: "blur(4px)",
               }}
             >
               Only {p.stockCount} Left
@@ -131,14 +141,15 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           ) : (
             <span
               style={{
-                fontSize: ".58rem",
+                fontSize: ".62rem",
                 letterSpacing: ".15em",
                 textTransform: "uppercase",
-                padding: "3px 8px",
-                background: "rgba(46, 213, 115, 0.12)",
-                border: "1px solid rgba(46, 213, 115, 0.4)",
+                padding: "4px 10px",
+                background: "rgba(10, 10, 10, 0.88)",
+                border: "1px solid rgba(46, 213, 115, 0.6)",
                 color: "#2ed573",
                 fontWeight: 600,
+                backdropFilter: "blur(4px)",
               }}
             >
               In Stock
@@ -149,13 +160,14 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           {p.badge && (
             <span
               style={{
-                fontSize: ".55rem",
+                fontSize: ".58rem",
                 letterSpacing: ".12em",
                 textTransform: "uppercase",
-                padding: "3px 8px",
+                padding: "4px 10px",
                 background: "var(--gold)",
                 color: "var(--black)",
                 fontWeight: 700,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.35)",
               }}
             >
               {p.badge}
@@ -164,14 +176,15 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           {p.badgeNew && (
             <span
               style={{
-                fontSize: ".55rem",
+                fontSize: ".58rem",
                 letterSpacing: ".12em",
                 textTransform: "uppercase",
-                padding: "3px 8px",
-                background: "transparent",
+                padding: "4px 10px",
+                background: "rgba(10, 10, 10, 0.88)",
                 border: "1px solid var(--gold)",
                 color: "var(--gold)",
                 fontWeight: 600,
+                backdropFilter: "blur(4px)",
               }}
             >
               {p.badgeNew}
@@ -194,7 +207,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
                     width: "100%",
                     height: "100%",
                     objectFit: "contain",
-                    padding: "16px",
+                    padding: "20px",
                     opacity: i === currentImg ? 1 : 0,
                     transition: "opacity 0.4s ease",
                   }}
@@ -205,11 +218,11 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
                 <div
                   style={{
                     position: "absolute",
-                    bottom: "10px",
+                    bottom: "12px",
                     left: "50%",
                     transform: "translateX(-50%)",
                     display: "flex",
-                    gap: "4px",
+                    gap: "5px",
                     zIndex: 4,
                   }}
                 >
@@ -217,9 +230,9 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
                     <div
                       key={i}
                       style={{
-                        width: i === currentImg ? "14px" : "4px",
+                        width: i === currentImg ? "16px" : "5px",
                         height: "4px",
-                        background: i === currentImg ? "var(--gold)" : "rgba(255,255,255,0.4)",
+                        background: i === currentImg ? "var(--gold)" : "rgba(0,0,0,0.3)",
                         borderRadius: "2px",
                         transition: "all .25s ease",
                       }}
@@ -229,8 +242,8 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
               )}
             </>
           ) : (
-            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg viewBox="0 0 160 160" width="130" height="130" xmlns="http://www.w3.org/2000/svg">
+            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+              <svg viewBox="0 0 160 160" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
                 <rect x="63" y="8" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
                 <rect x="63" y="112" width="34" height="40" rx="6" fill={p.strapColor} stroke={p.strapStroke} strokeWidth=".8" />
                 <circle cx="80" cy="80" r="50" fill={p.caseColor} stroke={p.caseStroke} strokeWidth={p.strokeWidth || "1.4"} />
@@ -250,18 +263,18 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           )}
         </Link>
 
-        {/* Hover Overlay: Gray overlay with action icons + Add to Cart */}
+        {/* Hover Overlay: Dark overlay with action icons + Add to Cart */}
         <div
           style={{
             position: "absolute",
             inset: 0,
-            background: "rgba(0, 0, 0, 0.55)",
+            background: "rgba(0, 0, 0, 0.58)",
             backdropFilter: "blur(2px)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: "14px",
+            gap: "16px",
             zIndex: 7,
             opacity: hovered ? 1 : 0,
             pointerEvents: hovered ? "auto" : "none",
@@ -269,24 +282,24 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           }}
         >
           {/* Quick Action Icons Row */}
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div style={{ display: "flex", gap: "10px" }}>
             {/* Wishlist Button */}
             <button
               onClick={(e) => handleWishlistClick(e, p.slug || p.id)}
               aria-label={inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               style={{
-                background: "rgba(14, 14, 14, 0.85)",
+                background: "rgba(14, 14, 14, 0.9)",
                 backdropFilter: "blur(6px)",
-                border: inWishlist ? "1px solid var(--gold)" : "1px solid rgba(255,255,255,0.25)",
+                border: inWishlist ? "1px solid var(--gold)" : "1px solid rgba(255,255,255,0.3)",
                 color: inWishlist ? "var(--gold)" : "var(--white)",
-                width: "38px",
-                height: "38px",
+                width: "42px",
+                height: "42px",
                 borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
-                fontSize: "1rem",
+                fontSize: "1.1rem",
                 transition: "all .25s ease",
                 transform: hovered ? "translateY(0)" : "translateY(8px)",
               }}
@@ -298,7 +311,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
               }}
               onMouseLeave={(e) => {
                 if (!inWishlist) {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
                   e.currentTarget.style.color = "var(--white)";
                 }
               }}
@@ -313,12 +326,12 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
                 onClick={handleQuickViewClick}
                 aria-label="Quick View Timepiece"
                 style={{
-                  background: "rgba(14, 14, 14, 0.85)",
+                  background: "rgba(14, 14, 14, 0.9)",
                   backdropFilter: "blur(6px)",
-                  border: "1px solid rgba(255,255,255,0.25)",
+                  border: "1px solid rgba(255,255,255,0.3)",
                   color: "var(--white)",
-                  width: "38px",
-                  height: "38px",
+                  width: "42px",
+                  height: "42px",
                   borderRadius: "50%",
                   display: "flex",
                   alignItems: "center",
@@ -332,12 +345,12 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
                   e.currentTarget.style.color = "var(--gold)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
                   e.currentTarget.style.color = "var(--white)";
                 }}
                 title="Quick View"
               >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                   <circle cx="12" cy="12" r="3" />
                 </svg>
@@ -349,18 +362,18 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
               onClick={handleCompareClick}
               aria-label="Compare Timepiece"
               style={{
-                background: "rgba(14, 14, 14, 0.85)",
+                background: "rgba(14, 14, 14, 0.9)",
                 backdropFilter: "blur(6px)",
-                border: inCompare ? "1px solid var(--gold)" : "1px solid rgba(255,255,255,0.25)",
+                border: inCompare ? "1px solid var(--gold)" : "1px solid rgba(255,255,255,0.3)",
                 color: inCompare ? "var(--gold)" : "var(--white)",
-                width: "38px",
-                height: "38px",
+                width: "42px",
+                height: "42px",
                 borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
-                fontSize: ".72rem",
+                fontSize: ".85rem",
                 transition: "all .25s ease",
                 transform: hovered ? "translateY(0)" : "translateY(8px)",
               }}
@@ -372,7 +385,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
               }}
               onMouseLeave={(e) => {
                 if (!inCompare) {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
                   e.currentTarget.style.color = "var(--white)";
                 }
               }}
@@ -387,18 +400,19 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
             <button
               disabled
               style={{
-                padding: "10px 28px",
-                background: "rgba(255, 75, 75, 0.12)",
-                border: "1px solid rgba(255, 75, 75, 0.4)",
+                padding: "12px 32px",
+                background: "rgba(255, 75, 75, 0.15)",
+                border: "1px solid rgba(255, 75, 75, 0.5)",
                 color: "#ff8b8b",
-                fontSize: ".68rem",
-                letterSpacing: ".15em",
+                fontSize: ".72rem",
+                letterSpacing: ".18em",
                 textTransform: "uppercase",
                 fontWeight: 600,
                 cursor: "not-allowed",
                 borderRadius: "2px",
                 transform: hovered ? "translateY(0)" : "translateY(10px)",
                 transition: "all .25s ease",
+                fontFamily: "Raleway, sans-serif",
               }}
             >
               Sold Out
@@ -407,12 +421,12 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
             <button
               onClick={handleAddToCart}
               style={{
-                padding: "10px 28px",
+                padding: "12px 32px",
                 background: added ? "#2ed573" : "var(--gold)",
                 border: added ? "1px solid #2ed573" : "1px solid var(--gold)",
                 color: "var(--black)",
-                fontSize: ".68rem",
-                letterSpacing: ".18em",
+                fontSize: ".74rem",
+                letterSpacing: ".2em",
                 textTransform: "uppercase",
                 fontWeight: 700,
                 cursor: "pointer",
@@ -420,9 +434,10 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "6px",
+                gap: "8px",
                 transform: hovered ? "translateY(0)" : "translateY(10px)",
                 transition: "all .25s ease",
+                fontFamily: "Raleway, sans-serif",
               }}
               onMouseEnter={(e) => {
                 if (!added) {
@@ -444,15 +459,15 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
       </div>
 
       {/* Information Section */}
-      <div style={{ padding: "18px 20px 20px", display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between", borderTop: "1px solid var(--dark3)" }}>
+      <div style={{ padding: "22px 24px 24px", display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between", borderTop: "1px solid var(--dark3)" }}>
         <div>
           {/* Tag & Movement Row */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-            <span style={{ fontSize: ".65rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+            <span style={{ fontSize: "12.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
               {p.tag}
             </span>
             {p.movement && (
-              <span style={{ fontSize: ".62rem", letterSpacing: ".1em", color: "#a5a5a5", textTransform: "uppercase" }}>
+              <span style={{ fontSize: "12px", letterSpacing: ".1em", color: "#a5a5a5", textTransform: "uppercase" }}>
                 {p.movement}
               </span>
             )}
@@ -463,10 +478,10 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
             <h3
               style={{
                 fontFamily: "Playfair Display, serif",
-                fontSize: "1.2rem",
+                fontSize: "23px",
                 fontWeight: 400,
                 color: "var(--white)",
-                margin: "0 0 4px",
+                margin: "0 0 6px",
                 lineHeight: 1.25,
                 transition: "color .2s",
               }}
@@ -478,7 +493,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           </Link>
 
           {/* Series */}
-          <div style={{ fontSize: ".7rem", letterSpacing: ".12em", textTransform: "uppercase", color: "#9e9e9e", marginBottom: "16px" }}>
+          <div style={{ fontSize: "12.5px", letterSpacing: ".12em", textTransform: "uppercase", color: "#9e9e9e", marginBottom: "18px" }}>
             {p.series}
           </div>
         </div>
@@ -487,10 +502,10 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
             <div>
-              <span style={{ fontFamily: "Playfair Display, serif", fontSize: "1.15rem", color: "var(--gold)", fontWeight: 600 }}>
+              <span style={{ fontFamily: "Playfair Display, serif", fontSize: "22px", color: "var(--gold)", fontWeight: 600 }}>
                 {fmt(p.price)}
               </span>
-              <span style={{ fontSize: ".65rem", color: "#808080", marginLeft: "6px" }}>
+              <span style={{ fontSize: "12px", color: "#808080", marginLeft: "8px" }}>
                 + fees
               </span>
             </div>

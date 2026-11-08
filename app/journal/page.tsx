@@ -26,7 +26,7 @@ export default function JournalPage() {
                         The Fynekings <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Journal</em>
                     </h1>
                     <p style={{ fontSize: ".7rem", letterSpacing: ".12em", color: "var(--text)", lineHeight: 2.4, maxWidth: "600px" }}>
-                        Six volumes of horological knowledge written by our master watchmakers in Victoria Island, Lagos. Understanding what you wear transforms how you wear it.
+                        Six volumes of horological knowledge written by our master curators in Lagos, Nigeria. Understanding what you wear transforms how you wear it.
                     </p>
                 </div>
             </div>

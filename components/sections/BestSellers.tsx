@@ -37,34 +37,38 @@ export default function BestSellers() {
 
   // Filter products by selected collection or style
   const filteredProducts = useMemo(() => {
-    if (activeFilter === "All") return products.slice(0, 8);
     const filterLower = activeFilter.toLowerCase();
-    const matches = products.filter((p) => {
-      const series = (p.series || "").toLowerCase();
-      const name = (p.name || "").toLowerCase();
-      const tag = (p.tag || "").toLowerCase();
-      const badge = (p.badge || "").toLowerCase();
-      const badgeNew = (p.badgeNew || "").toLowerCase();
-      const categories = Array.isArray(p.categories) ? p.categories.join(" ").toLowerCase() : "";
+    const sourceList = activeFilter === "All"
+      ? products
+      : products.filter((p) => {
+          const series = (p.series || "").toLowerCase();
+          const name = (p.name || "").toLowerCase();
+          const tag = (p.tag || "").toLowerCase();
+          const badge = (p.badge || "").toLowerCase();
+          const badgeNew = (p.badgeNew || "").toLowerCase();
+          const categories = Array.isArray(p.categories) ? p.categories.join(" ").toLowerCase() : "";
 
-      if (filterLower === "limited") {
-        return (
-          series.includes("limited") ||
-          badge.includes("limited") ||
-          badgeNew.includes("limited") ||
-          tag.includes("limited") ||
-          categories.includes("limited")
-        );
-      }
-      return (
-        series.includes(filterLower) ||
-        name.includes(filterLower) ||
-        tag.includes(filterLower) ||
-        categories.includes(filterLower)
-      );
-    });
+          if (filterLower === "limited") {
+            return (
+              series.includes("limited") ||
+              badge.includes("limited") ||
+              badgeNew.includes("limited") ||
+              tag.includes("limited") ||
+              categories.includes("limited")
+            );
+          }
+          return (
+            series.includes(filterLower) ||
+            name.includes(filterLower) ||
+            tag.includes(filterLower) ||
+            categories.includes(filterLower)
+          );
+        });
 
-    return matches.length > 0 ? matches.slice(0, 8) : products.slice(0, 8);
+    const list = sourceList.length > 0 ? sourceList : products;
+    // Render cleanly in rows of 3 (multiple of 3, e.g. 6 or 9)
+    const cleanLimit = list.length >= 6 ? (list.length >= 9 ? 9 : 6) : list.length;
+    return list.slice(0, cleanLimit);
   }, [products, activeFilter]);
 
   return (
@@ -160,22 +164,15 @@ export default function BestSellers() {
         </div>
 
         {/* Product Cards Grid */}
-        <div
-          className="products-grid reveal"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))",
-            gap: "28px",
-          }}
-        >
+        <div className="products-grid reveal">
           {loading ? (
-            [...Array(4)].map((_, i) => (
+            [...Array(6)].map((_, i) => (
               <div
                 key={i}
                 style={{
                   background: "var(--dark2)",
                   border: "1px solid var(--dark3)",
-                  minHeight: "420px",
+                  minHeight: "480px",
                   opacity: 0.5,
                   animation: "pulse 1.5s infinite ease-in-out",
                 }}
