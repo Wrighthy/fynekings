@@ -8,8 +8,8 @@ const REVIEWS = [
     author: "Amara K.", location: "Accra, Ghana", watch: "Continent · Steel",
   },
   {
-    text: "The custom configuration was seamless. Built my own strap and case combination and it arrived exactly as designed. Unmatched quality.",
-    author: "David M.", location: "Nairobi, Kenya", watch: "Custom Build",
+    text: "The attention to detail is extraordinary. From the packaging to the timepiece itself, every element speaks of genuine luxury. This is what fine watchmaking should feel like.",
+    author: "David M.", location: "Nairobi, Kenya", watch: "Lagos Prestige · Gold",
   },
 ];
 

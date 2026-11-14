@@ -872,9 +872,23 @@ section {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  background: transparent
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  background: transparent;
+}
+
+@media (max-width: 1199px) and (min-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+  }
+}
+
+@media (max-width: 767px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
 
 .product-card {
@@ -1672,7 +1686,15 @@ section {
   font-size: .52rem;
   letter-spacing: .2em;
   text-transform: uppercase;
-  color: var(--muted)
+  color: var(--muted);
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity .2s;
+}
+
+.payment-icon:hover {
+  opacity: .75;
 }
 
 .payment-icon.gold {
@@ -3175,8 +3197,8 @@ footer {
   }
 
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
   }
 
   .customizer-grid {
@@ -3481,8 +3503,8 @@ footer {
   }
 
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .mobile-menu-btn {

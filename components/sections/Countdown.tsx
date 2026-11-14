@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/store";
 
 type Edition = {
@@ -21,6 +22,7 @@ export default function Countdown() {
   const [timer, setTimer] = useState({ d: "14", h: "00", m: "00", s: "00" });
   const [edition, setEdition] = useState<Edition | null>(null);
   const addToCart = useCart(s => s.addToCart);
+  const router = useRouter();
 
   // Fetch edition from database
   useEffect(() => {
@@ -61,6 +63,11 @@ export default function Countdown() {
   const price = (edition ? edition.price : 850000) || 850000;
   const editionName = edition ? edition.name : "Obsidian King";
   const reference = edition ? edition.reference : "F-OBK/24";
+
+  const handleReserve = () => {
+    addToCart(editionName, `Limited Edition · No. ${(edition?.soldCount ?? 38) + 1}/${total}`, price);
+    router.push("/checkout");
+  };
 
   return (
     <section id="countdown">
@@ -154,13 +161,25 @@ export default function Countdown() {
         <div className="limited-price-wrap">
           <p className="limited-price">₦{price.toLocaleString("en-NG")} <em>+ ₦{Math.min(Math.round(price * 0.015 + 100), 2000).toLocaleString("en-NG")} fee</em></p>
           <p className="limited-price-meta">Paystack processing fee (1.5% + ₦100) · shown transparently</p>
-          <button className="btn-primary" onClick={() => addToCart(editionName, `Limited Edition · No. ${(edition?.soldCount ?? 38) + 1}/${total}`, price)}>
+          <button className="btn-primary" onClick={handleReserve}>
             <span>Reserve Yours Now</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
           </button>
           <div className="payment-icons">
-            <span className="payment-icon gold">Paystack</span>
-            <span className="payment-icon">Bank Transfer</span>
+            <button
+              className="payment-icon gold"
+              onClick={handleReserve}
+              title="Pay with Paystack"
+            >
+              Paystack
+            </button>
+            <button
+              className="payment-icon"
+              onClick={handleReserve}
+              title="Pay via Bank Transfer"
+            >
+              Bank Transfer
+            </button>
           </div>
         </div>
       </div>
