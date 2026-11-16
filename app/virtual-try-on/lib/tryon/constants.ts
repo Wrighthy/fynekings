@@ -1,35 +1,33 @@
 /**
  * Snapshot try-on thresholds and copy.
  *
- * Numeric defaults are the spec's starting values (section 11). Any change
- * after fixture tuning should be recorded next to the constant.
+ * Hand detection uses MediaPipe HandLandmarker.
+ * Model files are loaded from pinned URLs. Licenses are recorded in THIRD_PARTY_LICENSES.md.
  *
- * Known gaps versus the spec, kept on purpose:
- * - HolisticLandmarker in @mediapipe/tasks-vision@1.0.1 cannot disable face
- *   landmarks. Face blendshapes and pose segmentation masks are off.
- * - Model files are loaded from pinned URLs (LIC-4 is "should", not "must").
- *   Licenses are recorded in THIRD_PARTY_LICENSES.md.
- * - The catalogue has single sticker images, so legacy sticker rendering (WA-3)
- *   is the path used until case and strap layers exist.
- * - Section 13 fixture photos are not in the repo, so handedness and
- *   back-of-hand signs are set from MediaPipe's documented axes and covered
- *   by synthetic tests. Confirm them on real photos before QA sign-off.
- * - FR-25 says hide the millimetre estimate by default. Section 15 answers
- *   the open question with "show it". The result screen shows it, with the
- *   approximation note.
- *
- * This is the only virtual try-on method. The live sticker overlay is not used.
+ * This is the virtual try-on method for the Fynekings snapshot experience.
  */
 
 export const HOLD_MS = 1000;
-export const MAX_HAND_TILT_DEG = 15;
+/** Maximum hand tilt in degrees. Relaxed from 15° to 35° for natural, unconstrained positioning. */
+export const MAX_HAND_TILT_DEG = 35;
 export const MAX_FOREARM_PITCH_DEG = 25;
 export const FRAME_MARGIN = 0.05;
 export const HAND_BREADTH_MM = 80;
-export const WATCH_OFFSET_MM = 25;
+export const WATCH_OFFSET_MM = 39;
+/** Lateral shift along the wrist/screen plane in mm per hand. */
+export const WATCH_LATERAL_OFFSET_MM = {
+  right: 4,
+  left: -9,
+} as const;
+
+export function getWatchLateralOffsetMm(handedness: "left" | "right"): number {
+  return WATCH_LATERAL_OFFSET_MM[handedness] ?? (handedness === "right" ? 4 : -16);
+}
+
 export const HAND_BREADTH_FRAC_MIN = 0.1;
 export const HAND_BREADTH_FRAC_MAX = 0.35;
-export const DEPTH_FLATNESS_MAX = 0.35;
+/** Relaxed depth flatness threshold. */
+export const DEPTH_FLATNESS_MAX = 0.60;
 export const ENABLE_DEPTH_SCALE_CORRECTION = false;
 export const DEPTH_SCALE_MIN = 0.92;
 export const DEPTH_SCALE_MAX = 1.08;
@@ -38,7 +36,7 @@ export const WRIST_RATIO_MAX = 1.0;
 export const RIGHT_WRIST_CROWN_SIDE = "elbow" as const;
 export const PROCESSING_TIMEOUT_MS = 15000;
 
-/** Laplacian variance below this fails the sharpness check. Not in section 11; starting default. */
+/** Laplacian variance below this fails the sharpness check. Starting default. */
 export const MIN_SHARPNESS = 15;
 export const MIN_LUMINANCE = 40;
 export const MAX_LUMINANCE = 220;
@@ -52,17 +50,16 @@ export const FOREARM_HINT_DEG = 45;
 /**
  * Front-camera preview is mirrored. MediaPipe labels hands as if the bitmap
  * were unmirrored, so labels are swapped when the bitmap matches the mirror.
- * Confirm with a photo of each hand (FR-11).
  */
 export const SWAP_HANDEDNESS_ON_MIRRORED_BITMAP = true;
 
 /**
  * Back of the hand faces the camera when `n.z * sign > 0`.
  * Axes assumed for world landmarks: x right, y down, z away from the camera
- * (MediaPipe: smaller z is closer). See geometry tests.
+ * (MediaPipe: smaller z is closer).
  */
-export const BACK_FACING_SIGN_LEFT = -1;
-export const BACK_FACING_SIGN_RIGHT = 1;
+export const BACK_FACING_SIGN_LEFT = 1;
+export const BACK_FACING_SIGN_RIGHT = -1;
 
 export const PALM_NORMAL_DEADZONE = 0.02;
 
@@ -89,15 +86,40 @@ export const DEFAULT_LUG_TO_LUG_MM = 47;
 export const DEFAULT_STRAP_WIDTH_MM = 20;
 /**
  * Share of a legacy sticker's width that is the case, until WA-2 metadata exists.
- * Tune visually. Manual result adjustment covers ±15%.
  */
 export const LEGACY_CASE_WIDTH_FRACTION = 0.42;
+
+/**
+ * Watch scale calibration multiplier per hand.
+ */
+export const WATCH_SCALE_CALIBRATION = {
+  right: 0.95,
+  left: 0.95,
+} as const;
+
+export function getWatchScaleCalibration(handedness: "left" | "right"): number {
+  return WATCH_SCALE_CALIBRATION[handedness] ?? 0.95;
+}
+
+/**
+ * Baseline rotation offset for the watch in degrees per hand.
+ * Right hand: -12°
+ * Left hand: +12° (mirrored symmetry for natural left wrist presentation)
+ */
+export const WATCH_ROTATION_OFFSET_DEG = {
+  right: -12,
+  left: 12,
+} as const;
+
+export function getWatchRotationOffsetDeg(handedness: "left" | "right"): number {
+  return WATCH_ROTATION_OFFSET_DEG[handedness] ?? (handedness === "right" ? -12 : 12);
+}
 
 export const ADJUST_ROTATION_DEG = 15;
 export const ADJUST_SCALE_MIN = 0.85;
 export const ADJUST_SCALE_MAX = 1.15;
 
-/** Pose indices in the 33-point MediaPipe pose. */
+/** Pose indices in the 33-point MediaPipe pose. Kept for reference. */
 export const POSE = {
   leftElbow: 13,
   rightElbow: 14,
@@ -112,8 +134,10 @@ export const POSE = {
 export const WASM_URL =
   "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm";
 
-export const HOLISTIC_MODEL_URL =
-  "https://storage.googleapis.com/mediapipe-models/holistic_landmarker/holistic_landmarker/float16/1/holistic_landmarker.task";
+export const HAND_MODEL_URL =
+  "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
+
+export const HOLISTIC_MODEL_URL = HAND_MODEL_URL;
 
 export const SELFIE_MODEL_URL =
   "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/1/selfie_multiclass_256x256.tflite";

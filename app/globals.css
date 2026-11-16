@@ -2619,8 +2619,15 @@ section {
 
 /* ── Enlisted / Already in the Circle state ─────────────────────── */
 @keyframes enlistedIn {
-  from { opacity: 0; transform: translateY(10px) scale(.97); }
-  to   { opacity: 1; transform: translateY(0)    scale(1);   }
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .enlisted-badge {
@@ -2633,7 +2640,7 @@ section {
   border: 1px solid var(--gold-dk);
   background: rgba(196, 169, 98, .06);
   box-shadow: 0 0 32px rgba(196, 169, 98, .08);
-  animation: enlistedIn .45s cubic-bezier(.22,.68,0,1.2) both;
+  animation: enlistedIn .45s cubic-bezier(.22, .68, 0, 1.2) both;
   text-align: left;
 }
 
@@ -3575,6 +3582,7 @@ footer {
     grid-template-columns: 1fr !important;
   }
 }
+
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    VIRTUAL TRY-ON  â€”  /virtual-try-on
    z-index stack: video 1 Â· watch 10 Â· instructions 12 Â· hud 15
@@ -4240,7 +4248,9 @@ footer {
   color: var(--gold);
 }
 
-.tryon-hidden { visibility: hidden; }
+.tryon-hidden {
+  visibility: hidden;
+}
 
 .tryon-guide {
   position: absolute;
@@ -4264,7 +4274,10 @@ footer {
   color: var(--white);
 }
 
-.tryon-guide-banner.ready { color: #d7f5df; border-color: #7dcea0; }
+.tryon-guide-banner.ready {
+  color: #d7f5df;
+  border-color: #7dcea0;
+}
 
 .tryon-guide-banner p {
   margin: 0;
@@ -4273,8 +4286,17 @@ footer {
   line-height: 1.4;
 }
 
-.tryon-guide-icon { width: 22px; height: 22px; flex: 0 0 auto; }
-.tryon-guide-ring { width: 28px; height: 28px; flex: 0 0 auto; }
+.tryon-guide-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+
+.tryon-guide-ring {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+}
 
 .tryon-guide-chip,
 .tryon-guide-hint,
@@ -4303,7 +4325,9 @@ footer {
   color: rgba(255, 255, 255, .55);
 }
 
-.tryon-wrist-outline.ready { color: #7dcea0; }
+.tryon-wrist-outline.ready {
+  color: #7dcea0;
+}
 
 .tryon-privacy {
   position: absolute;
@@ -4368,7 +4392,16 @@ footer {
   cursor: grab;
 }
 
-.tryon-result-warn { color: var(--gold); font-size: .72rem; text-align: center; max-width: 420px; }
+.tryon-result-canvas:active {
+  cursor: grabbing;
+}
+
+.tryon-result-warn {
+  color: var(--gold);
+  font-size: .72rem;
+  text-align: center;
+  max-width: 420px;
+}
 
 .tryon-result-sliders {
   display: flex;
@@ -4389,7 +4422,10 @@ footer {
   color: var(--muted);
 }
 
-.tryon-result-sliders input { width: 100%; accent-color: var(--gold); }
+.tryon-result-sliders input {
+  width: 100%;
+  accent-color: var(--gold);
+}
 
 .tryon-watch-picker img {
   width: 100%;
@@ -4401,27 +4437,55 @@ footer {
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Keyframes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @keyframes tryon-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: .5; transform: scale(.8); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: .5;
+    transform: scale(.8);
+  }
 }
 
 @keyframes tryon-flash-anim {
-  0% { opacity: .85; }
-  100% { opacity: 0; }
+  0% {
+    opacity: .85;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes tryon-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes tryon-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes tryon-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -4457,13 +4521,21 @@ footer {
     gap: 10px;
   }
 
-  .tryon-hud-tl { left: 14px; }
-  .tryon-hud-tr { right: 14px; }
+  .tryon-hud-tl {
+    left: 14px;
+  }
 
-  .tryon-watch-info-name { font-size: .65rem; }
+  .tryon-hud-tr {
+    right: 14px;
+  }
+
+  .tryon-watch-info-name {
+    font-size: .65rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .tryon-instructions-icon,
   .tryon-status-dot.searching,
   .tryon-loading-ring {
@@ -4482,8 +4554,472 @@ footer {
   .catalog-filter-sidebar {
     display: none !important;
   }
+
   .catalog-mobile-filter-btn {
     display: inline-flex !important;
   }
 }
 
+/* ========================================================
+   VIRTUAL TRY-ON: DESKTOP QR SCREEN
+   ======================================================== */
+
+/* Page shell */
+.dqr-page {
+  min-height: 100dvh;
+  background: var(--black);
+  color: var(--text);
+  font-family: 'Raleway', sans-serif;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  isolation: isolate;
+}
+
+/* Ambient gold glow — top-right */
+.dqr-page::before {
+  content: '';
+  position: fixed;
+  top: -200px;
+  right: -200px;
+  width: 640px;
+  height: 640px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196, 169, 98, 0.10) 0%, transparent 68%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ambient gold glow — bottom-left */
+.dqr-page::after {
+  content: '';
+  position: fixed;
+  bottom: -160px;
+  left: -160px;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196, 169, 98, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Fixed nav bar ── */
+.dqr-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 72px;
+  background: linear-gradient(to bottom,
+      rgba(5, 5, 5, 0.97) 0%,
+      rgba(5, 5, 5, 0.80) 65%,
+      transparent 100%);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+@media (max-width: 900px) {
+  .dqr-nav {
+    padding: 18px 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .dqr-nav {
+    padding: 16px 20px;
+  }
+}
+
+/* Logo */
+.dqr-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: .5em;
+  color: var(--white);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.dqr-logo span {
+  color: var(--gold);
+}
+
+.dqr-logo-mark {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Nav back link */
+.dqr-nav-link {
+  font-size: .58rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .2s ease;
+  white-space: nowrap;
+}
+
+.dqr-nav-link:hover {
+  color: var(--gold);
+}
+
+/* ── Thin gold rule below nav ── */
+.dqr-top-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, var(--gold-dk) 40%, var(--gold-dk) 60%, transparent 100%);
+  margin-top: 80px;
+  opacity: .35;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+/* ── Two-column main grid ── */
+.dqr-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  align-items: center;
+  gap: 0 48px;
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 60px 72px 80px;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1200px) {
+  .dqr-main {
+    grid-template-columns: 1fr 420px;
+    padding: 60px 48px 80px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dqr-main {
+    grid-template-columns: 1fr;
+    padding: 56px 40px 72px;
+    gap: 56px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .dqr-main {
+    padding: 44px 20px 60px;
+  }
+}
+
+/* ── Left text column ── */
+.dqr-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 48px;
+  max-width: 580px;
+}
+
+@media (max-width: 1024px) {
+  .dqr-left {
+    padding-right: 0;
+    align-items: center;
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+}
+
+/* Eyebrow label */
+.dqr-eyebrow {
+  font-size: .58rem;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dqr-eyebrow::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 1px;
+  background: var(--gold-dk);
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .dqr-eyebrow::before {
+    display: none;
+  }
+}
+
+/* Main heading */
+.dqr-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 4.5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.12;
+  color: var(--white);
+  margin-bottom: 28px;
+}
+
+.dqr-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+/* Body copy */
+.dqr-subtitle {
+  font-size: .80rem;
+  line-height: 1.95;
+  color: var(--muted);
+  margin-bottom: 36px;
+  max-width: 460px;
+}
+
+@media (max-width: 1024px) {
+  .dqr-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Active watch badge */
+.dqr-watch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .66rem;
+  letter-spacing: .08em;
+  color: var(--gold);
+  background: var(--gold-dim);
+  border: 1px solid rgba(196, 169, 98, .24);
+  padding: 8px 18px;
+  margin-bottom: 40px;
+  text-transform: capitalize;
+}
+
+.dqr-watch-badge strong {
+  font-weight: 600;
+}
+
+/* Numbered steps list */
+.dqr-steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-bottom: 48px;
+  padding: 0;
+}
+
+.dqr-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  text-align: left;
+}
+
+.dqr-step-n {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--gold-dk);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 38px;
+  opacity: .65;
+}
+
+.dqr-step-title {
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 5px;
+}
+
+.dqr-step-body {
+  font-size: .73rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* CTA buttons row */
+.dqr-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1024px) {
+  .dqr-actions {
+    justify-content: center;
+  }
+}
+
+.dqr-copy-btn {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Right QR card column ── */
+.dqr-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── QR card ── */
+.dqr-qr-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  background: rgba(10, 10, 10, 0.75);
+  border: 1px solid rgba(196, 169, 98, 0.20);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 40px 36px 32px;
+  box-shadow:
+    0 0 0 1px rgba(196, 169, 98, 0.04) inset,
+    0 32px 80px rgba(0, 0, 0, 0.5);
+}
+
+/* Frame with corner decorators */
+.dqr-qr-frame {
+  position: relative;
+  display: inline-flex;
+  padding: 8px;
+}
+
+/* The rendered QR code SVG */
+.dqr-qr-svg {
+  width: 230px;
+  height: 230px;
+  display: block;
+  background: #F8F5EE;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* Skeleton while URL resolves */
+.dqr-qr-skeleton {
+  width: 230px;
+  height: 230px;
+  background: var(--dark2);
+  border: 1px dashed var(--dark5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted2);
+  font-size: .68rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+/* Gold corner brackets */
+.dqr-corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--gold);
+  border-style: solid;
+  opacity: .8;
+}
+
+.dqr-corner-tl {
+  top: -2px;
+  left: -2px;
+  border-width: 2px 0 0 2px;
+}
+
+.dqr-corner-tr {
+  top: -2px;
+  right: -2px;
+  border-width: 2px 2px 0 0;
+}
+
+.dqr-corner-bl {
+  bottom: -2px;
+  left: -2px;
+  border-width: 0 0 2px 2px;
+}
+
+.dqr-corner-br {
+  bottom: -2px;
+  right: -2px;
+  border-width: 0 2px 2px 0;
+}
+
+/* "Scan with phone" label */
+.dqr-qr-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: .60rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+/* Privacy note */
+.dqr-qr-privacy {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .60rem;
+  color: var(--muted2);
+  letter-spacing: .05em;
+  margin: 0;
+}
+
+/* ── Bottom strip ── */
+.dqr-bottom-rule {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 22px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dqr-bottom-rule span {
+  font-size: .50rem;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--muted2);
+  opacity: .6;
+}
+
+@media (max-width: 600px) {
+  .dqr-bottom-rule {
+    padding: 18px 20px;
+  }
+
+}

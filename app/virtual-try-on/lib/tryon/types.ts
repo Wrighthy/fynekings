@@ -51,6 +51,8 @@ export type GateResult = {
 export type ManualAdjustments = {
   /** Pixels along the forearm axis, in snapshot space. */
   alongPx: number;
+  /** Pixels perpendicular to the forearm axis (lateral shift), in snapshot space. */
+  lateralPx: number;
   rotationDeg: number;
   /** Multiplier around 1, limited to ±15%. */
   scale: number;
@@ -58,6 +60,7 @@ export type ManualAdjustments = {
 
 export const DEFAULT_ADJUSTMENTS: ManualAdjustments = {
   alongPx: 0,
+  lateralPx: 0,
   rotationDeg: 0,
   scale: 1,
 };
@@ -89,6 +92,8 @@ export type WatchAsset = {
   anchor: Vec2;
   /** Single sticker with no strap layer (WA-3). */
   legacySticker: boolean;
+  scaleFactor?: number;
+  caseWidthFraction?: number;
 };
 
 export type LoadedWatch = {

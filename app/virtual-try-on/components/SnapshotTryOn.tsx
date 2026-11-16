@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { fmt } from "@/lib/store";
 import GuidanceOverlay from "./GuidanceOverlay";
 import ResultView from "./ResultView";
-import { useHolisticTracking } from "../hooks/useHolisticTracking";
+import { useHandTracking } from "../hooks/useHandTracking";
 import { downscaleCanvas, getCameraErrorMessage, openCamera } from "../lib/tryon/camera";
 import { GUIDANCE, HOLD_MS, MAX_SNAPSHOT_EDGE, type GuidanceId } from "../lib/tryon/constants";
 import { warmupDepth } from "../lib/tryon/depthClient";
@@ -23,6 +23,7 @@ export default function SnapshotTryOn({ products }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<HandObservation[]>([]);
+  const lastHandRef = useRef<HandObservation | null>(null);
   const holdStartRef = useRef<number | null>(null);
   const busyRef = useRef(false);
   const phaseRef = useRef(useTryOnStore.getState().phase);
@@ -67,12 +68,13 @@ export default function SnapshotTryOn({ products }: Props) {
 
   const showLive = phase !== "RESULT" && phase !== "PROCESSING" && phase !== "CAPTURING";
 
-  const { start, stop, grabFrame, error: trackingError } = useHolisticTracking(
+  const { start, stop, grabFrame, error: trackingError } = useHandTracking(
     (frame) => {
       if (!showLiveRef.current || busyRef.current) return;
       const raw = frame.hands.length === 1 ? frame.hands[0] : null;
       if (raw) {
         historyRef.current = [...historyRef.current, raw].slice(-8);
+        lastHandRef.current = frame.smoothed[0] ?? raw;
       } else {
         historyRef.current = [];
       }
@@ -131,7 +133,7 @@ export default function SnapshotTryOn({ products }: Props) {
       const product = useTryOnStore.getState().selectedWatch;
       if (!product) throw new Error(GUIDANCE.genericProcessing);
       const watch = await loadWatch(product);
-      const outcome = await runSnapshotPipeline(source, watch, isFrontCamera, setStep);
+      const outcome = await runSnapshotPipeline(source, watch, isFrontCamera, setStep, lastHandRef.current);
       if (!outcome.ok) {
         forcedRef.current = outcome.messageId;
         setForcedId(outcome.messageId);
@@ -228,6 +230,7 @@ export default function SnapshotTryOn({ products }: Props) {
   const retake = () => {
     releaseSnapshotSession();
     renderedWatchRef.current = null;
+    lastHandRef.current = null;
     setMeasurements(null);
     setLowConfidence(false);
     setSnapshotSize(null);

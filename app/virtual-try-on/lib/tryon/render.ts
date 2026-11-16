@@ -1,4 +1,13 @@
-import { EDGE_SHADE_BAND_FRAC, EDGE_SHADE_MAX, FEATHER_SIGMA_FRAC, SHADOW_BLUR_FRAC, SHADOW_OFFSET_FRAC, SHADOW_OPACITY } from "./constants";
+import {
+  EDGE_SHADE_BAND_FRAC,
+  EDGE_SHADE_MAX,
+  FEATHER_SIGMA_FRAC,
+  SHADOW_BLUR_FRAC,
+  SHADOW_OFFSET_FRAC,
+  SHADOW_OPACITY,
+  getWatchRotationOffsetDeg,
+  getWatchScaleCalibration,
+} from "./constants";
 import { blurMask } from "./mask";
 import type { LoadedWatch, ManualAdjustments, MaskBuffer, SnapshotMeasurements } from "./types";
 import { add2, scale2 } from "./vec";
@@ -84,13 +93,20 @@ export function renderComposite(target: HTMLCanvasElement, input: RenderInput): 
   ctx.clearRect(0, 0, width, height);
   ctx.drawImage(input.snapshot, 0, 0, width, height);
 
-  const placement = add2(
-    measurements.placementPoint,
-    scale2(measurements.forearmAxis, adjustments.alongPx)
-  );
-  const rotation = measurements.rotation + (adjustments.rotationDeg * Math.PI) / 180;
-  const scale = (measurements.pxPerMm / watch.asset.assetPxPerMm) * adjustments.scale;
-  const casePx = measurements.pxPerMm * watch.asset.caseDiameterMm;
+  const alongOffset = scale2(measurements.forearmAxis, adjustments.alongPx);
+  const lateralOffset = scale2(measurements.perp, adjustments.lateralPx ?? 0);
+  const placement = add2(add2(measurements.placementPoint, alongOffset), lateralOffset);
+  const handSide = measurements.handedness;
+  const rotationOffset = getWatchRotationOffsetDeg(handSide);
+  const rotation =
+    measurements.rotation +
+    ((rotationOffset + adjustments.rotationDeg) * Math.PI) / 180;
+  const scaleCalibration = getWatchScaleCalibration(handSide);
+  const scale =
+    (measurements.pxPerMm / watch.asset.assetPxPerMm) *
+    adjustments.scale *
+    scaleCalibration;
+  const casePx = measurements.pxPerMm * watch.asset.caseDiameterMm * scaleCalibration;
   const shadowOff = SHADOW_OFFSET_FRAC * casePx;
   const shadowBlur = Math.max(1, SHADOW_BLUR_FRAC * casePx);
 

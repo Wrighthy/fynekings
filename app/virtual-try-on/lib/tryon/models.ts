@@ -1,15 +1,15 @@
 import {
   FilesetResolver,
-  HolisticLandmarker,
+  HandLandmarker,
   ImageSegmenter,
-  type HolisticLandmarker as HolisticInstance,
+  type HandLandmarker as HandLandmarkerInstance,
   type ImageSegmenter as SegmenterInstance,
 } from "@mediapipe/tasks-vision";
-import { HOLISTIC_MODEL_URL, SELFIE_MODEL_URL, WASM_URL } from "./constants";
+import { HAND_MODEL_URL, SELFIE_MODEL_URL, WASM_URL } from "./constants";
 
 export type VisionProgress = (status: string) => void;
 
-let holisticPromise: Promise<HolisticInstance> | null = null;
+let handPromise: Promise<HandLandmarkerInstance> | null = null;
 let segmenterPromise: Promise<SegmenterInstance> | null = null;
 let skinIndex = 2;
 let clothesIndex = 4;
@@ -29,61 +29,67 @@ async function contentLength(url: string): Promise<number> {
   }
 }
 
-async function createHolistic(delegate: "GPU" | "CPU"): Promise<HolisticInstance> {
+async function createHandLandmarker(delegate: "GPU" | "CPU"): Promise<HandLandmarkerInstance> {
   const vision = await FilesetResolver.forVisionTasks(WASM_URL);
-  return HolisticLandmarker.createFromOptions(vision, {
+  return HandLandmarker.createFromOptions(vision, {
     baseOptions: {
-      modelAssetPath: HOLISTIC_MODEL_URL,
+      modelAssetPath: HAND_MODEL_URL,
       delegate,
     },
     runningMode: "VIDEO",
-    outputFaceBlendshapes: false,
-    outputPoseSegmentationMasks: false,
-    minHandLandmarksConfidence: 0.5,
-    minPoseDetectionConfidence: 0.5,
-    minPosePresenceConfidence: 0.5,
+    numHands: 2,
+    minHandDetectionConfidence: 0.5,
+    minHandPresenceConfidence: 0.5,
+    minTrackingConfidence: 0.5,
   });
 }
 
-async function createHolisticWithFallback(onProgress?: VisionProgress): Promise<HolisticInstance> {
+async function createWithFallback(onProgress?: VisionProgress): Promise<HandLandmarkerInstance> {
   onProgress?.("Loading vision runtime...");
   try {
     onProgress?.("Loading wrist tracking...");
-    return await createHolistic("GPU");
+    return await createHandLandmarker("GPU");
   } catch {
     onProgress?.("Switching to the compatible tracker...");
-    return createHolistic("CPU");
+    return createHandLandmarker("CPU");
   }
 }
 
-export function getHolisticLandmarker(onProgress?: VisionProgress): Promise<HolisticInstance> {
-  if (holisticPromise) return holisticPromise;
+/**
+ * Returns a MediaPipe HandLandmarker instance configured for video tracking.
+ */
+export function getHandLandmarker(onProgress?: VisionProgress): Promise<HandLandmarkerInstance> {
+  if (handPromise) return handPromise;
 
-  holisticPromise = (async () => {
-    const bytes = await contentLength(HOLISTIC_MODEL_URL);
+  handPromise = (async () => {
+    const bytes = await contentLength(HAND_MODEL_URL);
     notedBytes += bytes;
     if (bytes > 0) {
       onProgress?.(`Wrist model · ${(bytes / (1024 * 1024)).toFixed(0)} MB`);
     }
     try {
-      return await createHolisticWithFallback(onProgress);
+      return await createWithFallback(onProgress);
     } catch (first) {
       onProgress?.("Retrying the wrist model...");
       try {
-        return await createHolisticWithFallback(onProgress);
+        return await createWithFallback(onProgress);
       } catch (second) {
-        holisticPromise = null;
+        handPromise = null;
         throw second ?? first;
       }
     }
   })();
 
-  return holisticPromise;
+  return handPromise;
 }
 
-export function resetHolisticLandmarker(): void {
-  holisticPromise = null;
+export function resetHandLandmarker(): void {
+  handPromise = null;
 }
+
+/** Compatibility aliases */
+export const getHolisticLandmarker = getHandLandmarker;
+export const resetHolisticLandmarker = resetHandLandmarker;
 
 async function createSegmenter(): Promise<SegmenterInstance> {
   const vision = await FilesetResolver.forVisionTasks(WASM_URL);
@@ -139,4 +145,5 @@ export function resetSegmenter(): void {
   segmenterPromise = null;
 }
 
-export type { HolisticInstance, SegmenterInstance };
+export type HolisticInstance = HandLandmarkerInstance;
+export type { HandLandmarkerInstance, SegmenterInstance };

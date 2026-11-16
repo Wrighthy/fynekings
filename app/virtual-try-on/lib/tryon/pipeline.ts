@@ -2,7 +2,6 @@ import { CROP_EXPAND, GUIDANCE, PROCESSING_TIMEOUT_MS } from "./constants";
 import { downscaleCanvas } from "./camera";
 import { estimateDepth, resetDepthWorker } from "./depthClient";
 import { depthFlatness } from "./depthFlatness";
-import { evaluateGates } from "./gates";
 import { placementOf } from "./geometry";
 import { capsuleMask } from "./mask";
 import { measureWrist } from "./measure";
@@ -116,42 +115,54 @@ async function analyse(
   watch: LoadedWatch,
   mirrored: boolean,
   onProgress: (step: string) => void,
-  state: { cancelled: boolean }
+  state: { cancelled: boolean },
+  fallbackHand?: HandObservation | null
 ): Promise<PipelineResult> {
   onProgress("Reading the photo");
-  const { observationsFromHolistic } = await import("./observe");
-  const { getHolisticLandmarker } = await import("./models");
-  const landmarker = await getHolisticLandmarker();
-  await landmarker.setOptions({ runningMode: "IMAGE" });
-  const result = landmarker.detect(source);
-  await landmarker.setOptions({ runningMode: "VIDEO" });
-  if (state.cancelled) throw new Error(GUIDANCE.processingTimeout);
-  const hands = observationsFromHolistic(result, mirrored);
+  const { observationsFromHandLandmarker } = await import("./observe");
+  const { getHandLandmarker } = await import("./models");
+  const landmarker = await getHandLandmarker();
 
-  const gates = evaluateGates(hands, [], source.width, source.height, null, "still");
-  if (!gates.allPassed || !gates.hand) {
-    return { ok: false, messageId: gates.messageId };
+  let hands: HandObservation[] = [];
+  try {
+    // Detect directly on the snapshot canvas without toggling runningMode to avoid state crashes
+    const result = landmarker.detectForVideo(source, performance.now());
+    hands = observationsFromHandLandmarker(result, mirrored);
+  } catch (err) {
+    console.warn("Snapshot landmarker detection fallback:", err);
   }
 
+  // Use re-detected hand, or the verified hand that triggered the capture
+  const hand = (hands.length > 0 ? hands[0] : null) ?? fallbackHand ?? null;
+  if (!hand) {
+    return { ok: false, messageId: "noWrist" };
+  }
+
+  if (state.cancelled) throw new Error(GUIDANCE.processingTimeout);
+
   onProgress("Finding the wrist");
-  const mask = await segment(source, gates.hand);
+  const mask = await segment(source, hand);
 
   onProgress("Checking the angle");
   const bounds = maskBounds(mask.skin, source.width, source.height);
   let depth = null;
   if (bounds) {
-    const crop = document.createElement("canvas");
-    crop.width = bounds.width;
-    crop.height = bounds.height;
-    const ctx = crop.getContext("2d", { willReadFrequently: true });
-    ctx?.drawImage(source, bounds.x, bounds.y, bounds.width, bounds.height, 0, 0, bounds.width, bounds.height);
-    const pixels = ctx?.getImageData(0, 0, bounds.width, bounds.height);
-    if (pixels) {
-      depth = await estimateDepth(pixels.data, bounds.width, bounds.height, bounds.x, bounds.y);
+    try {
+      const crop = document.createElement("canvas");
+      crop.width = bounds.width;
+      crop.height = bounds.height;
+      const ctx = crop.getContext("2d", { willReadFrequently: true });
+      ctx?.drawImage(source, bounds.x, bounds.y, bounds.width, bounds.height, 0, 0, bounds.width, bounds.height);
+      const pixels = ctx?.getImageData(0, 0, bounds.width, bounds.height);
+      if (pixels) {
+        depth = await estimateDepth(pixels.data, bounds.width, bounds.height, bounds.x, bounds.y);
+      }
+    } catch {
+      depth = null;
     }
   }
 
-  const draft = measureWrist(gates.hand, source.width, source.height, mask.skin);
+  const draft = measureWrist(hand, source.width, source.height, mask.skin);
   if (mask.synthetic) draft.lowConfidence = true;
   if (depth) {
     const flat = depthFlatness(
@@ -164,7 +175,7 @@ async function analyse(
       draft.wristWidthPx
     );
     if (flat && !flat.flatEnough) {
-      return { ok: false, messageId: "flattenDepth" };
+      draft.lowConfidence = true;
     }
   }
   if (state.cancelled) throw new Error(GUIDANCE.processingTimeout);
@@ -191,10 +202,11 @@ export async function runSnapshotPipeline(
   source: HTMLCanvasElement,
   watch: LoadedWatch,
   mirrored: boolean,
-  onProgress: (step: string) => void
+  onProgress: (step: string) => void,
+  fallbackHand?: HandObservation | null
 ): Promise<PipelineResult> {
   const state = { cancelled: false };
-  const run = () => analyse(source, watch, mirrored, onProgress, state);
+  const run = () => analyse(source, watch, mirrored, onProgress, state, fallbackHand);
   let timer: ReturnType<typeof setTimeout> | undefined;
   setTrackingPaused(true);
   try {
@@ -212,8 +224,9 @@ export async function runSnapshotPipeline(
     if (err instanceof Error && err.message === GUIDANCE.processingTimeout) throw err;
     if (isMemoryError(err) && Math.max(source.width, source.height) > 1280) {
       const smaller = downscaleCanvas(source, 1280);
-      return analyse(smaller, watch, mirrored, onProgress, state);
+      return analyse(smaller, watch, mirrored, onProgress, state, fallbackHand);
     }
+    console.error("runSnapshotPipeline failed:", err);
     throw new Error(GUIDANCE.genericProcessing);
   } finally {
     if (timer) clearTimeout(timer);

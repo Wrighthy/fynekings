@@ -1,5 +1,4 @@
 import {
-  FOREARM_HINT_DEG,
   FRAME_MARGIN,
   GUIDANCE,
   HAND_BREADTH_FRAC_MAX,
@@ -8,7 +7,6 @@ import {
   MAX_HAND_TILT_DEG,
   MAX_LUMINANCE,
   MIN_LUMINANCE,
-  MIN_POSE_VISIBILITY,
   MIN_SHARPNESS,
   POSE_WRIST_AGREEMENT,
   STABILITY_DISPLACEMENT,
@@ -16,13 +14,11 @@ import {
 } from "./constants";
 import {
   crownRotation,
-  degreesFromHorizontal,
   forearmPitchDeg,
   handTiltDeg,
   insideFrame,
   isBackFacing,
   placementOf,
-  requiredLandmarkPixels,
 } from "./geometry";
 import type { GateResult, GuidanceId, HandObservation, QualitySample } from "./types";
 import { denorm, len2, sub2 } from "./vec";
@@ -58,6 +54,11 @@ function meanStep(history: HandObservation[], width: number, height: number): nu
   return count === 0 ? null : total / count;
 }
 
+/** Whether pose landmarks are available for this observation. */
+function hasPose(hand: HandObservation): boolean {
+  return hand.poseWrist !== null;
+}
+
 export function evaluateGates(
   hands: HandObservation[],
   rawHistory: HandObservation[],
@@ -66,17 +67,16 @@ export function evaluateGates(
   quality: QualitySample | null,
   mode: "live" | "still" = "live"
 ): GateEvaluation {
-  const hint =
-    hands.length === 1 &&
-    degreesFromHorizontal(placementOf(hands[0], width, height).axis) > FOREARM_HINT_DEG;
+  // Vertical wrist presentation is fully enabled on all devices (no 45° sideways requirement).
+  const hint = false;
 
-  if (hands.length === 0 || (hands.length === 1 && !hands[0].poseWrist)) {
+  if (hands.length === 0) {
     return {
       gates: [gate("G1", false, GUIDANCE.noWrist)],
       messageId: "noWrist",
       allPassed: false,
       hint: false,
-      hand: hands[0] ?? null,
+      hand: null,
     };
   }
 
@@ -94,32 +94,25 @@ export function evaluateGates(
   const place = placementOf(hand, width, height);
   const diagonal = Math.hypot(width, height);
 
-  const poseWristPx = hand.poseWrist ? denorm(hand.poseWrist, width, height) : null;
-  const wristAgree =
-    poseWristPx !== null &&
-    len2(sub2(poseWristPx, place.wrist)) <= POSE_WRIST_AGREEMENT * width &&
-    hand.landmarks.length >= 21;
-  const g1 = wristAgree;
+  // G1: MediaPipe HandLandmarker presence. Exactly one hand with 21 landmarks.
+  let g1: boolean;
+  if (hasPose(hand)) {
+    const poseWristPx = denorm(hand.poseWrist!, width, height);
+    g1 =
+      len2(sub2(poseWristPx, place.wrist)) <= POSE_WRIST_AGREEMENT * width &&
+      hand.landmarks.length >= 21;
+  } else {
+    // HandLandmarker tracking — verified by 21 hand landmarks
+    g1 = hand.landmarks.length >= 21;
+  }
 
-  const posePoints = [hand.poseWrist, hand.poseIndex, hand.posePinky].filter(
-    (point): point is NonNullable<typeof point> => point !== null
-  );
-  const poseVis =
-    hand.poseWristVisibility >= MIN_POSE_VISIBILITY &&
-    hand.poseIndexVisibility >= MIN_POSE_VISIBILITY &&
-    hand.posePinkyVisibility >= MIN_POSE_VISIBILITY;
-  const beyond = {
-    x: place.placement.x + place.axis.x * place.estimatedWristPx,
-    y: place.placement.y + place.axis.y * place.estimatedWristPx,
-  };
-  const points = [
-    ...requiredLandmarkPixels(hand, width, height),
-    place.placement,
-    beyond,
-    ...posePoints.map((point) => denorm(point, width, height)),
-  ];
-  const g2 = poseVis && points.every((point) => insideFrame(point, width, height, FRAME_MARGIN));
+  // G2: Wrist in frame. The wrist landmark and the watch placement position
+  // must be inside the frame. The entire forearm is not required to be in frame.
+  const wristInFrame = insideFrame(place.wrist, width, height, FRAME_MARGIN);
+  const placementInFrame = insideFrame(place.placement, width, height, FRAME_MARGIN);
+  const g2 = wristInFrame && placementInFrame;
 
+  // G3: Back of hand facing the camera
   const g3 = isBackFacing(hand);
 
   const tilt = handTiltDeg(hand);
@@ -129,7 +122,11 @@ export function evaluateGates(
     tilt <= MAX_HAND_TILT_DEG &&
     (pitch === null || pitch <= MAX_FOREARM_PITCH_DEG);
 
-  const frac = width > 0 ? place.breadthPx / width : 0;
+  // G5: Distance / Hand size.
+  // Use the shorter dimension (width in portrait, height in landscape/desktop)
+  // so vertical presentation on desktop webcams does not penalise the ratio.
+  const refDim = Math.min(width, height);
+  const frac = refDim > 0 ? place.breadthPx / refDim : 0;
   const g5 = frac >= HAND_BREADTH_FRAC_MIN && frac <= HAND_BREADTH_FRAC_MAX;
   const tooSmall = frac < HAND_BREADTH_FRAC_MIN;
 
@@ -155,15 +152,13 @@ export function evaluateGates(
   ];
 
   let messageId: GuidanceId = "perfect";
-  if (!g1 || !hand.poseWrist) messageId = g1 ? "inFrame" : "inFrame";
+  if (!g1) messageId = "inFrame";
   else if (!g2) messageId = "inFrame";
   else if (!g3) messageId = "backOfHand";
   else if (!g4) messageId = "flat";
   else if (!g5) messageId = tooSmall ? "closer" : "farther";
   else if (mode === "live" && quality !== null && !lumaOk) messageId = "lighting";
   else if (mode === "live" && (!g6 || (quality !== null && !sharpOk))) messageId = "still";
-
-  if (!g1) messageId = "inFrame";
 
   return {
     gates,

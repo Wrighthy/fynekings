@@ -27,7 +27,7 @@ export default function ResultView({
   onSave,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const dragRef = useRef<{ x: number; y: number; along: number } | null>(null);
+  const dragRef = useRef<{ x: number; y: number; along: number; lateral: number } | null>(null);
 
   useEffect(() => {
     const source = snapshotSession.composite;
@@ -40,7 +40,12 @@ export default function ResultView({
 
   const onPointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
-    dragRef.current = { x: event.clientX, y: event.clientY, along: adjustments.alongPx };
+    dragRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      along: adjustments.alongPx,
+      lateral: adjustments.lateralPx ?? 0,
+    };
   };
 
   const onPointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
@@ -51,11 +56,16 @@ export default function ResultView({
     if (!rect.width || !rect.height) return;
     const dx = ((event.clientX - drag.x) * canvas.width) / rect.width;
     const dy = ((event.clientY - drag.y) * canvas.height) / rect.height;
-    const along = drag.along + dx * measurements.forearmAxis.x + dy * measurements.forearmAxis.y;
-    const limit = Math.max(40, measurements.wristWidthPx);
+    const dAlong = dx * measurements.forearmAxis.x + dy * measurements.forearmAxis.y;
+    const dLateral = dx * measurements.perp.x + dy * measurements.perp.y;
+    const along = drag.along + dAlong;
+    const lateral = drag.lateral + dLateral;
+    const alongLimit = Math.max(60, measurements.wristWidthPx * 1.5);
+    const lateralLimit = Math.max(60, measurements.wristWidthPx * 1.2);
     onAdjust({
       ...adjustments,
-      alongPx: Math.max(-limit, Math.min(limit, along)),
+      alongPx: Math.max(-alongLimit, Math.min(alongLimit, along)),
+      lateralPx: Math.max(-lateralLimit, Math.min(lateralLimit, lateral)),
     });
   };
 
@@ -74,6 +84,9 @@ export default function ResultView({
       <p className="tryon-result-note">{GUIDANCE.approximation}</p>
       <p className="tryon-result-note">
         Estimated wrist width {Math.round(measurements.wristWidthMm)} mm. This can be off by about 10 to 15 percent.
+      </p>
+      <p className="tryon-result-note">
+        Drag the watch on your wrist to adjust its position.
       </p>
       {lowConfidence && (
         <p className="tryon-result-warn" role="status">

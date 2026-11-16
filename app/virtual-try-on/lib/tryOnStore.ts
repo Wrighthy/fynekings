@@ -26,6 +26,10 @@ export type TryOnProduct = {
   caseLayerUrl?: string;
   strapLayerUrl?: string | null;
   anchor?: { x: number; y: number };
+  /** Optional fraction of the image width occupied by the watch case (e.g. 0.45) */
+  caseWidthFraction?: number;
+  /** Optional per-watch scaling fine-tuning multiplier (default 1.0) */
+  scaleFactor?: number;
 };
 
 type TryOnState = {

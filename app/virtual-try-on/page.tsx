@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import TryOnLoading from "./components/TryOnLoading";
 import SnapshotTryOn from "./components/SnapshotTryOn";
-import { getHolisticLandmarker, prefetchSegmenter, resetHolisticLandmarker } from "./lib/tryon/models";
+import DesktopQrView from "./components/DesktopQrView";
+import { getHandLandmarker, prefetchSegmenter, resetHandLandmarker } from "./lib/tryon/models";
 import { GUIDANCE } from "./lib/tryon/constants";
 import { releaseSnapshotSession } from "./lib/tryon/snapshotSession";
 import { resetDepthWorker } from "./lib/tryon/depthClient";
@@ -32,6 +33,10 @@ export default function VirtualTryOnPage() {
 function VirtualTryOn() {
   const searchParams = useSearchParams();
   const requestedSlug = searchParams.get("watch");
+  const forceMobile = searchParams.get("force") === "1" || searchParams.get("mobile") === "1";
+
+  // Device detection state: null until checked on client
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   const [products, setProducts] = useState<TryOnProduct[]>([]);
   const [isModelReady, setIsModelReady] = useState(false);
@@ -51,16 +56,27 @@ function VirtualTryOn() {
   const requestedSlugRef = useRef(requestedSlug);
   requestedSlugRef.current = requestedSlug;
 
-  // ── Choose a sensible default camera ──
-  // Mobile defaults to the rear camera so you can film your own wrist (FR-02.2);
-  // a desktop webcam faces the user, so mirroring it reads as a mirror.
+  // ── 1. Detect device type (Desktop vs Mobile) ──
   useEffect(() => {
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    setFrontCamera(!isMobile);
-  }, [setFrontCamera]);
+    const ua = navigator.userAgent || "";
+    const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+    const isTouchDevice = navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth <= 1024;
+    setIsMobile(isMobileUA || (isTouchDevice && isSmallScreen));
+  }, []);
 
-  // ── Fetch the catalogue ──
+  const shouldShowTryOn = Boolean(isMobile || forceMobile);
+
+  // ── 2. Choose default camera on mobile ──
   useEffect(() => {
+    if (!shouldShowTryOn) return;
+    const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    setFrontCamera(!isMobileDevice);
+  }, [setFrontCamera, shouldShowTryOn]);
+
+  // ── 3. Fetch the catalogue (only when running try-on) ──
+  useEffect(() => {
+    if (!shouldShowTryOn) return;
     let cancelled = false;
 
     const load = async () => {
@@ -92,13 +108,14 @@ function VirtualTryOn() {
     return () => {
       cancelled = true;
     };
-  }, [selectWatch, attempt]);
+  }, [selectWatch, attempt, shouldShowTryOn]);
 
-  // ── Initialise MediaPipe ──
+  // ── 4. Initialise MediaPipe (only on mobile / allowed try-on) ──
   useEffect(() => {
+    if (!shouldShowTryOn) return;
     let cancelled = false;
 
-    getHolisticLandmarker((status) => {
+    getHandLandmarker((status) => {
       if (!cancelled) setModelProgress(status);
     })
       .then(() => {
@@ -107,7 +124,7 @@ function VirtualTryOn() {
       })
       .catch((err: unknown) => {
         if (cancelled) return;
-        resetHolisticLandmarker();
+        resetHandLandmarker();
         setLoadError(
           err instanceof Error
             ? `Could not load the AR engine: ${err.message}`
@@ -118,22 +135,21 @@ function VirtualTryOn() {
     return () => {
       cancelled = true;
     };
-  }, [attempt]);
+  }, [attempt, shouldShowTryOn]);
 
   // ── Release everything on unmount ──
   useEffect(() => {
     return () => {
       useTryOnStore.getState().reset();
-      resetHolisticLandmarker();
+      resetHandLandmarker();
       resetDepthWorker();
       releaseSnapshotSession();
     };
   }, []);
 
   // ── Dismiss the loading screen ──
-  // The experience mounts underneath it as soon as the model is ready, so the
-  // camera prompt appears while the loader is still covering the page.
   useEffect(() => {
+    if (!shouldShowTryOn) return;
     if (!showLoading) return;
     if (!isModelReady) return;
     if (!isCameraReady && !cameraError) return;
@@ -141,10 +157,10 @@ function VirtualTryOn() {
     setIsFadingOut(true);
     const id = setTimeout(() => setShowLoading(false), FADE_OUT_MS);
     return () => clearTimeout(id);
-  }, [showLoading, isModelReady, isCameraReady, cameraError]);
+  }, [showLoading, isModelReady, isCameraReady, cameraError, shouldShowTryOn]);
 
   const handleRetry = useCallback(() => {
-    resetHolisticLandmarker();
+    resetHandLandmarker();
     resetDepthWorker();
     releaseSnapshotSession();
     useTryOnStore.getState().reset();
@@ -156,6 +172,16 @@ function VirtualTryOn() {
     setProducts([]);
     setAttempt((n) => n + 1);
   }, []);
+
+  // If still checking device on initial client mount, show minimal loader
+  if (isMobile === null && !forceMobile) {
+    return <TryOnLoading statusText="Checking device compatibility..." />;
+  }
+
+  // DESKTOP VIEW: Show dedicated QR Code screen for mobile scanning
+  if (!shouldShowTryOn) {
+    return <DesktopQrView selectedWatchSlug={requestedSlug} />;
+  }
 
   if (loadError) {
     return <TryOnErrorScreen message={loadError} onRetry={handleRetry} />;
@@ -191,6 +217,7 @@ function TryOnErrorScreen({
 }: {
   message: string;
   onRetry: () => void;
+  selectedWatchSlug?: string | null;
 }) {
   return (
     <div className="tryon-page tryon-error-page">
@@ -212,5 +239,3 @@ function TryOnErrorScreen({
     </div>
   );
 }
-
-

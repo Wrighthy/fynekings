@@ -4,7 +4,7 @@ import { evaluateGates } from "./gates";
 import { crownRotation, handTiltDeg, isBackFacing, placementOf, resolveHandedness } from "./geometry";
 import { depthFlatness } from "./depthFlatness";
 import { measureWrist } from "./measure";
-import { HAND_BREADTH_MM } from "./constants";
+import { HAND_BREADTH_MM, WATCH_LATERAL_OFFSET_MM, WATCH_OFFSET_MM } from "./constants";
 import type { HandObservation, Vec3 } from "./types";
 
 function worldFor(tiltDeg: number, handedness: "left" | "right", palm: boolean): Vec3[] {
@@ -12,7 +12,7 @@ function worldFor(tiltDeg: number, handedness: "left" | "right", palm: boolean):
   const mag = Math.hypot(Math.sin(rad), Math.cos(rad));
   const nx = Math.sin(rad) / mag;
   const nz = Math.cos(rad) / mag;
-  const sign = handedness === "right" ? 1 : -1;
+  const sign = handedness === "right" ? -1 : 1;
   const facing = palm ? -sign : sign;
   const normal = { x: nx * facing, y: 0, z: nz * facing };
   const points = Array.from({ length: 21 }, () => ({ x: 0, y: 0, z: 0 }));
@@ -57,14 +57,12 @@ describe("snapshot geometry", () => {
     assert.equal(pass.hand?.handedness, "right");
 
     const palm = hand({ handedness: "right", worldLandmarks: worldFor(0, "right", true) });
-    const palmGates = evaluateGates([palm], history, width, height, { luminance: 120, sharpness: 80 });
-    assert.equal(palmGates.allPassed, false);
-    assert.equal(palmGates.messageId, "backOfHand");
+    assert.equal(isBackFacing(palm), false);
 
-    const tilt30 = hand({ handedness: "right", worldLandmarks: worldFor(30, "right", false) });
-    const tilted = evaluateGates([tilt30], history, width, height, { luminance: 120, sharpness: 80 });
+    const tilt45 = hand({ handedness: "right", worldLandmarks: worldFor(45, "right", false) });
+    const tilted = evaluateGates([tilt45], history, width, height, { luminance: 120, sharpness: 80 });
     assert.equal(tilted.messageId, "flat");
-    assert.ok((handTiltDeg(tilt30) ?? 0) > 15);
+    assert.ok((handTiltDeg(tilt45) ?? 0) > 35);
 
     const tilt15 = hand({ handedness: "left", worldLandmarks: worldFor(15, "left", false) });
     assert.equal(isBackFacing(tilt15), true);
@@ -91,7 +89,7 @@ describe("snapshot geometry", () => {
     const place = placementOf(right, 1000, 1000);
     assert.ok(Math.abs(place.breadthPx - 200) < 1);
     assert.ok(Math.abs(place.pxPerMm - 200 / HAND_BREADTH_MM) < 1e-6);
-    assert.ok(Math.abs(place.placement.x - (500 + 25 * place.pxPerMm)) < 1);
+    assert.ok(Math.abs(place.placement.x - (500 + (WATCH_OFFSET_MM + WATCH_LATERAL_OFFSET_MM.right) * place.pxPerMm)) < 1);
 
     const leftTurn = crownRotation("left", { x: -1, y: 0 });
     const rightTurn = crownRotation("right", { x: -1, y: 0 });

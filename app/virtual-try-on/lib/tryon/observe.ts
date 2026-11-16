@@ -1,4 +1,3 @@
-import { POSE } from "./constants";
 import { resolveHandedness } from "./geometry";
 import type { Handedness, HandObservation, Vec2, Vec3 } from "./types";
 
@@ -9,6 +8,8 @@ export type RawLandmark = {
   visibility?: number;
 };
 
+/* ── Original holistic types (kept for future swap-back) ── */
+
 export type HolisticLike = {
   leftHandLandmarks: RawLandmark[][];
   rightHandLandmarks: RawLandmark[][];
@@ -18,6 +19,18 @@ export type HolisticLike = {
   poseWorldLandmarks: RawLandmark[][];
 };
 
+/* ── HandLandmarker result shape ── */
+
+type Category = { categoryName?: string; displayName?: string };
+
+export type HandLandmarkerResult = {
+  landmarks: RawLandmark[][];
+  worldLandmarks: RawLandmark[][];
+  handedness: Category[][];
+};
+
+/* ── Helpers ── */
+
 function to2(point: RawLandmark): Vec2 {
   return { x: point.x, y: point.y };
 }
@@ -26,71 +39,60 @@ function to3(point: RawLandmark): Vec3 {
   return { x: point.x, y: point.y, z: point.z ?? 0 };
 }
 
-function readPose(pose: RawLandmark[] | undefined, index: number): { point: Vec2; visibility: number } | null {
-  const landmark = pose?.[index];
-  if (!landmark) return null;
-  return { point: to2(landmark), visibility: landmark.visibility ?? 0 };
-}
+/* ── HandLandmarker → HandObservation[] ── */
 
-function readWorld(pose: RawLandmark[] | undefined, index: number): Vec3 | null {
-  const landmark = pose?.[index];
-  return landmark ? to3(landmark) : null;
-}
-
-function oneSide(
-  mediaPipeSide: Handedness,
-  landmarks: RawLandmark[] | undefined,
-  world: RawLandmark[] | undefined,
-  pose: RawLandmark[] | undefined,
-  poseWorld: RawLandmark[] | undefined,
+/**
+ * Convert HandLandmarker output to the snapshot system's HandObservation[].
+ *
+ * HandLandmarker does NOT produce pose landmarks, so every pose field is
+ * null / 0. The gates and geometry modules already handle null pose data
+ * gracefully (forearmAxis falls back to L0→L9, forearmPitchDeg returns null,
+ * G1/G2 skip pose checks).
+ */
+export function observationsFromHandLandmarker(
+  result: HandLandmarkerResult,
   mirrored: boolean
-): HandObservation | null {
-  if (!landmarks || landmarks.length < 21 || !world || world.length < 21) return null;
-  const elbowIndex = mediaPipeSide === "left" ? POSE.leftElbow : POSE.rightElbow;
-  const wristIndex = mediaPipeSide === "left" ? POSE.leftWrist : POSE.rightWrist;
-  const indexIndex = mediaPipeSide === "left" ? POSE.leftIndex : POSE.rightIndex;
-  const pinkyIndex = mediaPipeSide === "left" ? POSE.leftPinky : POSE.rightPinky;
-  const elbow = readPose(pose, elbowIndex);
-  const wrist = readPose(pose, wristIndex);
-  const index = readPose(pose, indexIndex);
-  const pinky = readPose(pose, pinkyIndex);
-  return {
-    handedness: resolveHandedness(mediaPipeSide, mirrored),
-    landmarks: landmarks.slice(0, 21).map(to2),
-    worldLandmarks: world.slice(0, 21).map(to3),
-    poseWrist: wrist?.point ?? null,
-    poseElbow: elbow?.point ?? null,
-    poseIndex: index?.point ?? null,
-    posePinky: pinky?.point ?? null,
-    poseWristVisibility: wrist?.visibility ?? 0,
-    poseElbowVisibility: elbow?.visibility ?? 0,
-    poseIndexVisibility: index?.visibility ?? 0,
-    posePinkyVisibility: pinky?.visibility ?? 0,
-    poseWristWorld: readWorld(poseWorld, wristIndex),
-    poseElbowWorld: readWorld(poseWorld, elbowIndex),
-  };
+): HandObservation[] {
+  const hands: HandObservation[] = [];
+
+  for (let i = 0; i < result.landmarks.length; i++) {
+    const lm = result.landmarks[i];
+    const wl = result.worldLandmarks[i];
+    if (!lm || lm.length < 21 || !wl || wl.length < 21) continue;
+
+    // HandLandmarker labels from the camera's perspective:
+    // "Left" means the camera sees the viewer's right hand, etc.
+    const rawLabel = result.handedness[i]?.[0]?.categoryName ?? "Left";
+    const mediaPipeSide: Handedness =
+      rawLabel.toLowerCase() === "right" ? "right" : "left";
+
+    hands.push({
+      handedness: resolveHandedness(mediaPipeSide, mirrored),
+      landmarks: lm.slice(0, 21).map(to2),
+      worldLandmarks: wl.slice(0, 21).map(to3),
+      poseWrist: null,
+      poseElbow: null,
+      poseIndex: null,
+      posePinky: null,
+      poseWristVisibility: 0,
+      poseElbowVisibility: 0,
+      poseIndexVisibility: 0,
+      posePinkyVisibility: 0,
+      poseWristWorld: null,
+      poseElbowWorld: null,
+    });
+  }
+
+  return hands;
 }
 
-export function observationsFromHolistic(result: HolisticLike, mirrored: boolean): HandObservation[] {
-  const pose = result.poseLandmarks[0];
-  const poseWorld = result.poseWorldLandmarks[0];
-  const hands = [
-    oneSide(
-      "left",
-      result.leftHandLandmarks[0],
-      result.leftHandWorldLandmarks[0],
-      pose,
-      poseWorld,
-      mirrored
-    ),
-    oneSide(
-      "right",
-      result.rightHandLandmarks[0],
-      result.rightHandWorldLandmarks[0],
-      pose,
-      poseWorld,
-      mirrored
-    ),
-  ];
-  return hands.filter((hand): hand is HandObservation => hand !== null);
+/**
+ * Alias that matches the old import name used by useHolisticTracking and
+ * pipeline.ts. Now delegates to the HandLandmarker converter.
+ */
+export function observationsFromHolistic(
+  result: HandLandmarkerResult,
+  mirrored: boolean
+): HandObservation[] {
+  return observationsFromHandLandmarker(result, mirrored);
 }
