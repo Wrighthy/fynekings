@@ -130,13 +130,13 @@ function CheckoutContent() {
       <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
         <Nav />
         <div style={{ padding: "180px 24px 100px", maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: ".5rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
             Luxury Checkout Portal
           </div>
           <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.8rem", color: "var(--white)", fontWeight: 300, marginBottom: "20px" }}>
             Your Cart is Empty
           </h1>
-          <p style={{ fontSize: ".7rem", lineHeight: 2, color: "var(--muted)", marginBottom: "32px" }}>
+          <p style={{ fontSize: "15px", lineHeight: 2, color: "var(--muted)", marginBottom: "32px" }}>
             Select your timepiece from our collection to proceed to checkout.
           </p>
           <Link href="/collection" className="btn-primary" style={{ display: "inline-flex" }}>
@@ -154,7 +154,7 @@ function CheckoutContent() {
 
       {/* Header */}
       <div style={{ padding: "160px 24px 40px", maxWidth: "1200px", margin: "0 auto" }}>
-        <div style={{ fontSize: ".52rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
           Encrypted Security
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.4rem, 5vw, 3.8rem)", color: "var(--white)", fontWeight: 300 }}>
@@ -173,88 +173,88 @@ function CheckoutContent() {
           {/* Guest notice with optional sign-in prompt */}
           {!user && (
             <div style={{ padding: "12px 16px", background: "rgba(196,169,98,0.06)", border: "1px solid rgba(196,169,98,0.2)", marginBottom: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-              <span style={{ fontSize: ".6rem", color: "var(--muted)", letterSpacing: ".05em" }}>Checking out as guest.</span>
-              <Link href={`/login?redirect=${encodeURIComponent("/checkout")}`} style={{ fontSize: ".58rem", color: "var(--gold)", textDecoration: "none", letterSpacing: ".1em", textTransform: "uppercase" }}>
+              <span style={{ fontSize: "14px", color: "var(--muted)", letterSpacing: ".05em" }}>Checking out as guest.</span>
+              <Link href={`/login?redirect=${encodeURIComponent("/checkout")}`} style={{ fontSize: "14px", color: "var(--gold)", textDecoration: "none", letterSpacing: ".1em", textTransform: "uppercase" }}>
                 Sign In →
               </Link>
             </div>
           )}
 
           {error && (
-            <div style={{ padding: "14px", background: "rgba(139, 32, 32, 0.2)", border: "1px solid var(--crimson)", color: "#ff6b6b", fontSize: ".65rem", marginBottom: "24px" }}>
+            <div style={{ padding: "14px", background: "rgba(139, 32, 32, 0.2)", border: "1px solid var(--crimson)", color: "#ff6b6b", fontSize: "14px", marginBottom: "24px" }}>
               {error}
             </div>
           )}
 
           <form onSubmit={handleCheckout} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <div>
-              <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Full Name *</label>
+              <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Full Name *</label>
               <input
                 type="text"
                 required
                 value={form.customerName}
                 onChange={(e) => setForm({ ...form, customerName: e.target.value })}
                 placeholder="Prince Olayemi"
-                style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".85rem", outline: "none" }}
+                style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
               />
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               <div>
-                <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Email Address *</label>
+                <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Email Address *</label>
                 <input
                   type="email"
                   required
                   value={form.customerEmail}
                   onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
                   placeholder="olayemi@example.com"
-                  style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".85rem", outline: "none" }}
+                  style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Phone Number *</label>
+                <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Phone Number *</label>
                 <input
                   type="tel"
                   required
                   value={form.customerPhone}
                   onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
                   placeholder="+234 803 000 0000"
-                  style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".85rem", outline: "none" }}
+                  style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Delivery Address *</label>
+              <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Delivery Address *</label>
               <input
                 type="text"
                 required
                 value={form.shippingAddress}
                 onChange={(e) => setForm({ ...form, shippingAddress: e.target.value })}
                 placeholder="Ahmadu Bello Way, Victoria Island"
-                style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".85rem", outline: "none" }}
+                style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
               />
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               <div>
-                <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>City *</label>
+                <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>City *</label>
                 <input
                   type="text"
                   required
                   value={form.city}
                   onChange={(e) => setForm({ ...form, city: e.target.value })}
                   placeholder="Lagos"
-                  style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".85rem", outline: "none" }}
+                  style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Country</label>
+                <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Country</label>
                 <input
                   type="text"
                   readOnly
                   value="Nigeria"
-                  style={{ width: "100%", padding: "14px", background: "var(--dark3)", border: "1px solid var(--dark4)", color: "var(--gold)", fontSize: ".85rem", outline: "none" }}
+                  style={{ width: "100%", padding: "14px", background: "var(--dark3)", border: "1px solid var(--dark4)", color: "var(--gold)", fontSize: "15px", outline: "none" }}
                 />
               </div>
             </div>
@@ -265,7 +265,7 @@ function CheckoutContent() {
                 <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", fontWeight: 300, margin: 0 }}>
                   2. Select Payment Method
                 </h2>
-                <span style={{ fontSize: ".5rem", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase" }}>
+                <span style={{ fontSize: "14px", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase" }}>
                   Secured &amp; Verified
                 </span>
               </div>
@@ -286,14 +286,14 @@ function CheckoutContent() {
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
-                    <span style={{ fontSize: ".72rem", fontWeight: 600, color: paymentMethod === "paystack" ? "var(--gold)" : "var(--white)", letterSpacing: ".05em" }}>
+                    <span style={{ fontSize: "15px", fontWeight: 600, color: paymentMethod === "paystack" ? "var(--gold)" : "var(--white)", letterSpacing: ".05em" }}>
                       Paystack
                     </span>
                     <span style={{ width: "12px", height: "12px", borderRadius: "50%", border: `1px solid ${paymentMethod === "paystack" ? "var(--gold)" : "var(--muted)"}`, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
                       {paymentMethod === "paystack" && <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--gold)" }}></span>}
                     </span>
                   </div>
-                  <div style={{ fontSize: ".55rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                  <div style={{ fontSize: "14px", color: "var(--muted)", lineHeight: 1.5 }}>
                     Instant debit/credit cards (Mastercard, Visa, Verve) &amp; Apple Pay
                   </div>
                 </button>
@@ -312,14 +312,14 @@ function CheckoutContent() {
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
-                    <span style={{ fontSize: ".72rem", fontWeight: 600, color: paymentMethod === "bank_transfer" ? "var(--gold)" : "var(--white)", letterSpacing: ".05em" }}>
+                    <span style={{ fontSize: "15px", fontWeight: 600, color: paymentMethod === "bank_transfer" ? "var(--gold)" : "var(--white)", letterSpacing: ".05em" }}>
                       Bank Transfer
                     </span>
                     <span style={{ width: "12px", height: "12px", borderRadius: "50%", border: `1px solid ${paymentMethod === "bank_transfer" ? "var(--gold)" : "var(--muted)"}`, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
                       {paymentMethod === "bank_transfer" && <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--gold)" }}></span>}
                     </span>
                   </div>
-                  <div style={{ fontSize: ".55rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                  <div style={{ fontSize: "14px", color: "var(--muted)", lineHeight: 1.5 }}>
                     Direct corporate bank transfer with instant concierge invoice confirmation
                   </div>
                 </button>
@@ -327,20 +327,20 @@ function CheckoutContent() {
 
               {/* Dynamic Note based on selected method */}
               {paymentMethod === "paystack" ? (
-                <p style={{ fontSize: ".62rem", color: "var(--muted)", lineHeight: 1.8, marginBottom: "20px" }}>
+                <p style={{ fontSize: "14px", color: "var(--muted)", lineHeight: 1.8, marginBottom: "20px" }}>
                   Payment processed via 256-bit encrypted Paystack payment gateway with instant backend verification.
                 </p>
               ) : (
-                <div style={{ background: "var(--dark)", border: "1px solid var(--dark4)", padding: "16px", marginBottom: "20px", fontSize: ".62rem", lineHeight: 1.8 }}>
-                  <div style={{ color: "var(--gold)", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".15em", fontSize: ".52rem", marginBottom: "6px" }}>
+                <div style={{ background: "var(--dark)", border: "1px solid var(--dark4)", padding: "16px", marginBottom: "20px", fontSize: "14px", lineHeight: 1.8 }}>
+                  <div style={{ color: "var(--gold)", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".15em", fontSize: "14px", marginBottom: "6px" }}>
                     Corporate Account Wire
                   </div>
                   <div style={{ color: "var(--white)" }}>Bank: {FYNEKINGS_BANK_DETAILS.bankName}</div>
                   <div style={{ color: "var(--white)" }}>Account: {FYNEKINGS_BANK_DETAILS.accountName}</div>
-                  <div style={{ color: "var(--gold)", fontFamily: "monospace", letterSpacing: ".1em", fontSize: ".75rem", margin: "4px 0" }}>
+                  <div style={{ color: "var(--gold)", fontFamily: "monospace", letterSpacing: ".1em", fontSize: "15px", margin: "4px 0" }}>
                     {FYNEKINGS_BANK_DETAILS.accountNumber}
                   </div>
-                  <div style={{ color: "var(--muted)", fontSize: ".55rem" }}>
+                  <div style={{ color: "var(--muted)", fontSize: "14px" }}>
                     Place order to lock allocation. Your unique order reference will be generated for payment narration.
                   </div>
                 </div>
@@ -355,8 +355,8 @@ function CheckoutContent() {
                   background: "var(--gold)",
                   color: "var(--black)",
                   border: "none",
-                  fontSize: ".62rem",
-                  letterSpacing: ".32em",
+                  fontSize: "14px",
+                  letterSpacing: ".12em",
                   textTransform: "uppercase",
                   fontWeight: 600,
                   cursor: loading ? "wait" : "pointer",
@@ -374,7 +374,7 @@ function CheckoutContent() {
 
         {/* Order Summary Sidebar */}
         <div style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "36px" }}>
-          <div style={{ fontSize: ".5rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "20px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "20px" }}>
             Acquisition Summary ({cart.length})
           </div>
 
@@ -383,7 +383,7 @@ function CheckoutContent() {
               <div key={i} style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--dark3)", paddingBottom: "12px" }}>
                 <div>
                   <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.1rem", color: "var(--white)" }}>{item.name}</div>
-                  <div style={{ fontSize: ".52rem", color: "var(--muted)", textTransform: "uppercase" }}>{item.series}</div>
+                  <div style={{ fontSize: "14px", color: "var(--muted)", textTransform: "uppercase" }}>{item.series}</div>
                 </div>
                 <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.1rem", color: "var(--gold)" }}>
                   {fmt(item.amount)}
@@ -394,7 +394,7 @@ function CheckoutContent() {
 
           {/* Promo Code Input */}
           <div style={{ borderTop: "1px solid var(--dark3)", paddingTop: "20px", marginBottom: "20px" }}>
-            <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".25em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "8px" }}>
+            <label style={{ display: "block", fontSize: "14px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "8px" }}>
               Promo / VIP Voucher Code
             </label>
             <div style={{ display: "flex", gap: "8px" }}>
@@ -403,25 +403,25 @@ function CheckoutContent() {
                 value={promoInput}
                 onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
                 placeholder="ROYAL15"
-                style={{ flex: 1, padding: "10px 14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--gold)", fontSize: ".75rem", outline: "none" }}
+                style={{ flex: 1, padding: "10px 14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--gold)", fontSize: "15px", outline: "none" }}
               />
               <button
                 type="button"
                 onClick={handleApplyPromo}
                 disabled={promoLoading}
-                style={{ padding: "10px 16px", background: "var(--gold-dk)", color: "var(--white)", border: "none", fontSize: ".48rem", letterSpacing: ".2em", textTransform: "uppercase", cursor: "pointer" }}
+                style={{ padding: "10px 16px", background: "var(--gold-dk)", color: "var(--white)", border: "none", fontSize: "14px", letterSpacing: ".2em", textTransform: "uppercase", cursor: "pointer" }}
               >
                 {promoLoading ? "..." : "Apply"}
               </button>
             </div>
             {promoMsg && (
-              <div style={{ fontSize: ".55rem", marginTop: "8px", color: promoMsg.startsWith("✓") ? "var(--gold)" : "#ff6b6b" }}>
+              <div style={{ fontSize: "14px", marginTop: "8px", color: promoMsg.startsWith("✓") ? "var(--gold)" : "#ff6b6b" }}>
                 {promoMsg}
               </div>
             )}
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: ".65rem", color: "var(--text)", borderTop: "1px solid var(--dark3)", paddingTop: "16px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "14px", color: "var(--text)", borderTop: "1px solid var(--dark3)", paddingTop: "16px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span>Subtotal</span>
               <span style={{ color: "var(--white)" }}>{fmt(subtotal)}</span>

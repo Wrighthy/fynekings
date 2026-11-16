@@ -123,7 +123,7 @@ export default function CollectorInvite() {
           background: "none",
           border: "none",
           color: "var(--muted)",
-          fontSize: ".9rem",
+          fontSize: "15px",
           cursor: "pointer",
           lineHeight: 1,
         }}
@@ -132,8 +132,8 @@ export default function CollectorInvite() {
       </button>
 
       <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
-        <span style={{ color: "var(--gold)", fontSize: ".8rem" }}>✦</span>
-        <span style={{ fontSize: ".5rem", letterSpacing: ".35em", color: "var(--gold)", textTransform: "uppercase" }}>
+        <span style={{ color: "var(--gold)", fontSize: "15px" }}>✦</span>
+        <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase" }}>
           The Collector Club
         </span>
       </div>
@@ -141,7 +141,7 @@ export default function CollectorInvite() {
       <p style={{ fontFamily: "Playfair Display, serif", fontSize: "1.15rem", color: "var(--text)", lineHeight: 1.4, marginBottom: "8px" }}>
         First to know. First to own.
       </p>
-      <p style={{ fontSize: ".6rem", letterSpacing: ".08em", lineHeight: 1.8, color: "var(--muted)", marginBottom: "16px" }}>
+      <p style={{ fontSize: "14px", letterSpacing: ".08em", lineHeight: 1.8, color: "var(--muted)", marginBottom: "16px" }}>
         Join for private drop access, limited edition allocations, and collector-only pricing.
       </p>
 
@@ -159,7 +159,7 @@ export default function CollectorInvite() {
               background: "var(--black)",
               border: "1px solid var(--dark4)",
               color: "var(--text)",
-              fontSize: ".7rem",
+              fontSize: "15px",
               outline: "none",
               minWidth: 0,
             }}
@@ -172,7 +172,7 @@ export default function CollectorInvite() {
               background: "var(--gold)",
               border: "none",
               color: "var(--black)",
-              fontSize: ".5rem",
+              fontSize: "14px",
               letterSpacing: ".2em",
               textTransform: "uppercase",
               fontWeight: 600,
@@ -182,7 +182,7 @@ export default function CollectorInvite() {
             {submitting ? "Joining…" : "Join"}
           </button>
         </div>
-        {error && <div style={{ fontSize: ".58rem", color: "#ff6b6b", marginTop: "8px" }}>{error}</div>}
+        {error && <div style={{ fontSize: "14px", color: "#ff6b6b", marginTop: "8px" }}>{error}</div>}
       </form>
 
       <button
@@ -191,7 +191,7 @@ export default function CollectorInvite() {
           background: "none",
           border: "none",
           color: "var(--gold)",
-          fontSize: ".55rem",
+          fontSize: "14px",
           letterSpacing: ".15em",
           textTransform: "uppercase",
           cursor: "pointer",

@@ -141,8 +141,8 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                 <Link
                     href="/collection"
                     style={{
-                        fontSize: "0.75rem",
-                        letterSpacing: ".25em",
+                        fontSize: "15px",
+                        letterSpacing: ".12em",
                         color: "var(--gold)",
                         textTransform: "uppercase",
                         textDecoration: "none",
@@ -177,7 +177,7 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
 
             {/* Breadcrumb Navigation */}
             <div style={{ padding: "100px 24px 24px", borderBottom: "1px solid var(--dark3)" }}>
-                <div style={{ maxWidth: "1300px", margin: "0 auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px", fontSize: "0.78rem", letterSpacing: ".12em" }}>
+                <div style={{ maxWidth: "1300px", margin: "0 auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px", fontSize: "15px", letterSpacing: ".12em" }}>
                     <Link href="/" style={{ color: "var(--muted)", textDecoration: "none", textTransform: "uppercase" }}>Home</Link>
                     <span style={{ color: "var(--dark4)" }}>/</span>
                     <Link href="/collection" style={{ color: "var(--muted)", textDecoration: "none", textTransform: "uppercase" }}>Collection</Link>
@@ -243,13 +243,13 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                             <div style={{ position: "absolute", bottom: "16px", right: "16px", width: "24px", height: "24px", borderBottom: "1px solid var(--gold-dk)", borderRight: "1px solid var(--gold-dk)", pointerEvents: "none" }} />
 
                             {/* Reference Badge */}
-                            <div style={{ position: "absolute", top: "18px", left: "50%", transform: "translateX(-50%)", fontSize: "0.72rem", letterSpacing: ".2em", color: "var(--gold-dk)", textTransform: "uppercase", pointerEvents: "none", background: "rgba(10,10,10,0.8)", padding: "4px 12px", border: "1px solid rgba(196,169,98,0.2)" }}>
+                            <div style={{ position: "absolute", top: "18px", left: "50%", transform: "translateX(-50%)", fontSize: "15px", letterSpacing: ".2em", color: "var(--gold-dk)", textTransform: "uppercase", pointerEvents: "none", background: "rgba(10,10,10,0.8)", padding: "4px 12px", border: "1px solid rgba(196,169,98,0.2)" }}>
                                 REF. FYN-{slug.toUpperCase().replace(/-/g, "")}
                             </div>
 
                             {/* Image Counter & Zoom Hint */}
                             {product.images && product.images.length > 1 && (
-                                <div style={{ position: "absolute", bottom: "18px", left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,.75)", backdropFilter: "blur(6px)", border: "1px solid var(--dark4)", padding: "6px 16px", fontSize: "0.7rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase" }}>
+                                <div style={{ position: "absolute", bottom: "18px", left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,.75)", backdropFilter: "blur(6px)", border: "1px solid var(--dark4)", padding: "6px 16px", fontSize: "15px", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase" }}>
                                     {activeImage + 1} / {product.images.length} · Click to Zoom
                                 </div>
                             )}
@@ -352,34 +352,34 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                         {/* Status Badges */}
                         <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", marginBottom: "16px" }}>
                             {isSoldOut ? (
-                                <span style={{ padding: "6px 14px", background: "rgba(224, 75, 75, 0.15)", border: "1px solid #e04b4b", color: "#ff7b7b", fontSize: "0.72rem", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 700 }}>
+                                <span style={{ padding: "6px 14px", background: "rgba(224, 75, 75, 0.15)", border: "1px solid #e04b4b", color: "#ff7b7b", fontSize: "15px", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 700 }}>
                                     ● Sold Out
                                 </span>
                             ) : isLowStock ? (
-                                <span style={{ padding: "6px 14px", background: "rgba(240, 165, 0, 0.15)", border: "1px solid #f0a500", color: "#f0a500", fontSize: "0.72rem", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 700 }}>
+                                <span style={{ padding: "6px 14px", background: "rgba(240, 165, 0, 0.15)", border: "1px solid #f0a500", color: "#f0a500", fontSize: "15px", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 700 }}>
                                     ● Only {product.stockCount} Left in Vault
                                 </span>
                             ) : (
-                                <span style={{ padding: "6px 14px", background: "rgba(74, 189, 126, 0.12)", border: "1px solid #4abd7e", color: "#4abd7e", fontSize: "0.72rem", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 700 }}>
+                                <span style={{ padding: "6px 14px", background: "rgba(74, 189, 126, 0.12)", border: "1px solid #4abd7e", color: "#4abd7e", fontSize: "15px", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 700 }}>
                                     ● In Stock · Ready to Dispatch
                                 </span>
                             )}
 
                             {(product.badge || product.badgeNew) && (
-                                <span style={{ padding: "6px 14px", background: product.badge ? "var(--gold)" : "transparent", border: product.badgeNew ? "1px solid var(--gold)" : "none", color: product.badge ? "var(--black)" : "var(--gold)", fontSize: "0.72rem", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 700 }}>
+                                <span style={{ padding: "6px 14px", background: product.badge ? "var(--gold)" : "transparent", border: product.badgeNew ? "1px solid var(--gold)" : "none", color: product.badge ? "var(--black)" : "var(--gold)", fontSize: "15px", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 700 }}>
                                     {product.badge || product.badgeNew}
                                 </span>
                             )}
                         </div>
 
                         {/* Series & Name */}
-                        <div style={{ fontSize: "0.8rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
+                        <div style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                             {product.series}
                         </div>
                         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.2rem, 4vw, 3.2rem)", fontWeight: 400, color: "var(--white)", marginBottom: "8px", letterSpacing: "-.02em", lineHeight: 1.15 }}>
                             {product.name}
                         </h1>
-                        <p style={{ fontSize: "0.82rem", letterSpacing: ".18em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "24px" }}>
+                        <p style={{ fontSize: "15px", letterSpacing: ".18em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "24px" }}>
                             {product.tag}
                         </p>
 
@@ -389,7 +389,7 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                         <div style={{ marginBottom: "32px", padding: "24px", background: "var(--dark2)", border: "1px solid var(--dark3)" }}>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "12px" }}>
                                 <div>
-                                    <div style={{ fontSize: "0.72rem", letterSpacing: ".25em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "6px" }}>
+                                    <div style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "6px" }}>
                                         Price
                                     </div>
                                     <div style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2rem, 3.5vw, 2.8rem)", color: "var(--white)", fontWeight: 400, letterSpacing: "-.02em" }}>
@@ -397,10 +397,10 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                                     </div>
                                 </div>
                                 <div style={{ textAlign: "right" }}>
-                                    <div style={{ fontSize: "0.74rem", color: "var(--muted)", letterSpacing: ".08em" }}>
+                                    <div style={{ fontSize: "15px", color: "var(--muted)", letterSpacing: ".08em" }}>
                                         Transparent Checkout:
                                     </div>
-                                    <div style={{ fontSize: "0.78rem", color: "var(--gold)", letterSpacing: ".08em", fontWeight: 500, marginTop: "2px" }}>
+                                    <div style={{ fontSize: "15px", color: "var(--gold)", letterSpacing: ".08em", fontWeight: 500, marginTop: "2px" }}>
                                         + {fmt(calculatedFee)} Paystack Processing Fee
                                     </div>
                                 </div>
@@ -408,7 +408,7 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                         </div>
 
                         {/* Description */}
-                        <div style={{ fontSize: "0.92rem", lineHeight: 1.85, color: "#ded9ce", marginBottom: "36px" }}>
+                        <div style={{ fontSize: "15px", lineHeight: 1.85, color: "#ded9ce", marginBottom: "36px" }}>
                             <p>
                                 {product.description ||
                                     "A masterpiece of contemporary horological craft. Every detail is individually inspected, timed, and calibrated in our Victoria Island private salon for exceptional accuracy, comfort, and enduring luxury."}
@@ -440,7 +440,7 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                                         >
                                             −
                                         </button>
-                                        <span style={{ width: "44px", textAlign: "center", fontSize: "0.95rem", color: "var(--white)", fontWeight: 600, fontFamily: "Raleway, sans-serif" }}>
+                                        <span style={{ width: "44px", textAlign: "center", fontSize: "15px", color: "var(--white)", fontWeight: 600, fontFamily: "Raleway, sans-serif" }}>
                                             {quantity}
                                         </span>
                                         <button
@@ -474,8 +474,8 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                                         background: isSoldOut ? "var(--dark3)" : addedToCart ? "#4abd7e" : "var(--gold)",
                                         color: isSoldOut ? "var(--muted)" : addedToCart ? "#ffffff" : "var(--black)",
                                         border: "none",
-                                        fontSize: "0.82rem",
-                                        letterSpacing: ".25em",
+                                        fontSize: "15px",
+                                        letterSpacing: ".12em",
                                         textTransform: "uppercase",
                                         fontWeight: 700,
                                         fontFamily: "Raleway, sans-serif",
@@ -567,7 +567,7 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                             </div>
 
                             {/* Concierge Assistance Link */}
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "14px", fontSize: "0.76rem" }}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "14px", fontSize: "15px" }}>
                                 <span style={{ color: "var(--muted)" }}>Prefer personal assistance?</span>
                                 <a
                                     href={`https://wa.me/2348000000000?text=${encodeURIComponent(
@@ -601,7 +601,7 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                                             borderBottom: activeTab === tab.id ? "2px solid var(--gold)" : "2px solid transparent",
                                             padding: "12px 0",
                                             color: activeTab === tab.id ? "var(--white)" : "var(--muted)",
-                                            fontSize: "0.78rem",
+                                            fontSize: "15px",
                                             letterSpacing: ".15em",
                                             textTransform: "uppercase",
                                             fontWeight: activeTab === tab.id ? 700 : 500,
@@ -632,17 +632,17 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                                                         gap: "4px",
                                                     }}
                                                 >
-                                                    <span style={{ fontSize: "0.72rem", letterSpacing: ".18em", color: "var(--gold-dk)", textTransform: "uppercase" }}>
+                                                    <span style={{ fontSize: "15px", letterSpacing: ".18em", color: "var(--gold-dk)", textTransform: "uppercase" }}>
                                                         {key.replace(/([A-Z])/g, " $1").trim()}
                                                     </span>
-                                                    <span style={{ fontSize: "0.88rem", color: "var(--white)", fontWeight: 500 }}>
+                                                    <span style={{ fontSize: "15px", color: "var(--white)", fontWeight: 500 }}>
                                                         {value}
                                                     </span>
                                                 </div>
                                             ))}
                                         </div>
                                     ) : (
-                                        <div style={{ padding: "24px", background: "var(--dark2)", border: "1px solid var(--dark3)", color: "var(--muted)", fontSize: "0.82rem" }}>
+                                        <div style={{ padding: "24px", background: "var(--dark2)", border: "1px solid var(--dark3)", color: "var(--muted)", fontSize: "15px" }}>
                                             Technical caliber specifications available upon request through our master horologist.
                                         </div>
                                     )}
@@ -655,11 +655,11 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                                     <div style={{ padding: "16px 20px", background: "var(--dark2)", border: "1px solid var(--dark3)" }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
                                             <span style={{ fontSize: "1.1rem" }}>📍</span>
-                                            <span style={{ fontSize: "0.82rem", letterSpacing: ".12em", color: "var(--white)", fontWeight: 600, textTransform: "uppercase" }}>
+                                            <span style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--white)", fontWeight: 600, textTransform: "uppercase" }}>
                                                 Lagos Metro Delivery (24 – 48 Hours)
                                             </span>
                                         </div>
-                                        <p style={{ fontSize: "0.82rem", color: "var(--text)", lineHeight: 1.6, margin: 0 }}>
+                                        <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.6, margin: 0 }}>
                                             Hand-delivered in tamper-evident security vault cases by our private bonded courier service across Victoria Island, Ikoyi, Lekki, and Mainland.
                                         </p>
                                     </div>
@@ -667,11 +667,11 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                                     <div style={{ padding: "16px 20px", background: "var(--dark2)", border: "1px solid var(--dark3)" }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
                                             <span style={{ fontSize: "1.1rem" }}>✈️</span>
-                                            <span style={{ fontSize: "0.82rem", letterSpacing: ".12em", color: "var(--white)", fontWeight: 600, textTransform: "uppercase" }}>
+                                            <span style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--white)", fontWeight: 600, textTransform: "uppercase" }}>
                                                 Nationwide Express (2 – 4 Business Days)
                                             </span>
                                         </div>
-                                        <p style={{ fontSize: "0.82rem", color: "var(--text)", lineHeight: 1.6, margin: 0 }}>
+                                        <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.6, margin: 0 }}>
                                             Fully insured express air shipment to Abuja, Port Harcourt, Kano, Ibadan, and all 36 states with real-time SMS & email tracking.
                                         </p>
                                     </div>
@@ -679,11 +679,11 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                                     <div style={{ padding: "16px 20px", background: "var(--dark2)", border: "1px solid var(--dark3)" }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
                                             <span style={{ fontSize: "1.1rem" }}>↩</span>
-                                            <span style={{ fontSize: "0.82rem", letterSpacing: ".12em", color: "var(--white)", fontWeight: 600, textTransform: "uppercase" }}>
+                                            <span style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--white)", fontWeight: 600, textTransform: "uppercase" }}>
                                                 7-Day Inspection & Exchange Policy
                                             </span>
                                         </div>
-                                        <p style={{ fontSize: "0.82rem", color: "var(--text)", lineHeight: 1.6, margin: 0 }}>
+                                        <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.6, margin: 0 }}>
                                             Examine your timepiece with complete peace of mind. Timepieces in unworn condition with factory protective seals intact are eligible for immediate exchange or full refund.
                                         </p>
                                     </div>
@@ -696,11 +696,11 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                                     <div style={{ padding: "16px 20px", background: "var(--dark2)", border: "1px solid var(--dark3)" }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
                                             <span style={{ fontSize: "1.1rem" }}>🛡️</span>
-                                            <span style={{ fontSize: "0.82rem", letterSpacing: ".12em", color: "var(--white)", fontWeight: 600, textTransform: "uppercase" }}>
+                                            <span style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--white)", fontWeight: 600, textTransform: "uppercase" }}>
                                                 5-Year International Horology Warranty
                                             </span>
                                         </div>
-                                        <p style={{ fontSize: "0.82rem", color: "var(--text)", lineHeight: 1.6, margin: 0 }}>
+                                        <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.6, margin: 0 }}>
                                             Covers mechanical movement calibration, component integrity, and manufacturing defects. Serviced by certified horological technicians at our Lagos workshop.
                                         </p>
                                     </div>
@@ -708,11 +708,11 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                                     <div style={{ padding: "16px 20px", background: "var(--dark2)", border: "1px solid var(--dark3)" }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
                                             <span style={{ fontSize: "1.1rem" }}>⚜️</span>
-                                            <span style={{ fontSize: "0.82rem", letterSpacing: ".12em", color: "var(--white)", fontWeight: 600, textTransform: "uppercase" }}>
+                                            <span style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--white)", fontWeight: 600, textTransform: "uppercase" }}>
                                                 100% Certified Genuine & Numbered
                                             </span>
                                         </div>
-                                        <p style={{ fontSize: "0.82rem", color: "var(--text)", lineHeight: 1.6, margin: 0 }}>
+                                        <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.6, margin: 0 }}>
                                             Each timepiece is timed on electronic chronocomparators, assigned an individual serial code, and packaged in a velvet-lined luxury lacquered presentation box with signed papers.
                                         </p>
                                     </div>
@@ -730,10 +730,10 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                             ].map((b) => (
                                 <div key={b.title} style={{ padding: "14px 12px", border: "1px solid var(--dark3)", background: "var(--dark2)", textAlign: "center" }}>
                                     <div style={{ fontSize: "1.3rem", marginBottom: "6px" }}>{b.icon}</div>
-                                    <div style={{ fontSize: "0.74rem", letterSpacing: ".1em", color: "var(--white)", textTransform: "uppercase", fontWeight: 600, marginBottom: "2px" }}>
+                                    <div style={{ fontSize: "15px", letterSpacing: ".1em", color: "var(--white)", textTransform: "uppercase", fontWeight: 600, marginBottom: "2px" }}>
                                         {b.title}
                                     </div>
-                                    <div style={{ fontSize: "0.68rem", color: "var(--muted)" }}>
+                                    <div style={{ fontSize: "14px", color: "var(--muted)" }}>
                                         {b.sub}
                                     </div>
                                 </div>
@@ -784,7 +784,7 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                     >
                         ✕
                     </button>
-                    <div style={{ position: "absolute", bottom: "24px", left: "50%", transform: "translateX(-50%)", fontSize: "0.72rem", letterSpacing: ".25em", color: "var(--gold-dk)", textTransform: "uppercase", background: "rgba(0,0,0,0.7)", padding: "6px 16px" }}>
+                    <div style={{ position: "absolute", bottom: "24px", left: "50%", transform: "translateX(-50%)", fontSize: "15px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase", background: "rgba(0,0,0,0.7)", padding: "6px 16px" }}>
                         Click anywhere or press Esc to close
                     </div>
                 </div>
@@ -800,14 +800,14 @@ function ProductContent({ params }: { params: Promise<{ slug: string }> }) {
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "40px", flexWrap: "wrap", gap: "16px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
                                 <span style={{ width: "24px", height: "1px", background: "var(--gold)", display: "inline-block" }} />
-                                <span style={{ fontSize: "0.78rem", letterSpacing: ".35em", color: "var(--gold)", textTransform: "uppercase", fontWeight: 600 }}>
+                                <span style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", fontWeight: 600 }}>
                                     Curated Recommendations
                                 </span>
                             </div>
                             <Link
                                 href="/collection"
                                 style={{
-                                    fontSize: "0.75rem",
+                                    fontSize: "15px",
                                     letterSpacing: ".2em",
                                     color: "var(--muted)",
                                     textTransform: "uppercase",

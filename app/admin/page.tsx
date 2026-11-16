@@ -531,18 +531,18 @@ export default function UnifiedAdminDashboard() {
     return (
       <div style={{ background: "#0a0a0a", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "Raleway, sans-serif", padding: "24px" }}>
         <div style={{ background: "#121212", border: "1px solid #C4A962", padding: "48px", maxWidth: "420px", width: "100%", textAlign: "center" }}>
-          <div style={{ fontSize: ".5rem", letterSpacing: ".4em", color: "#C4A962", textTransform: "uppercase", marginBottom: "12px" }}>Fynekings Operating Portal</div>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "#C4A962", textTransform: "uppercase", marginBottom: "12px" }}>Fynekings Operating Portal</div>
           <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#F4EFE4", fontWeight: 300, marginBottom: "24px" }}>Admin Authorization</h1>
-          {authError && <div style={{ color: "#ff6b6b", fontSize: ".65rem", marginBottom: "16px" }}>{authError}</div>}
+          {authError && <div style={{ color: "#ff6b6b", fontSize: "14px", marginBottom: "16px" }}>{authError}</div>}
           <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <input
               type="password"
               placeholder="Enter Admin Passkey"
               value={passkeyInput}
               onChange={(e) => setPasskeyInput(e.target.value)}
-              style={{ width: "100%", padding: "14px", background: "#080808", border: "1px solid #2a2a2a", color: "#F4EFE4", fontSize: ".85rem", outline: "none" }}
+              style={{ width: "100%", padding: "14px", background: "#080808", border: "1px solid #2a2a2a", color: "#F4EFE4", fontSize: "15px", outline: "none" }}
             />
-            <button type="submit" style={{ padding: "14px", background: "#C4A962", color: "#000", border: "none", fontSize: ".6rem", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
+            <button type="submit" style={{ padding: "14px", background: "#C4A962", color: "#000", border: "none", fontSize: "14px", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
               Unlock Portal →
             </button>
           </form>
@@ -556,7 +556,7 @@ export default function UnifiedAdminDashboard() {
       {/* Header */}
       <div style={{ background: "#111", borderBottom: "1px solid #222", padding: "30px 40px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "20px" }}>
         <div>
-          <div style={{ fontSize: ".5rem", letterSpacing: ".4em", color: "#C4A962", textTransform: "uppercase" }}>Fynekings Executive Operations</div>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "#C4A962", textTransform: "uppercase" }}>Fynekings Executive Operations</div>
           <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.2rem", fontWeight: 300 }}>Business Operations Dashboard</h1>
         </div>
 
@@ -579,7 +579,7 @@ export default function UnifiedAdminDashboard() {
                 background: activeTab === tab.id ? "#C4A962" : "#181818",
                 color: activeTab === tab.id ? "#000" : "#888",
                 border: "1px solid #2a2a2a",
-                fontSize: ".55rem",
+                fontSize: "14px",
                 letterSpacing: ".15em",
                 textTransform: "uppercase",
                 cursor: "pointer",
@@ -593,7 +593,7 @@ export default function UnifiedAdminDashboard() {
       </div>
 
       {message && (
-        <div style={{ background: "rgba(196,169,98,.15)", borderBottom: "1px solid #C4A962", padding: "14px 40px", color: "#C4A962", fontSize: ".7rem", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600 }}>
+        <div style={{ background: "rgba(196,169,98,.15)", borderBottom: "1px solid #C4A962", padding: "14px 40px", color: "#C4A962", fontSize: "15px", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600 }}>
           {message}
         </div>
       )}

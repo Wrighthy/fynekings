@@ -65,7 +65,7 @@ export default function SizeGuideModal({ open, onClose }: { open: boolean; onClo
         </button>
 
         <div>
-          <div style={{ fontSize: ".5rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "8px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "8px" }}>
             Horological Fit Guide
           </div>
           <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "var(--white)", fontWeight: 300 }}>
@@ -76,7 +76,7 @@ export default function SizeGuideModal({ open, onClose }: { open: boolean; onClo
         {/* Wrist slider */}
         <div style={{ padding: "20px", background: "var(--dark2)", border: "1px solid var(--dark3)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", alignItems: "baseline" }}>
-            <span style={{ fontSize: ".55rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase" }}>Your Wrist Circumference</span>
+            <span style={{ fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase" }}>Your Wrist Circumference</span>
             <span style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", color: "var(--gold)" }}>{wristCircumference} cm</span>
           </div>
           <input
@@ -88,7 +88,7 @@ export default function SizeGuideModal({ open, onClose }: { open: boolean; onClo
             onChange={(e) => setWristCircumference(parseFloat(e.target.value))}
             style={{ width: "100%", accentColor: "var(--gold)", cursor: "pointer" }}
           />
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".45rem", color: "var(--muted)", marginTop: "6px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px", color: "var(--muted)", marginTop: "6px" }}>
             <span>13 cm (5.1 in)</span>
             <span>17.5 cm (6.9 in)</span>
             <span>22 cm (8.7 in)</span>
@@ -97,24 +97,24 @@ export default function SizeGuideModal({ open, onClose }: { open: boolean; onClo
 
         {/* Dynamic Recommendation Card */}
         <div style={{ padding: "20px", background: "var(--dark3)", borderLeft: "3px solid var(--gold)" }}>
-          <div style={{ fontSize: ".5rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "4px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "4px" }}>
             Recommended Case Diameter
           </div>
           <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", color: "var(--white)", marginBottom: "4px" }}>
             {rec.caseSize}
           </div>
-          <div style={{ fontSize: ".6rem", letterSpacing: ".15em", color: "var(--text)", textTransform: "uppercase", marginBottom: "8px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".15em", color: "var(--text)", textTransform: "uppercase", marginBottom: "8px" }}>
             {rec.fit}
           </div>
-          <p style={{ fontSize: ".65rem", lineHeight: 1.8, color: "var(--muted)" }}>{rec.note}</p>
+          <p style={{ fontSize: "14px", lineHeight: 1.8, color: "var(--muted)" }}>{rec.note}</p>
         </div>
 
         {/* Reference Table */}
         <div style={{ marginTop: "12px" }}>
-          <div style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "16px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "16px" }}>
             Watch Diameter Reference Chart
           </div>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: ".6rem" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "14px" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid var(--dark4)", textAlign: "left", color: "var(--gold-dk)" }}>
                 <th style={{ padding: "10px 0", letterSpacing: ".15em" }}>Case Size</th>

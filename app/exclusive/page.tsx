@@ -14,7 +14,7 @@ function ExclusiveContent() {
       <Nav />
 
       <section style={{ padding: "160px 24px 100px", maxWidth: "1200px", margin: "0 auto", textAlign: "center" }}>
-        <div style={{ fontSize: ".55rem", letterSpacing: ".45em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
+        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
           PRIVATE VAULT
         </div>
         <h1
@@ -28,7 +28,7 @@ function ExclusiveContent() {
         >
           Exclusive <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Atelier</em>
         </h1>
-        <p style={{ fontSize: ".8rem", letterSpacing: ".08em", color: "var(--muted)", maxWidth: "600px", margin: "0 auto 40px", lineHeight: 2 }}>
+        <p style={{ fontSize: "15px", letterSpacing: ".08em", color: "var(--muted)", maxWidth: "600px", margin: "0 auto 40px", lineHeight: 2 }}>
           Unreleased references, rare dials, and private collector commissions.
         </p>
 
@@ -46,7 +46,7 @@ function ExclusiveContent() {
             <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", color: "var(--white)", marginBottom: "16px" }}>
               Inner Circle Enlistment Required
             </h2>
-            <p style={{ fontSize: ".75rem", color: "var(--muted)", lineHeight: 1.8, marginBottom: "28px" }}>
+            <p style={{ fontSize: "15px", color: "var(--muted)", lineHeight: 1.8, marginBottom: "28px" }}>
               To view private vault pieces and reserve limited releases, please complete your complimentary enlistment.
             </p>
             <Link href="/inner-circle" className="btn-primary" style={{ display: "inline-flex" }}>
@@ -56,31 +56,31 @@ function ExclusiveContent() {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "32px", textAlign: "left" }}>
             <div style={{ background: "var(--dark2)", border: "1px solid var(--gold-border)", padding: "32px" }}>
-              <div style={{ fontSize: ".55rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+              <div style={{ fontSize: "14px", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
                 Vault Piece 001
               </div>
               <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", color: "var(--white)", marginBottom: "12px" }}>
                 The Obsidian Tourbillon Concept
               </h3>
-              <p style={{ fontSize: ".75rem", color: "var(--muted)", lineHeight: 1.8, marginBottom: "24px" }}>
+              <p style={{ fontSize: "15px", color: "var(--muted)", lineHeight: 1.8, marginBottom: "24px" }}>
                 Hand-finished forged carbon case with 24k gold leaf rotor. Strictly limited to 5 bespoke allocations.
               </p>
-              <Link href="/customize" className="btn-primary" style={{ display: "inline-flex", fontSize: ".65rem" }}>
+              <Link href="/customize" className="btn-primary" style={{ display: "inline-flex", fontSize: "14px" }}>
                 REQUEST COMMISSION
               </Link>
             </div>
 
             <div style={{ background: "var(--dark2)", border: "1px solid var(--gold-border)", padding: "32px" }}>
-              <div style={{ fontSize: ".55rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+              <div style={{ fontSize: "14px", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
                 Vault Piece 002
               </div>
               <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.4rem", color: "var(--white)", marginBottom: "12px" }}>
                 Royal Damascus Heritage Edition
               </h3>
-              <p style={{ fontSize: ".75rem", color: "var(--muted)", lineHeight: 1.8, marginBottom: "24px" }}>
+              <p style={{ fontSize: "15px", color: "var(--muted)", lineHeight: 1.8, marginBottom: "24px" }}>
                 Pattern-welded steel dial paired with hand-stitched Nigerian ostrich leather strap.
               </p>
-              <Link href="/collection" className="btn-primary" style={{ display: "inline-flex", fontSize: ".65rem" }}>
+              <Link href="/collection" className="btn-primary" style={{ display: "inline-flex", fontSize: "14px" }}>
                 VIEW ALLOCATIONS
               </Link>
             </div>

@@ -208,7 +208,7 @@ export default function MobileNav() {
           }}
         >
           {user ? (
-            <div style={{ fontSize: ".55rem", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase" }}>
+            <div style={{ fontSize: "13px", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase" }}>
               Signed in as {user.name || user.email}
             </div>
           ) : (
@@ -221,8 +221,8 @@ export default function MobileNav() {
                 background: "none",
                 border: "none",
                 color: "var(--gold)",
-                fontSize: ".55rem",
-                letterSpacing: ".2em",
+                fontSize: "13px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 cursor: "pointer",
               }}
@@ -236,8 +236,8 @@ export default function MobileNav() {
         <nav style={{ padding: "20px 24px", flex: 1, position: "static", background: "transparent", display: "block", width: "100%" }}>
           <div
             style={{
-              fontSize: ".45rem",
-              letterSpacing: ".4em",
+              fontSize: "13px",
+              letterSpacing: ".12em",
               color: "var(--gold-dk)",
               textTransform: "uppercase",
               marginBottom: "14px",
@@ -278,13 +278,13 @@ export default function MobileNav() {
                             display: "flex",
                             alignItems: "center",
                             gap: "4px",
-                            fontSize: ".52rem",
+                            fontSize: "13px",
                             letterSpacing: ".1em",
                             textTransform: "uppercase",
                           }}
                         >
                           Categories
-                          <span style={{ fontSize: ".45rem", transform: categoriesOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
+                          <span style={{ fontSize: "13px", transform: categoriesOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
                             ▼
                           </span>
                         </button>
@@ -302,7 +302,7 @@ export default function MobileNav() {
                         >
                           {/* By Gender */}
                           <div>
-                            <div style={{ fontSize: ".62rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "6px", fontWeight: 600 }}>
+                            <div style={{ fontSize: "13px", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "6px", fontWeight: 600 }}>
                               By Gender
                             </div>
                             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "6px" }}>
@@ -316,7 +316,7 @@ export default function MobileNav() {
                                   href={`/watches/category/${cat.slug}`}
                                   onClick={() => setOpen(false)}
                                   style={{
-                                    fontSize: ".75rem",
+                                    fontSize: "14px",
                                     color: "var(--white)",
                                     textDecoration: "none",
                                     padding: "10px 12px",
@@ -329,7 +329,7 @@ export default function MobileNav() {
                                     minHeight: "42px",
                                   }}
                                 >
-                                  <span style={{ color: "var(--gold)", fontSize: ".85rem" }}>{cat.icon}</span>
+                                  <span style={{ color: "var(--gold)", fontSize: "15px" }}>{cat.icon}</span>
                                   <span style={{ fontWeight: 500 }}>{cat.label}</span>
                                 </Link>
                               ))}
@@ -338,7 +338,7 @@ export default function MobileNav() {
 
                           {/* By Movement */}
                           <div>
-                            <div style={{ fontSize: ".62rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "6px", fontWeight: 600 }}>
+                            <div style={{ fontSize: "13px", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "6px", fontWeight: 600 }}>
                               By Movement
                             </div>
                             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "6px" }}>
@@ -352,7 +352,7 @@ export default function MobileNav() {
                                   href={`/watches/category/${cat.slug}`}
                                   onClick={() => setOpen(false)}
                                   style={{
-                                    fontSize: ".75rem",
+                                    fontSize: "14px",
                                     color: "var(--white)",
                                     textDecoration: "none",
                                     padding: "10px 12px",
@@ -365,7 +365,7 @@ export default function MobileNav() {
                                     minHeight: "42px",
                                   }}
                                 >
-                                  <span style={{ color: "var(--gold)", fontSize: ".85rem" }}>{cat.icon}</span>
+                                  <span style={{ color: "var(--gold)", fontSize: "15px" }}>{cat.icon}</span>
                                   <span style={{ fontWeight: 500 }}>{cat.label}</span>
                                 </Link>
                               ))}
@@ -374,7 +374,7 @@ export default function MobileNav() {
 
                           {/* Curations */}
                           <div>
-                            <div style={{ fontSize: ".62rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "6px", fontWeight: 600 }}>
+                            <div style={{ fontSize: "13px", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "6px", fontWeight: 600 }}>
                               Curations & Styles
                             </div>
                             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "6px" }}>
@@ -389,7 +389,7 @@ export default function MobileNav() {
                                   href={`/watches/category/${cat.slug}`}
                                   onClick={() => setOpen(false)}
                                   style={{
-                                    fontSize: ".75rem",
+                                    fontSize: "14px",
                                     color: "var(--white)",
                                     textDecoration: "none",
                                     padding: "10px 12px",
@@ -402,7 +402,7 @@ export default function MobileNav() {
                                     minHeight: "42px",
                                   }}
                                 >
-                                  <span style={{ color: "var(--gold)", fontSize: ".85rem" }}>{cat.icon}</span>
+                                  <span style={{ color: "var(--gold)", fontSize: "15px" }}>{cat.icon}</span>
                                   <span style={{ fontWeight: 500 }}>{cat.label}</span>
                                 </Link>
                               ))}
@@ -428,7 +428,7 @@ export default function MobileNav() {
                             gap: "6px",
                           }}
                         >
-                          <span style={{ fontSize: ".7rem" }}>✦</span>
+                          <span style={{ fontSize: "14px" }}>✦</span>
                           <span>Premium Collection</span>
                         </Link>
                         <button
@@ -443,13 +443,13 @@ export default function MobileNav() {
                             display: "flex",
                             alignItems: "center",
                             gap: "4px",
-                            fontSize: ".52rem",
+                            fontSize: "13px",
                             letterSpacing: ".1em",
                             textTransform: "uppercase",
                           }}
                         >
                           Editions
-                          <span style={{ fontSize: ".45rem", transform: premiumOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
+                          <span style={{ fontSize: "13px", transform: premiumOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
                             ▼
                           </span>
                         </button>
@@ -469,7 +469,7 @@ export default function MobileNav() {
                             href="/premium"
                             onClick={() => setOpen(false)}
                             style={{
-                              fontSize: ".55rem",
+                              fontSize: "13px",
                               letterSpacing: ".15em",
                               textTransform: "uppercase",
                               color: "var(--gold)",
@@ -492,7 +492,7 @@ export default function MobileNav() {
                               href={`/premium/${sub.slug}`}
                               onClick={() => setOpen(false)}
                               style={{
-                                fontSize: ".55rem",
+                                fontSize: "13px",
                                 letterSpacing: ".1em",
                                 textTransform: "uppercase",
                                 color: "var(--muted)",
@@ -560,7 +560,7 @@ export default function MobileNav() {
               background: "var(--gold)",
               color: "var(--black)",
               border: "none",
-              fontSize: ".58rem",
+              fontSize: "13px",
               letterSpacing: ".28em",
               textTransform: "uppercase",
               fontWeight: 600,
@@ -583,8 +583,8 @@ export default function MobileNav() {
         <div style={{ padding: "18px 24px", borderTop: "1px solid var(--dark3)" }}>
           <div
             style={{
-              fontSize: ".45rem",
-              letterSpacing: ".4em",
+              fontSize: "13px",
+              letterSpacing: ".12em",
               color: "var(--gold-dk)",
               textTransform: "uppercase",
               marginBottom: "10px",

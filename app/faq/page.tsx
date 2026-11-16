@@ -63,13 +63,13 @@ export default function FAQPage() {
 
       {/* Header */}
       <div style={{ padding: "160px 24px 60px", maxWidth: "1200px", margin: "0 auto", textAlign: "center" }}>
-        <div style={{ fontSize: ".52rem", letterSpacing: ".45em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
+        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
           Knowledge Base & Client Guide
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.8rem, 6vw, 4.5rem)", fontWeight: 300, color: "var(--white)", marginBottom: "20px" }}>
           Frequently Asked <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Questions</em>
         </h1>
-        <p style={{ fontSize: ".7rem", letterSpacing: ".1em", lineHeight: 2.2, color: "var(--text)", maxWidth: "600px", margin: "0 auto" }}>
+        <p style={{ fontSize: "15px", letterSpacing: ".1em", lineHeight: 2.2, color: "var(--text)", maxWidth: "600px", margin: "0 auto" }}>
           Find answers to common questions about purchasing, shipping, horological warranties, and custom timepiece builds.
         </p>
       </div>
@@ -87,7 +87,7 @@ export default function FAQPage() {
                 background: activeCategory === cat ? "var(--gold)" : "var(--dark2)",
                 border: activeCategory === cat ? "1px solid var(--gold)" : "1px solid var(--dark3)",
                 color: activeCategory === cat ? "var(--black)" : "var(--text)",
-                fontSize: ".55rem",
+                fontSize: "14px",
                 letterSpacing: ".2em",
                 textTransform: "uppercase",
                 fontWeight: activeCategory === cat ? 600 : 400,
@@ -128,7 +128,7 @@ export default function FAQPage() {
 
               {openIdx === i && (
                 <div style={{ padding: "0 24px 24px", borderTop: "1px solid var(--dark4)", paddingTop: "16px" }}>
-                  <p style={{ fontSize: ".7rem", lineHeight: 2.2, color: "var(--text)" }}>{faq.a}</p>
+                  <p style={{ fontSize: "15px", lineHeight: 2.2, color: "var(--text)" }}>{faq.a}</p>
                 </div>
               )}
             </div>
@@ -140,7 +140,7 @@ export default function FAQPage() {
           <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", marginBottom: "12px", fontWeight: 300 }}>
             Have a Specific Horological Inquiry?
           </h3>
-          <p style={{ fontSize: ".65rem", color: "var(--muted)", marginBottom: "24px" }}>
+          <p style={{ fontSize: "14px", color: "var(--muted)", marginBottom: "24px" }}>
             Our concierge team is standing by to answer custom requests or technical watch specifications.
           </p>
           <Link href="/contact" className="btn-primary">

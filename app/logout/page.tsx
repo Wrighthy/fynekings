@@ -39,7 +39,7 @@ export default function LogoutPage() {
       >
         Signing out of FYNEKINGS...
       </div>
-      <div style={{ fontSize: ".7rem", letterSpacing: ".1em", color: "var(--muted)" }}>
+      <div style={{ fontSize: "15px", letterSpacing: ".1em", color: "var(--muted)" }}>
         Securing client session...
       </div>
     </div>

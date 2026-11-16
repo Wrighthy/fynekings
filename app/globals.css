@@ -28,8 +28,8 @@ html {
   --gold-dim: rgba(196, 169, 98, 0.12);
   --white: #F8F5EE;
   --text: #DDD5C7;
-  --muted: #A39B90;
-  --muted2: #787167;
+  --muted: #b8b8b8;
+  --muted2: #9e9e9e;
   --crimson: #C73838;
 }
 
@@ -131,8 +131,8 @@ body::before {
   border-bottom: 1px solid var(--dark3);
   padding: 8px 0;
   overflow: hidden;
-  font-size: .5rem;
-  letter-spacing: .4em;
+  font-size: 12px;
+  letter-spacing: .15em;
   text-transform: uppercase;
   color: var(--muted)
 }
@@ -232,8 +232,8 @@ nav.scrolled {
 }
 
 .nav-links a {
-  font-size: .55rem;
-  letter-spacing: .28em;
+  font-size: 14px;
+  letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--muted);
   text-decoration: none;
@@ -271,7 +271,7 @@ nav.scrolled {
 }
 
 .lang-switch {
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .3em;
   color: var(--muted);
   text-transform: uppercase
@@ -282,8 +282,8 @@ nav.scrolled {
 }
 
 .nav-btn {
-  font-size: .55rem;
-  letter-spacing: .25em;
+  font-size: 13px;
+  letter-spacing: .12em;
   text-transform: uppercase;
   padding: 11px 22px;
   border: 1px solid var(--gold-dk);
@@ -304,7 +304,7 @@ nav.scrolled {
 }
 
 .cart-pill {
-  font-size: .5rem;
+  font-size: 13px;
   background: var(--gold);
   color: var(--black);
   padding: 2px 6px;
@@ -434,7 +434,7 @@ nav.scrolled {
 }
 
 .hero-meta-text {
-  font-size: .65rem;
+  font-size: 15px;
   letter-spacing: .3em;
   text-transform: uppercase;
   color: var(--gold);
@@ -485,8 +485,8 @@ nav.scrolled {
 }
 
 .btn-primary {
-  font-size: .58rem;
-  letter-spacing: .3em;
+  font-size: 15px;
+  letter-spacing: .12em;
   text-transform: uppercase;
   padding: 18px 44px;
   background: var(--gold);
@@ -533,8 +533,8 @@ nav.scrolled {
 }
 
 .btn-outline {
-  font-size: .58rem;
-  letter-spacing: .3em;
+  font-size: 15px;
+  letter-spacing: .12em;
   text-transform: uppercase;
   padding: 18px 44px;
   border: 1px solid var(--gold-dk);
@@ -580,7 +580,7 @@ nav.scrolled {
 }
 
 .trust-item .label {
-  font-size: .65rem;
+  font-size: 15px;
   letter-spacing: .15em;
   text-transform: uppercase;
   color: var(--muted);
@@ -660,7 +660,7 @@ nav.scrolled {
 
 .hero-spec {
   position: absolute;
-  font-size: .5rem;
+  font-size: 14px;
   letter-spacing: .3em;
   color: var(--gold-dk);
   text-transform: uppercase;
@@ -710,7 +710,7 @@ nav.scrolled {
 }
 
 .scroll-hint span {
-  font-size: .48rem;
+  font-size: 13px;
   letter-spacing: .4em;
   color: var(--muted);
   text-transform: uppercase
@@ -749,8 +749,8 @@ section {
 }
 
 .sec-tag {
-  font-size: .62rem;
-  letter-spacing: .35em;
+  font-size: 14px;
+  letter-spacing: .15em;
   text-transform: uppercase;
   color: var(--gold-lt);
   margin-bottom: 18px;
@@ -783,7 +783,8 @@ section {
 }
 
 .sec-desc {
-  font-size: clamp(0.88rem, 1.6vw, 1rem);
+  font-size: 17px;
+  line-height: 1.7;
   letter-spacing: .025em;
   line-height: 1.75;
   color: var(--text);
@@ -830,7 +831,7 @@ section {
 .brand-item::after {
   content: '✦';
   color: var(--gold-dk);
-  font-size: .8rem;
+  font-size: 15px;
   font-style: normal
 }
 
@@ -851,8 +852,8 @@ section {
 }
 
 .filter-btn {
-  font-size: .5rem;
-  letter-spacing: .25em;
+  font-size: 14px;
+  letter-spacing: .12em;
   text-transform: uppercase;
   padding: 10px 18px;
   border: 1px solid var(--dark4);
@@ -961,7 +962,7 @@ section {
 }
 
 .prod-overlay-inner span {
-  font-size: .55rem;
+  font-size: 14px;
   letter-spacing: .35em;
   text-transform: uppercase;
   color: var(--gold);
@@ -977,7 +978,7 @@ section {
 }
 
 .prod-tag {
-  font-size: .58rem;
+  font-size: 13px;
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--gold-lt);
@@ -996,7 +997,7 @@ section {
 }
 
 .prod-series {
-  font-size: .68rem;
+  font-size: 14px;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--muted);
@@ -1010,7 +1011,7 @@ section {
 }
 
 .prod-price {
-  font-size: .95rem;
+  font-size: 15px;
   font-weight: 400;
   letter-spacing: .03em;
   color: var(--gold);
@@ -1018,14 +1019,14 @@ section {
 }
 
 .prod-price small {
-  font-size: .65rem;
+  font-size: 13px;
   color: var(--muted);
   font-family: 'Raleway', sans-serif;
   letter-spacing: .1em
 }
 
 .prod-cta {
-  font-size: .58rem;
+  font-size: 14px;
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--muted);
@@ -1040,7 +1041,7 @@ section {
   position: absolute;
   top: 18px;
   left: 18px;
-  font-size: .45rem;
+  font-size: 12px;
   letter-spacing: .25em;
   text-transform: uppercase;
   padding: 5px 11px;
@@ -1054,7 +1055,7 @@ section {
   position: absolute;
   top: 18px;
   left: 18px;
-  font-size: .45rem;
+  font-size: 12px;
   letter-spacing: .25em;
   text-transform: uppercase;
   padding: 5px 11px;
@@ -1071,7 +1072,7 @@ section {
 }
 
 .view-all {
-  font-size: .55rem;
+  font-size: 14px;
   letter-spacing: .35em;
   text-transform: uppercase;
   color: var(--gold);
@@ -1195,7 +1196,7 @@ section {
 
 .stage-spec {
   position: absolute;
-  font-size: .45rem;
+  font-size: 13px;
   letter-spacing: .3em;
   color: var(--gold-dk);
   text-transform: uppercase
@@ -1222,7 +1223,7 @@ section {
 }
 
 .ctrl-label {
-  font-size: .55rem;
+  font-size: 14px;
   letter-spacing: .35em;
   text-transform: uppercase;
   color: var(--gold);
@@ -1234,7 +1235,7 @@ section {
 
 .ctrl-label span:last-child {
   color: var(--muted);
-  font-size: .5rem
+  font-size: 13px
 }
 
 .swatches {
@@ -1279,7 +1280,7 @@ section {
   height: 14px;
   background: var(--gold);
   color: var(--black);
-  font-size: .5rem;
+  font-size: 13px;
   font-weight: 700;
   border-radius: 50%;
   display: flex;
@@ -1294,7 +1295,7 @@ section {
 }
 
 .style-btn {
-  font-size: .55rem;
+  font-size: 14px;
   letter-spacing: .22em;
   text-transform: uppercase;
   padding: 12px 20px;
@@ -1318,7 +1319,7 @@ section {
 
 .style-btn small {
   color: var(--gold-dk);
-  font-size: .45rem;
+  font-size: 13px;
   letter-spacing: .15em
 }
 
@@ -1355,7 +1356,7 @@ section {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  font-size: .62rem;
+  font-size: 14px;
   letter-spacing: .1em
 }
 
@@ -1369,7 +1370,7 @@ section {
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: .18em;
-  font-size: .55rem
+  font-size: 14px
 }
 
 .config-val {
@@ -1378,7 +1379,7 @@ section {
 
 .config-price {
   color: var(--gold);
-  font-size: .95rem;
+  font-size: 15px;
   font-family: 'Playfair Display', serif
 }
 
@@ -1386,7 +1387,7 @@ section {
   width: 100%;
   margin-top: 24px;
   padding: 18px;
-  font-size: .6rem;
+  font-size: 14px;
   letter-spacing: .32em;
   text-transform: uppercase;
   background: var(--gold);
@@ -1466,7 +1467,7 @@ section {
 }
 
 .edition-label {
-  font-size: .62rem;
+  font-size: 14px;
   letter-spacing: .3em;
   text-transform: uppercase;
   color: #E04848;
@@ -1474,7 +1475,7 @@ section {
 }
 
 .edition-mini-meta {
-  font-size: .68rem;
+  font-size: 14px;
   letter-spacing: .15em;
   text-transform: uppercase;
   color: var(--muted);
@@ -1555,7 +1556,7 @@ section {
 }
 
 .timer-label {
-  font-size: .62rem;
+  font-size: 14px;
   letter-spacing: .3em;
   text-transform: uppercase;
   color: var(--gold-lt);
@@ -1588,7 +1589,7 @@ section {
 .stock-label {
   display: flex;
   justify-content: space-between;
-  font-size: .68rem;
+  font-size: 14px;
   letter-spacing: .15em;
   text-transform: uppercase;
   color: var(--text);
@@ -1638,7 +1639,7 @@ section {
   display: flex;
   justify-content: space-between;
   margin-top: 6px;
-  font-size: .58rem;
+  font-size: 13px;
   letter-spacing: .12em;
   color: var(--muted);
   text-transform: uppercase
@@ -1664,7 +1665,7 @@ section {
 }
 
 .limited-price-meta {
-  font-size: .65rem;
+  font-size: 14px;
   letter-spacing: .15em;
   color: var(--muted);
   text-transform: uppercase;
@@ -1683,7 +1684,7 @@ section {
 .payment-icon {
   padding: 8px 14px;
   border: 1px solid var(--dark4);
-  font-size: .52rem;
+  font-size: 13px;
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--muted);
@@ -1840,7 +1841,7 @@ section {
 }
 
 .ar-scan-label {
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .32em;
   text-transform: uppercase;
   color: rgba(196, 169, 98, .7)
@@ -1868,7 +1869,7 @@ section {
   justify-content: space-between;
   align-items: center;
   padding: 14px 24px;
-  font-size: .45rem;
+  font-size: 13px;
   letter-spacing: .2em;
   color: rgba(196, 169, 98, .6);
   text-transform: uppercase;
@@ -1883,7 +1884,7 @@ section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: .42rem;
+  font-size: 13px;
   letter-spacing: .25em;
   color: rgba(196, 169, 98, .5);
   text-transform: uppercase;
@@ -1950,7 +1951,7 @@ section {
   backdrop-filter: blur(6px);
   border: 1px solid var(--gold-dk);
   padding: 10px 16px;
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .25em;
   color: var(--gold);
   text-transform: uppercase;
@@ -2011,14 +2012,14 @@ section {
   align-items: center;
   justify-content: center;
   font-family: 'Playfair Display', serif;
-  font-size: .85rem;
+  font-size: 15px;
   color: var(--gold);
   flex-shrink: 0;
   font-style: italic
 }
 
 .ar-step h4 {
-  font-size: .85rem;
+  font-size: 15px;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--white);
@@ -2027,7 +2028,7 @@ section {
 }
 
 .ar-step p {
-  font-size: .85rem;
+  font-size: 15px;
   line-height: 1.7;
   color: var(--text);
   letter-spacing: .02em
@@ -2038,7 +2039,7 @@ section {
   align-items: center;
   gap: 14px;
   margin-top: 40px;
-  font-size: .6rem;
+  font-size: 14px;
   letter-spacing: .3em;
   text-transform: uppercase;
   padding: 18px 40px;
@@ -2056,7 +2057,7 @@ section {
 }
 
 .ar-8w-badge {
-  font-size: .45rem;
+  font-size: 13px;
   letter-spacing: .2em;
   padding: 5px 10px;
   background: var(--gold-dim);
@@ -2066,7 +2067,7 @@ section {
 }
 
 .ar-compat {
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .2em;
   color: var(--muted);
   margin-top: 18px;
@@ -2155,7 +2156,7 @@ section {
 }
 
 .heritage-stat-label {
-  font-size: .62rem;
+  font-size: 14px;
   letter-spacing: .2em;
   color: var(--muted);
   text-transform: uppercase;
@@ -2187,7 +2188,7 @@ section {
 }
 
 .heritage-author {
-  font-size: .68rem;
+  font-size: 14px;
   letter-spacing: .2em;
   color: var(--muted);
   text-transform: uppercase;
@@ -2253,7 +2254,7 @@ section {
 }
 
 .rating-text {
-  font-size: .68rem;
+  font-size: 14px;
   letter-spacing: .15em;
   text-transform: uppercase;
   color: var(--muted)
@@ -2304,7 +2305,7 @@ section {
 }
 
 .review-author {
-  font-size: .72rem;
+  font-size: 15px;
   letter-spacing: .18em;
   text-transform: uppercase;
   color: var(--white);
@@ -2312,7 +2313,7 @@ section {
 }
 
 .review-location {
-  font-size: .62rem;
+  font-size: 13px;
   letter-spacing: .15em;
   color: var(--muted);
   margin-top: 4px;
@@ -2320,7 +2321,7 @@ section {
 }
 
 .review-watch {
-  font-size: .62rem;
+  font-size: 14px;
   letter-spacing: .15em;
   color: var(--gold);
   text-align: right;
@@ -2328,7 +2329,7 @@ section {
 }
 
 .review-verified {
-  font-size: .55rem;
+  font-size: 12px;
   letter-spacing: .15em;
   color: var(--gold-lt);
   margin-top: 4px;
@@ -2399,7 +2400,7 @@ section {
 
 .edu-num {
   font-family: 'Playfair Display', serif;
-  font-size: .7rem;
+  font-size: 14px;
   color: var(--gold-dk);
   letter-spacing: .3em;
   margin-bottom: 24px;
@@ -2424,7 +2425,7 @@ section {
 }
 
 .edu-card p {
-  font-size: .85rem;
+  font-size: 15px;
   letter-spacing: .02em;
   line-height: 1.75;
   color: var(--text);
@@ -2435,7 +2436,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: .62rem;
+  font-size: 14px;
   letter-spacing: .25em;
   text-transform: uppercase;
   color: var(--gold);
@@ -2531,7 +2532,7 @@ section {
 }
 
 .club-label {
-  font-size: .5rem;
+  font-size: 14px;
   letter-spacing: .4em;
   text-transform: uppercase;
   color: var(--gold)
@@ -2546,7 +2547,7 @@ section {
 }
 
 .perk {
-  font-size: .55rem;
+  font-size: 14px;
   letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--text);
@@ -2580,7 +2581,7 @@ section {
   border: none;
   color: var(--white);
   font-family: 'Raleway', sans-serif;
-  font-size: .7rem;
+  font-size: 15px;
   letter-spacing: .1em;
   outline: none;
   cursor: none
@@ -2596,7 +2597,7 @@ section {
   color: var(--black);
   border: none;
   font-family: 'Raleway', sans-serif;
-  font-size: .55rem;
+  font-size: 14px;
   letter-spacing: .32em;
   text-transform: uppercase;
   font-weight: 600;
@@ -2610,7 +2611,7 @@ section {
 }
 
 .newsletter-fineprint {
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .18em;
   color: var(--muted);
   margin-top: 18px;
@@ -2662,7 +2663,7 @@ section {
 }
 
 .enlisted-title {
-  font-size: .6rem;
+  font-size: 14px;
   letter-spacing: .3em;
   text-transform: uppercase;
   color: var(--gold);
@@ -2670,7 +2671,7 @@ section {
 }
 
 .enlisted-sub {
-  font-size: .55rem;
+  font-size: 14px;
   letter-spacing: .1em;
   color: var(--muted);
   text-transform: uppercase;
@@ -2702,7 +2703,7 @@ footer {
 }
 
 .footer-tag {
-  font-size: .85rem;
+  font-size: 15px;
   letter-spacing: .03em;
   line-height: 1.75;
   color: var(--text);
@@ -2711,7 +2712,7 @@ footer {
 }
 
 .footer-locale {
-  font-size: .62rem;
+  font-size: 14px;
   letter-spacing: .25em;
   color: var(--gold);
   text-transform: uppercase;
@@ -2728,7 +2729,7 @@ footer {
 }
 
 .footer-col h5 {
-  font-size: .72rem;
+  font-size: 15px;
   letter-spacing: .25em;
   text-transform: uppercase;
   color: var(--gold);
@@ -2745,7 +2746,7 @@ footer {
 }
 
 .footer-col ul a {
-  font-size: .82rem;
+  font-size: 14px;
   letter-spacing: .05em;
   color: var(--text);
   text-decoration: none;
@@ -2772,7 +2773,7 @@ footer {
 }
 
 .footer-copy {
-  font-size: .68rem;
+  font-size: 14px;
   letter-spacing: .12em;
   color: var(--muted);
   text-transform: uppercase
@@ -2854,7 +2855,7 @@ footer {
 }
 
 .cart-title-meta {
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .25em;
   color: var(--gold-dk);
   text-transform: uppercase;
@@ -2911,13 +2912,13 @@ footer {
 
 .cart-item-name {
   font-family: 'Playfair Display', serif;
-  font-size: .95rem;
+  font-size: 15px;
   color: var(--white);
   margin-bottom: 4px
 }
 
 .cart-item-config {
-  font-size: .55rem;
+  font-size: 14px;
   letter-spacing: .1em;
   color: var(--muted);
   line-height: 2;
@@ -2926,13 +2927,13 @@ footer {
 }
 
 .cart-item-price {
-  font-size: .75rem;
+  font-size: 15px;
   color: var(--gold);
   font-family: 'Playfair Display', serif
 }
 
 .cart-item-remove {
-  font-size: .45rem;
+  font-size: 13px;
   letter-spacing: .25em;
   color: var(--muted);
   text-transform: uppercase;
@@ -2953,7 +2954,7 @@ footer {
   text-align: center;
   padding: 60px 0;
   color: var(--muted);
-  font-size: .62rem;
+  font-size: 15px;
   letter-spacing: .2em;
   text-transform: uppercase
 }
@@ -2973,13 +2974,13 @@ footer {
   display: flex;
   justify-content: space-between;
   margin-bottom: 12px;
-  font-size: .62rem;
+  font-size: 15px;
   letter-spacing: .1em
 }
 
 .cart-row.muted {
   color: var(--muted);
-  font-size: .55rem
+  font-size: 14px
 }
 
 .cart-row.total {
@@ -2987,7 +2988,7 @@ footer {
   border-top: 1px solid var(--dark4);
   color: var(--white);
   margin-bottom: 24px;
-  font-size: .75rem
+  font-size: 16px
 }
 
 .cart-row.total span:last-child {
@@ -3003,7 +3004,7 @@ footer {
   color: var(--black);
   border: none;
   font-family: 'Raleway', sans-serif;
-  font-size: .6rem;
+  font-size: 15px;
   letter-spacing: .32em;
   text-transform: uppercase;
   font-weight: 600;
@@ -3025,7 +3026,7 @@ footer {
   gap: 10px;
   margin-top: 14px;
   flex-wrap: wrap;
-  font-size: .45rem;
+  font-size: 12px;
   letter-spacing: .2em;
   color: var(--muted);
   text-transform: uppercase
@@ -3056,7 +3057,7 @@ footer {
   background: var(--dark2);
   border: 1px solid var(--gold);
   padding: 16px 32px;
-  font-size: .6rem;
+  font-size: 14px;
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--gold);
@@ -3159,7 +3160,7 @@ footer {
   }
 
   .ticker {
-    font-size: .45rem
+    font-size: 12px
   }
 
   #hero {
@@ -3281,7 +3282,7 @@ footer {
   }
 
   .footer-link-btn {
-    font-size: .6rem;
+    font-size: 14px;
     letter-spacing: .12em;
     color: var(--text);
     transition: color .3s, padding-left .3s;
@@ -3358,8 +3359,8 @@ footer {
   }
 
   .nav-links a {
-    font-size: .48rem;
-    letter-spacing: .15em;
+    font-size: 14px;
+    letter-spacing: .12em;
   }
 
   .nav-right {
@@ -3368,14 +3369,14 @@ footer {
 
   .nav-btn {
     padding: 8px 12px;
-    font-size: .48rem;
-    letter-spacing: .15em;
+    font-size: 13px;
+    letter-spacing: .12em;
   }
 
   .nav-btn-desktop-only {
     padding: 0 8px !important;
     height: 32px !important;
-    font-size: .44rem !important;
+    font-size: 13px !important;
     letter-spacing: .15em !important;
   }
 }
@@ -3656,7 +3657,7 @@ footer {
 }
 
 .tryon-instructions p {
-  font-size: .55rem;
+  font-size: 14px;
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--muted);
@@ -3704,7 +3705,7 @@ footer {
   align-items: center;
   gap: 8px;
   font-family: 'Raleway', sans-serif;
-  font-size: .5rem;
+  font-size: 13px;
   font-weight: 400;
   letter-spacing: .25em;
   text-transform: uppercase;
@@ -3727,7 +3728,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--text);
@@ -3763,7 +3764,7 @@ footer {
 
 .tryon-fps {
   font-family: 'Raleway', sans-serif;
-  font-size: .45rem;
+  font-size: 13px;
   letter-spacing: .25em;
   text-transform: uppercase;
   color: var(--muted);
@@ -3783,7 +3784,7 @@ footer {
   flex-wrap: wrap;
   gap: 4px 12px;
   max-width: 220px;
-  font-size: .42rem;
+  font-size: 13px;
   letter-spacing: .15em;
   text-transform: uppercase;
   color: var(--muted);
@@ -3802,13 +3803,13 @@ footer {
 
 .tryon-watch-info-name {
   font-family: 'Playfair Display', serif;
-  font-size: .75rem;
+  font-size: 15px;
   font-weight: 300;
   color: var(--white);
 }
 
 .tryon-watch-info-price {
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .2em;
   color: var(--gold);
 }
@@ -3905,7 +3906,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: .45rem;
+  font-size: 13px;
   letter-spacing: .25em;
   text-transform: uppercase;
   color: var(--muted);
@@ -4020,14 +4021,14 @@ footer {
 }
 
 .tryon-loading-status {
-  font-size: .55rem;
+  font-size: 14px;
   letter-spacing: .3em;
   text-transform: uppercase;
   color: var(--text);
 }
 
 .tryon-loading-detail {
-  font-size: .45rem;
+  font-size: 13px;
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--muted);
@@ -4035,7 +4036,7 @@ footer {
 }
 
 .tryon-loading-sub {
-  font-size: .45rem;
+  font-size: 13px;
   letter-spacing: .4em;
   text-transform: uppercase;
   color: var(--muted2);
@@ -4076,7 +4077,7 @@ footer {
 }
 
 .tryon-shot-tag {
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .4em;
   text-transform: uppercase;
   color: var(--gold);
@@ -4098,7 +4099,7 @@ footer {
 
 .tryon-shot-btn {
   font-family: 'Raleway', sans-serif;
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .3em;
   text-transform: uppercase;
   padding: 14px 28px;
@@ -4154,7 +4155,7 @@ footer {
 
 .tryon-camera-error p {
   max-width: 380px;
-  font-size: .6rem;
+  font-size: 14px;
   line-height: 2.2;
   letter-spacing: .1em;
   color: var(--muted);
@@ -4162,7 +4163,7 @@ footer {
 
 .tryon-retry-btn {
   font-family: 'Raleway', sans-serif;
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .3em;
   text-transform: uppercase;
   padding: 16px 34px;
@@ -4192,7 +4193,7 @@ footer {
 }
 
 .tryon-error-tag {
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .4em;
   text-transform: uppercase;
   color: var(--gold);
@@ -4213,7 +4214,7 @@ footer {
 }
 
 .tryon-error-msg {
-  font-size: .62rem;
+  font-size: 14px;
   line-height: 2.2;
   letter-spacing: .1em;
   color: var(--muted);
@@ -4228,7 +4229,7 @@ footer {
 }
 
 .tryon-error-link {
-  font-size: .5rem;
+  font-size: 13px;
   letter-spacing: .3em;
   text-transform: uppercase;
   color: var(--gold-dk);
@@ -4302,7 +4303,7 @@ footer {
   .tryon-hud-tl { left: 14px; }
   .tryon-hud-tr { right: 14px; }
 
-  .tryon-watch-info-name { font-size: .65rem; }
+  .tryon-watch-info-name { font-size: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

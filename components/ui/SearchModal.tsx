@@ -110,10 +110,10 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
         {/* Header Bar */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <div style={{ fontSize: "0.74rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", fontWeight: 600 }}>
+            <div style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", fontWeight: 600 }}>
               Discover Timepieces
             </div>
-            <div style={{ fontSize: "0.82rem", color: "var(--muted)", marginTop: "2px" }}>
+            <div style={{ fontSize: "15px", color: "var(--muted)", marginTop: "2px" }}>
               Search across movements, series, genders, and calibers
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
                 right: "20px",
                 top: "50%",
                 transform: "translateY(-50%)",
-                fontSize: "0.75rem",
+                fontSize: "15px",
                 color: "var(--gold)",
                 letterSpacing: ".1em",
               }}
@@ -206,7 +206,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
 
         {/* Suggestion Chips */}
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
-          <span style={{ fontSize: "0.72rem", letterSpacing: ".15em", color: "var(--muted)", textTransform: "uppercase", marginRight: "4px" }}>
+          <span style={{ fontSize: "15px", letterSpacing: ".15em", color: "var(--muted)", textTransform: "uppercase", marginRight: "4px" }}>
             Suggested:
           </span>
           {SUGGESTIONS.map((tag) => (
@@ -218,7 +218,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
                 background: query === tag ? "var(--gold)" : "var(--dark2)",
                 border: query === tag ? "1px solid var(--gold)" : "1px solid var(--dark4)",
                 color: query === tag ? "var(--black)" : "var(--text)",
-                fontSize: "0.74rem",
+                fontSize: "15px",
                 letterSpacing: ".1em",
                 cursor: "pointer",
                 transition: "all .2s ease",
@@ -287,13 +287,13 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
                     )}
                   </div>
                   <div>
-                    <div style={{ fontSize: "0.7rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase", fontWeight: 600 }}>
+                    <div style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", fontWeight: 600 }}>
                       {p.series}
                     </div>
                     <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.2rem", color: "var(--white)", margin: "4px 0" }}>
                       {p.name}
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.74rem", color: "var(--muted)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "15px", color: "var(--muted)" }}>
                       <span>{p.tag}</span>
                       {isSoldOut ? (
                         <span style={{ color: "#ff6b6b", fontWeight: 600 }}>· Sold Out</span>
@@ -308,7 +308,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
                   <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.25rem", color: "var(--white)", fontWeight: 500 }}>
                     {fmt(p.price)}
                   </div>
-                  <div style={{ fontSize: "0.72rem", color: "var(--gold)", marginTop: "4px", letterSpacing: ".05em" }}>
+                  <div style={{ fontSize: "15px", color: "var(--gold)", marginTop: "4px", letterSpacing: ".05em" }}>
                     View Timepiece →
                   </div>
                 </div>
@@ -322,7 +322,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
                 padding: "60px 20px",
                 color: "var(--muted)",
                 textAlign: "center",
-                fontSize: "0.88rem",
+                fontSize: "15px",
                 background: "var(--dark2)",
                 border: "1px solid var(--dark3)",
               }}
@@ -344,7 +344,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
                   border: "1px solid var(--gold)",
                   color: "var(--gold)",
                   textDecoration: "none",
-                  fontSize: "0.76rem",
+                  fontSize: "15px",
                   letterSpacing: ".2em",
                   textTransform: "uppercase",
                   fontWeight: 600,

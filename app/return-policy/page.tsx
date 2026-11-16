@@ -8,13 +8,13 @@ export default function ReturnPolicyPage() {
     <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
       <Nav />
       <div style={{ padding: "160px 24px 80px", maxWidth: "900px", margin: "0 auto" }}>
-        <div style={{ fontSize: ".52rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px" }}>
+        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px" }}>
           Returns & Exchanges
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "3rem", fontWeight: 300, color: "var(--white)", marginBottom: "32px" }}>
           30-Day Return & Exchange Policy
         </h1>
-        <div style={{ fontSize: ".7rem", lineHeight: 2.4, color: "var(--text)", display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div style={{ fontSize: "15px", lineHeight: 2.4, color: "var(--text)", display: "flex", flexDirection: "column", gap: "24px" }}>
           <p>
             We take immense pride in our craftsmanship. If for any reason you are not completely satisfied with your standard collection timepiece, we offer a 30-day return policy.
           </p>

@@ -124,17 +124,17 @@ export default function Countdown() {
                 alignItems: "flex-end",
               }}
             >
-              <span style={{ fontSize: ".52rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase" }}>
+              <span style={{ fontSize: "13px", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase" }}>
                 Ref. {reference}
               </span>
-              <span style={{ fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase" }}>
+              <span style={{ fontSize: "13px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase" }}>
                 No. {edition?.soldCount ?? 38} / {total}
               </span>
             </div>
           </div>
         </div>
 
-        <p style={{ fontSize: ".55rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "32px" }}>Drop Closes In</p>
+        <p style={{ fontSize: "14px", letterSpacing: ".15em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "32px" }}>Drop Closes In</p>
 
         <div className="timer-grid">
           {[{ v: timer.d, l: "Days" }, { v: timer.h, l: "Hours" }, { v: timer.m, l: "Minutes" }, { v: timer.s, l: "Seconds" }].map(t => (

@@ -21,7 +21,7 @@ export default function CollectionPage() {
             justifyContent: "center",
           }}
         >
-          <p style={{ color: "var(--gold)", fontSize: ".7rem", letterSpacing: ".3em", textTransform: "uppercase" }}>
+          <p style={{ color: "var(--gold)", fontSize: "15px", letterSpacing: ".12em", textTransform: "uppercase" }}>
             Loading Collection...
           </p>
         </div>

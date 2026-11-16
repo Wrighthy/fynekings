@@ -9,7 +9,7 @@ export default function CommentsTab() {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px", marginBottom: "24px" }}>
         <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem" }}>Comment Moderation</h2>
-        <button onClick={fetchDashboardData} style={{ background: "none", border: "1px solid #333", color: "#C4A962", padding: "6px 12px", fontSize: ".5rem", textTransform: "uppercase", cursor: "pointer" }}>
+        <button onClick={fetchDashboardData} style={{ background: "none", border: "1px solid #333", color: "#C4A962", padding: "6px 12px", fontSize: "14px", textTransform: "uppercase", cursor: "pointer" }}>
           Refresh ↻
         </button>
       </div>
@@ -30,7 +30,7 @@ export default function CommentsTab() {
               background: commentFilter === f.id ? "#C4A962" : "#181818",
               color: commentFilter === f.id ? "#000" : "#888",
               border: "1px solid #2a2a2a",
-              fontSize: ".55rem",
+              fontSize: "14px",
               letterSpacing: ".15em",
               textTransform: "uppercase",
               cursor: "pointer",
@@ -49,20 +49,20 @@ export default function CommentsTab() {
             <div key={c.id} style={{ background: "#121212", border: "1px solid #222", padding: "24px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", flexWrap: "wrap", marginBottom: "12px" }}>
                 <div>
-                  <div style={{ fontSize: ".5rem", letterSpacing: ".25em", color: "#C4A962", textTransform: "uppercase", marginBottom: "4px" }}>
+                  <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "#C4A962", textTransform: "uppercase", marginBottom: "4px" }}>
                     {c.product?.name || "Deleted product"}
                   </div>
-                  <div style={{ fontSize: ".8rem", color: "#fff" }}>
-                    {c.name} <span style={{ color: "#555", fontSize: ".7rem" }}>· {c.email}</span>
+                  <div style={{ fontSize: "15px", color: "#fff" }}>
+                    {c.name} <span style={{ color: "#b8b8b8", fontSize: "15px" }}>· {c.email}</span>
                   </div>
-                  <div style={{ fontSize: ".55rem", color: "#555", letterSpacing: ".15em", marginTop: "2px" }}>
+                  <div style={{ fontSize: "14px", color: "#b8b8b8", letterSpacing: ".15em", marginTop: "2px" }}>
                     {new Date(c.createdAt).toLocaleString()}
                   </div>
                 </div>
                 <span
                   style={{
                     padding: "5px 12px",
-                    fontSize: ".5rem",
+                    fontSize: "14px",
                     letterSpacing: ".2em",
                     textTransform: "uppercase",
                     fontWeight: 600,
@@ -75,20 +75,20 @@ export default function CommentsTab() {
                 </span>
               </div>
 
-              <p style={{ fontSize: ".8rem", color: "#ccc", lineHeight: 1.8, marginBottom: "18px", whiteSpace: "pre-wrap" }}>{c.body}</p>
+              <p style={{ fontSize: "15px", color: "#ccc", lineHeight: 1.8, marginBottom: "18px", whiteSpace: "pre-wrap" }}>{c.body}</p>
 
               <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", borderTop: "1px solid #1a1a1a", paddingTop: "14px" }}>
                 {c.status !== "APPROVED" && (
-                  <button onClick={() => updateCommentStatus(c.id, "APPROVED")} style={{ background: "#C4A962", color: "#000", border: "none", padding: "8px 16px", fontSize: ".55rem", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
+                  <button onClick={() => updateCommentStatus(c.id, "APPROVED")} style={{ background: "#C4A962", color: "#000", border: "none", padding: "8px 16px", fontSize: "14px", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
                     Approve ✓
                   </button>
                 )}
                 {c.status !== "REJECTED" && (
-                  <button onClick={() => updateCommentStatus(c.id, "REJECTED")} style={{ background: "none", border: "1px solid #ff6b6b", color: "#ff6b6b", padding: "8px 16px", fontSize: ".55rem", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
+                  <button onClick={() => updateCommentStatus(c.id, "REJECTED")} style={{ background: "none", border: "1px solid #ff6b6b", color: "#ff6b6b", padding: "8px 16px", fontSize: "14px", letterSpacing: ".15em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}>
                     Reject ✕
                   </button>
                 )}
-                <button onClick={() => handleDeleteComment(c.id)} style={{ background: "none", border: "none", color: "#ff6b6b", fontSize: ".55rem", letterSpacing: ".15em", textTransform: "uppercase", cursor: "pointer", marginLeft: "auto" }}>
+                <button onClick={() => handleDeleteComment(c.id)} style={{ background: "none", border: "none", color: "#ff6b6b", fontSize: "14px", letterSpacing: ".15em", textTransform: "uppercase", cursor: "pointer", marginLeft: "auto" }}>
                   Delete 🗑
                 </button>
               </div>
@@ -96,7 +96,7 @@ export default function CommentsTab() {
           ))}
 
         {comments.filter((c) => commentFilter === "ALL" || c.status === commentFilter).length === 0 && (
-          <div style={{ background: "#121212", border: "1px solid #222", padding: "40px", textAlign: "center", color: "#555", fontSize: ".7rem", letterSpacing: ".2em", textTransform: "uppercase" }}>
+          <div style={{ background: "#121212", border: "1px solid #222", padding: "40px", textAlign: "center", color: "#b8b8b8", fontSize: "15px", letterSpacing: ".2em", textTransform: "uppercase" }}>
             No {commentFilter === "ALL" ? "" : commentFilter.toLowerCase() + " "}comments
           </div>
         )}

@@ -25,7 +25,7 @@ export default function Heritage() {
                   <line x1="100" y1="100" x2="80" y2="100" stroke="#F4EFE4" strokeWidth=".5"/>
                   <line x1="100" y1="100" x2="120" y2="100" stroke="#F4EFE4" strokeWidth=".5"/>
                 </svg>
-                <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: ".75rem", color: "var(--muted)", textAlign: "center", marginTop: "20px" }}>
+                <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "15px", color: "var(--muted)", textAlign: "center", marginTop: "20px" }}>
                   Caliber F-2401 · 25 Jewels · Hand-finished
                 </p>
               </div>
@@ -52,7 +52,7 @@ export default function Heritage() {
               {stats.map(s => (
                 <div key={s.l} style={{ borderLeft: "1px solid var(--gold-dk)", paddingLeft: "16px" }}>
                   <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", color: "var(--gold)", fontWeight: 300 }}>{s.n}</div>
-                  <div style={{ fontSize: ".5rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--muted)", marginTop: "4px" }}>{s.l}</div>
+                  <div style={{ fontSize: "14px", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--muted)", marginTop: "4px" }}>{s.l}</div>
                 </div>
               ))}
             </div>

@@ -63,20 +63,20 @@ function ProfileContent() {
         <Nav />
 
         <div style={{ padding: "160px 24px 100px", maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: ".52rem", letterSpacing: ".35em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
             Collector Profile
           </div>
           <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.4rem", color: "var(--white)", fontWeight: 300, marginBottom: "20px" }}>
             Account Sign-In <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Required</em>
           </h1>
-          <p style={{ fontSize: ".75rem", color: "var(--muted)", lineHeight: 1.8, marginBottom: "36px" }}>
+          <p style={{ fontSize: "15px", color: "var(--muted)", lineHeight: 1.8, marginBottom: "36px" }}>
             To view and update your personal collector credentials, telephone, and delivery address preferences, please sign in or register an account.
           </p>
           <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
             <Link
               href="/login?redirect=/profile"
               className="btn-primary"
-              style={{ padding: "14px 28px", fontSize: ".6rem", textDecoration: "none" }}
+              style={{ padding: "14px 28px", fontSize: "14px", textDecoration: "none" }}
             >
               Sign In
             </Link>
@@ -86,7 +86,7 @@ function ProfileContent() {
                 border: "1px solid var(--gold-dk)",
                 color: "var(--gold)",
                 padding: "14px 28px",
-                fontSize: ".6rem",
+                fontSize: "14px",
                 letterSpacing: ".2em",
                 textTransform: "uppercase",
                 textDecoration: "none",
@@ -108,13 +108,13 @@ function ProfileContent() {
 
       <div style={{ padding: "160px 24px 100px", maxWidth: "600px", margin: "0 auto" }}>
         <div style={{ marginBottom: "32px" }}>
-          <Link href="/account" style={{ fontSize: ".52rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase", textDecoration: "none" }}>
+          <Link href="/account" style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", textDecoration: "none" }}>
             ← Back to Account
           </Link>
           <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.4rem", color: "var(--white)", fontWeight: 300, marginTop: "16px" }}>
             Collector <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Profile</em>
           </h1>
-          <p style={{ fontSize: ".72rem", color: "var(--muted)", marginTop: "6px" }}>
+          <p style={{ fontSize: "15px", color: "var(--muted)", marginTop: "6px" }}>
             Manage your personal identity, contact numbers, and delivery destination.
           </p>
         </div>
@@ -126,7 +126,7 @@ function ProfileContent() {
               border: "1px solid var(--gold)",
               color: "var(--gold)",
               padding: "14px 18px",
-              fontSize: ".75rem",
+              fontSize: "15px",
               marginBottom: "24px",
             }}
           >
@@ -141,7 +141,7 @@ function ProfileContent() {
               border: "1px solid rgba(220, 53, 69, 0.4)",
               color: "#ff6b6b",
               padding: "14px 18px",
-              fontSize: ".75rem",
+              fontSize: "15px",
               marginBottom: "24px",
             }}
           >
@@ -161,7 +161,7 @@ function ProfileContent() {
           }}
         >
           <div>
-            <label style={{ display: "block", fontSize: ".55rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+            <label style={{ display: "block", fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
               Email Address (Permanent ID)
             </label>
             <input
@@ -174,14 +174,14 @@ function ProfileContent() {
                 border: "1px solid var(--dark4)",
                 color: "var(--muted)",
                 padding: "14px",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 cursor: "not-allowed",
               }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: ".55rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+            <label style={{ display: "block", fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
               Full Name
             </label>
             <input
@@ -195,14 +195,14 @@ function ProfileContent() {
                 border: "1px solid var(--dark3)",
                 color: "var(--white)",
                 padding: "14px",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 outline: "none",
               }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: ".55rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+            <label style={{ display: "block", fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
               Phone Number
             </label>
             <input
@@ -216,14 +216,14 @@ function ProfileContent() {
                 border: "1px solid var(--dark3)",
                 color: "var(--white)",
                 padding: "14px",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 outline: "none",
               }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: ".55rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+            <label style={{ display: "block", fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
               Shipping Street Address
             </label>
             <input
@@ -237,7 +237,7 @@ function ProfileContent() {
                 border: "1px solid var(--dark3)",
                 color: "var(--white)",
                 padding: "14px",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 outline: "none",
               }}
             />
@@ -245,7 +245,7 @@ function ProfileContent() {
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
             <div>
-              <label style={{ display: "block", fontSize: ".55rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+              <label style={{ display: "block", fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
                 City
               </label>
               <input
@@ -258,13 +258,13 @@ function ProfileContent() {
                   border: "1px solid var(--dark3)",
                   color: "var(--white)",
                   padding: "14px",
-                  fontSize: ".85rem",
+                  fontSize: "15px",
                   outline: "none",
                 }}
               />
             </div>
             <div>
-              <label style={{ display: "block", fontSize: ".55rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+              <label style={{ display: "block", fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
                 Country
               </label>
               <input
@@ -277,7 +277,7 @@ function ProfileContent() {
                   border: "1px solid var(--dark3)",
                   color: "var(--white)",
                   padding: "14px",
-                  fontSize: ".85rem",
+                  fontSize: "15px",
                   outline: "none",
                 }}
               />
@@ -292,7 +292,7 @@ function ProfileContent() {
               marginTop: "12px",
               padding: "16px",
               justifyContent: "center",
-              fontSize: ".75rem",
+              fontSize: "15px",
               letterSpacing: ".2em",
               cursor: saving ? "not-allowed" : "pointer",
             }}
