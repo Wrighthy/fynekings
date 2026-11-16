@@ -1,18 +1,12 @@
 "use client";
 
 import { create } from "zustand";
-
-/**
- * Rendered size of the watch overlay in CSS pixels, before the tracked scale is
- * applied. Must match `baseWatchSize` in useHandTracking so a scale of 1.0
- * means "life size", and is reused by the screenshot compositor.
- */
-export const WATCH_OVERLAY_SIZE = 140;
-
-// ============ TYPES ============
-
-/** Tracking status of the hand detection pipeline */
-export type TrackingStatus = "initializing" | "searching" | "locked" | "lost";
+import {
+  DEFAULT_ADJUSTMENTS,
+  type ManualAdjustments,
+  type SnapshotMeasurements,
+  type TryOnPhase,
+} from "./tryon/types";
 
 /** Minimal product data needed for try-on rendering */
 export type TryOnProduct = {
@@ -24,114 +18,72 @@ export type TryOnProduct = {
   overlayUrl: string;
   thumbnailUrl: string | null;
   productId: string | null;
+  /** Optional snapshot-method metadata. Absent watches use the legacy sticker. */
+  caseDiameterMm?: number;
+  lugToLugMm?: number;
+  strapWidthMm?: number;
+  assetPxPerMm?: number;
+  caseLayerUrl?: string;
+  strapLayerUrl?: string | null;
+  anchor?: { x: number; y: number };
+  /** Optional fraction of the image width occupied by the watch case (e.g. 0.45) */
+  caseWidthFraction?: number;
+  /** Optional per-watch scaling fine-tuning multiplier (default 1.0) */
+  scaleFactor?: number;
 };
-
-/** Computed wrist transform applied to the watch overlay each frame */
-export type WristTransform = {
-  x: number;        // pixels from left
-  y: number;        // pixels from top
-  rotation: number; // degrees
-  scale: number;    // multiplier
-  visible: boolean; // whether to show the overlay
-};
-
-// ============ PER-FRAME DATA (NON-REACTIVE) ============
-
-/** Live data written on every animation frame by TryOnExperience */
-type LiveFrame = {
-  video: HTMLVideoElement | null;
-  transform: WristTransform;
-  fps: number;
-  containerWidth: number;
-  containerHeight: number;
-};
-
-/**
- * Per-frame values live here rather than in the Zustand store on purpose.
- *
- * The wrist transform and FPS change ~30x per second. Routing them through
- * reactive state would re-render the controls bar (and every watch thumbnail
- * SVG inside it) on every frame. Consumers instead read this on demand — the
- * screenshot compositor reads it once per capture, the HUD polls the FPS on a
- * slow interval.
- */
-export const liveFrame: LiveFrame = {
-  video: null,
-  transform: { x: 0, y: 0, rotation: 0, scale: 1, visible: false },
-  fps: 0,
-  containerWidth: 0,
-  containerHeight: 0,
-};
-
-/** Restore `liveFrame` to its initial values. Call alongside `reset()`. */
-export function resetLiveFrame(): void {
-  liveFrame.video = null;
-  liveFrame.transform = { x: 0, y: 0, rotation: 0, scale: 1, visible: false };
-  liveFrame.fps = 0;
-  liveFrame.containerWidth = 0;
-  liveFrame.containerHeight = 0;
-}
-
-// ============ STORE ============
 
 type TryOnState = {
-  // State
   selectedWatch: TryOnProduct | null;
-  watchScale: number;               // 0.6 – 1.4, default 1.0 (temporary testing slider)
-  trackingStatus: TrackingStatus;
   isCameraReady: boolean;
   isFrontCamera: boolean;
-  showDebug: boolean;
-  screenshotData: string | null;
   cameraError: string | null;
+  phase: TryOnPhase;
+  measurements: SnapshotMeasurements | null;
+  adjustments: ManualAdjustments;
+  lowConfidence: boolean;
+  snapshotSize: { width: number; height: number } | null;
 
-  // Actions
   selectWatch: (watch: TryOnProduct) => void;
-  setWatchScale: (scale: number) => void;
-  setTrackingStatus: (status: TrackingStatus) => void;
   setCameraReady: (ready: boolean) => void;
   setFrontCamera: (front: boolean) => void;
   toggleCamera: () => void;
-  toggleDebug: () => void;
-  takeScreenshot: (dataUrl: string) => void;
-  clearScreenshot: () => void;
   setCameraError: (message: string | null) => void;
+  setPhase: (phase: TryOnPhase) => void;
+  setMeasurements: (measurements: SnapshotMeasurements | null) => void;
+  setAdjustments: (adjustments: ManualAdjustments) => void;
+  setLowConfidence: (lowConfidence: boolean) => void;
+  setSnapshotSize: (size: { width: number; height: number } | null) => void;
   reset: () => void;
 };
 
 const INITIAL_STATE = {
   selectedWatch: null as TryOnProduct | null,
-  watchScale: 0.75,
-  trackingStatus: "initializing" as TrackingStatus,
   isCameraReady: false,
   isFrontCamera: false,
-  showDebug: false,
-  screenshotData: null as string | null,
   cameraError: null as string | null,
+  phase: "IDLE" as TryOnPhase,
+  measurements: null as SnapshotMeasurements | null,
+  adjustments: DEFAULT_ADJUSTMENTS,
+  lowConfidence: false,
+  snapshotSize: null as { width: number; height: number } | null,
 };
 
 export const useTryOnStore = create<TryOnState>((set) => ({
   ...INITIAL_STATE,
 
   selectWatch: (watch) => set({ selectedWatch: watch }),
-  setWatchScale: (scale) =>
-    set({ watchScale: Math.max(0.6, Math.min(1.4, scale)) }),
-
-  // The tracking loop calls this every frame. Returning the identical state
-  // object when nothing changed makes Zustand skip the notification entirely,
-  // so subscribers only re-render on real status transitions.
-  setTrackingStatus: (status) =>
-    set((s) => (s.trackingStatus === status ? s : { trackingStatus: status })),
   setCameraReady: (ready) =>
     set((s) => (s.isCameraReady === ready ? s : { isCameraReady: ready })),
-
   setFrontCamera: (front) =>
     set((s) => (s.isFrontCamera === front ? s : { isFrontCamera: front })),
   toggleCamera: () => set((s) => ({ isFrontCamera: !s.isFrontCamera })),
-  toggleDebug: () => set((s) => ({ showDebug: !s.showDebug })),
-  takeScreenshot: (dataUrl) => set({ screenshotData: dataUrl }),
-  clearScreenshot: () => set({ screenshotData: null }),
   setCameraError: (message) => set({ cameraError: message }),
-  reset: () => set(INITIAL_STATE),
+  setPhase: (phase) => set((s) => (s.phase === phase ? s : { phase })),
+  setMeasurements: (measurements) => set({ measurements }),
+  setAdjustments: (adjustments) => set({ adjustments }),
+  setLowConfidence: (lowConfidence) =>
+    set((s) => (s.lowConfidence === lowConfidence ? s : { lowConfidence })),
+  setSnapshotSize: (snapshotSize) => set({ snapshotSize }),
+  reset: () => set({ ...INITIAL_STATE, adjustments: { ...DEFAULT_ADJUSTMENTS } }),
 }));
 
