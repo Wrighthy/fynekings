@@ -6,19 +6,23 @@
     "dev": "node --dns-result-order=ipv4first ./node_modules/next/dist/bin/next dev -p 3005 --turbopack",
     "build": "prisma migrate deploy && prisma generate && next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:tryon": "tsx --test app/virtual-try-on/lib/tryon/geometry.test.ts"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
   },
   "dependencies": {
+    "@huggingface/transformers": "^3.8.1",
     "@mediapipe/tasks-vision": "^1.0.1",
     "@prisma/client": "^5.22.0",
+    "@types/qrcode": "^1.5.6",
     "@vercel/blob": "^2.4.1",
     "cloudinary": "^2.10.0",
     "dotenv": "^17.4.2",
     "next": "16.2.5",
     "prisma": "^5.22.0",
+    "qrcode": "^1.5.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "resend": "^6.18.1",
