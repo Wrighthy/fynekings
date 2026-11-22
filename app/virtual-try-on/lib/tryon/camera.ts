@@ -20,15 +20,127 @@ export function getCameraErrorMessage(err: unknown): string {
 }
 
 export async function openCamera(front: boolean): Promise<MediaStream> {
-  const video = {
-    facingMode: front ? "user" : "environment",
-    width: { ideal: 1280, max: 1920 },
-    height: { ideal: 720, max: 1080 },
-  };
+  // ── Rear / back camera (required for mobile back-of-wrist AR) ──
+  if (!front) {
+    // 1. If device labels are already available, locate a back/rear camera directly
+    try {
+      if (typeof navigator !== "undefined" && navigator.mediaDevices?.enumerateDevices) {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter((d) => d.kind === "videoinput");
+        const backDevice = videoDevices.find((d) => {
+          const label = d.label.toLowerCase();
+          return (
+            label.includes("back") ||
+            label.includes("rear") ||
+            label.includes("environment") ||
+            label.includes("facing back")
+          );
+        });
+
+        if (backDevice?.deviceId) {
+          try {
+            return await navigator.mediaDevices.getUserMedia({
+              video: {
+                deviceId: { exact: backDevice.deviceId },
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
+              },
+            });
+          } catch {
+            // If deviceId constraint fails, continue to facingMode
+          }
+        }
+      }
+    } catch {
+      // Permission might not be granted yet, continue
+    }
+
+    // 2. Request back camera using exact environment facingMode
+    try {
+      return await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { exact: "environment" },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+      });
+    } catch (err) {
+      if (err instanceof DOMException && (err.name === "NotAllowedError" || err.name === "SecurityError")) {
+        throw err;
+      }
+    }
+
+    // 3. Request back camera using ideal environment facingMode (without rigid max dimensions)
+    try {
+      return await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+      });
+    } catch (err) {
+      if (err instanceof DOMException && (err.name === "NotAllowedError" || err.name === "SecurityError")) {
+        throw err;
+      }
+    }
+
+    // 4. Request with bare ideal environment constraint
+    try {
+      return await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" },
+        },
+      });
+    } catch (err) {
+      if (err instanceof DOMException && (err.name === "NotAllowedError" || err.name === "SecurityError")) {
+        throw err;
+      }
+    }
+
+    // 5. Enumerate devices now that permission may have been granted to find the rear camera
+    try {
+      if (typeof navigator !== "undefined" && navigator.mediaDevices?.enumerateDevices) {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter((d) => d.kind === "videoinput");
+        const backDevice = videoDevices.find((d) => {
+          const label = d.label.toLowerCase();
+          return (
+            label.includes("back") ||
+            label.includes("rear") ||
+            label.includes("environment") ||
+            label.includes("facing back")
+          );
+        });
+        if (backDevice?.deviceId) {
+          return await navigator.mediaDevices.getUserMedia({
+            video: { deviceId: { exact: backDevice.deviceId } },
+          });
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    // 6. Last fallback — strictly keep facingMode: "environment", NEVER plain { video: true }
+    return navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" },
+    });
+  }
+
+  // ── Front camera (fallback for devices with only front camera) ──
   try {
-    return await navigator.mediaDevices.getUserMedia({ video });
+    return await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "user",
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+      },
+    });
   } catch (err) {
-    if (err instanceof DOMException && err.name === "NotAllowedError") throw err;
+    if (err instanceof DOMException && (err.name === "NotAllowedError" || err.name === "SecurityError")) {
+      throw err;
+    }
     return navigator.mediaDevices.getUserMedia({ video: true });
   }
 }

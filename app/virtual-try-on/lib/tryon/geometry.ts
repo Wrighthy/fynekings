@@ -40,19 +40,32 @@ export function palmNormal(world: Vec3[]): Vec3 | null {
  * True when the back of the hand faces the camera.
  * A dead-zone around n.z ≈ 0 is treated as not back-facing so an edge-on
  * hand does not pass.
+ *
+ * `mirrored` must be true for a front/selfie camera (bitmap is horizontally
+ * flipped) and false for a rear camera (unmirrored). MediaPipe world-landmark
+ * z-coordinates point away from the camera in the original frame; when the
+ * bitmap is NOT mirrored (rear camera) the z-axis sign is opposite relative
+ * to what the BACK_FACING_SIGN constants expect, so we negate the sign.
  */
-export function isBackFacing(hand: HandObservation): boolean {
+export function isBackFacing(hand: HandObservation, mirrored = true): boolean {
+  // For the rear camera (mirrored=false) the world-space z-axis is flipped
+  // compared to what the BACK_FACING_SIGN calibration assumed (front camera).
+  const signMultiplier = mirrored ? 1 : -1;
+
   const n = palmNormal(hand.worldLandmarks);
   if (n) {
     const l = len3(n);
     if (l > 1e-8) {
       const unitZ = n.z / l;
-      const signed = unitZ * backFacingSign(hand.handedness);
+      const signed = unitZ * backFacingSign(hand.handedness) * signMultiplier;
       return signed > PALM_NORMAL_DEADZONE;
     }
   }
 
   // 2D image-space fallback using landmarks (wrist 0 -> index 5 x wrist 0 -> pinky 17)
+  // The 2D cross-product sign is NOT affected by z-axis flip, but the bitmap
+  // IS horizontally mirrored for the front camera, which flips the 2D cross
+  // sign. Apply the same signMultiplier for consistency.
   if (hand.landmarks && hand.landmarks.length >= 18) {
     const v1x = hand.landmarks[5].x - hand.landmarks[0].x;
     const v1y = hand.landmarks[5].y - hand.landmarks[0].y;
@@ -61,7 +74,7 @@ export function isBackFacing(hand: HandObservation): boolean {
     const crossZ = v1x * v2y - v1y * v2x;
     const mag = Math.hypot(v1x, v1y) * Math.hypot(v2x, v2y);
     if (mag > 1e-6) {
-      const signed = (crossZ / mag) * backFacingSign(hand.handedness);
+      const signed = (crossZ / mag) * backFacingSign(hand.handedness) * signMultiplier;
       return signed > PALM_NORMAL_DEADZONE;
     }
   }

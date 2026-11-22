@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { QrCode, QrEcc } from "../lib/qrcodegen";
+import QRCode from "qrcode";
 
 type Props = {
   selectedWatchSlug?: string | null;
@@ -11,38 +11,52 @@ type Props = {
 
 export default function DesktopQrView({ selectedWatchSlug }: Props) {
   const [copied, setCopied] = useState(false);
-  const [url, setUrl] = useState("");
+  const [qrSvg, setQrSvg] = useState<string | null>(null);
 
+  // Exact target URL requested for mobile virtual try-on
+  const targetUrl = selectedWatchSlug
+    ? `https://fynekings.vercel.app/virtual-try-on?watch=${encodeURIComponent(selectedWatchSlug)}`
+    : "https://fynekings.vercel.app/virtual-try-on";
+
+  // Generate crisp, ISO-standard vector SVG QR code with High error correction
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setUrl("https://fynekings.vercel.app/virtual-try-on");
-    }
-  }, []);
+    let cancelled = false;
 
-  const qrData = useMemo(() => {
-    const targetUrl = url || "https://fynekings.vercel.app/virtual-try-on";
-    try {
-      const qr = QrCode.encodeText(targetUrl, QrEcc.MEDIUM);
-      return qr.toSvgPath(4);
-    } catch {
-      return null;
-    }
-  }, [url]);
+    QRCode.toString(targetUrl, {
+      type: "svg",
+      margin: 4,
+      errorCorrectionLevel: "H",
+      color: {
+        dark: "#000000",
+        light: "#FFFFFF",
+      },
+    })
+      .then((svg) => {
+        if (!cancelled) {
+          setQrSvg(svg);
+        }
+      })
+      .catch((err) => {
+        console.error("QR Code generation error:", err);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [targetUrl]);
 
   const handleCopyLink = async () => {
-    if (!url) return;
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(targetUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     } catch {
-      // silent fail
+      // silent fallback
     }
   };
 
   return (
     <div className="dqr-page">
-
       {/* ── Minimal nav bar ── */}
       <header className="dqr-nav">
         <Link href="/" className="dqr-logo">
@@ -66,7 +80,6 @@ export default function DesktopQrView({ selectedWatchSlug }: Props) {
 
       {/* ── Main content ── */}
       <main className="dqr-main">
-
         {/* Left column – text */}
         <div className="dqr-left">
           <p className="dqr-eyebrow">Virtual Try-On · Atelier Experience</p>
@@ -78,7 +91,7 @@ export default function DesktopQrView({ selectedWatchSlug }: Props) {
 
           <p className="dqr-subtitle">
             Our AR fitting room uses your phone&apos;s rear camera and MediaPipe
-            hand-tracking. No app required — open the link on mobile and hold still.
+            hand-tracking. No app required — scan the QR code to open the experience on mobile.
           </p>
 
           {selectedWatchSlug && (
@@ -94,8 +107,8 @@ export default function DesktopQrView({ selectedWatchSlug }: Props) {
           <ol className="dqr-steps">
             {[
               { n: "01", title: "Open Camera", body: "Launch the native camera app on your iOS or Android device." },
-              { n: "02", title: "Scan the code", body: "Point at the QR code" },
-              { n: "03", title: "Fit your watch", body: "Show the back of your wrist and hold steady for the snapshot." },
+              { n: "02", title: "Scan the code", body: "Point your camera at the QR code and tap the banner that appears." },
+              { n: "03", title: "Fit your watch", body: "Show the back of your wrist to the rear camera and hold steady." },
             ].map((s) => (
               <li key={s.n} className="dqr-step">
                 <span className="dqr-step-n">{s.n}</span>
@@ -131,22 +144,17 @@ export default function DesktopQrView({ selectedWatchSlug }: Props) {
         <div className="dqr-right">
           <div className="dqr-qr-card">
             <div className="dqr-qr-frame">
-              {qrData ? (
-                <svg
-                  viewBox={qrData.viewBox}
-                  className="dqr-qr-svg"
-                  shapeRendering="crispEdges"
-                  aria-label="QR code — scan with your phone to open the virtual try-on"
-                >
-                  <rect width="100%" height="100%" fill="#f8f5ee" />
-                  <path d={qrData.path} fill="#050505" />
-                </svg>
+              {qrSvg ? (
+                <div
+                  className="dqr-qr-container"
+                  dangerouslySetInnerHTML={{ __html: qrSvg }}
+                />
               ) : (
                 <div className="dqr-qr-skeleton">
                   <span>Generating…</span>
                 </div>
               )}
-              {/* Corner decorators */}
+              {/* Corner decorators positioned outside quiet zone */}
               <div className="dqr-corner dqr-corner-tl" />
               <div className="dqr-corner dqr-corner-tr" />
               <div className="dqr-corner dqr-corner-bl" />
@@ -160,6 +168,17 @@ export default function DesktopQrView({ selectedWatchSlug }: Props) {
               </svg>
               <span>Scan with your phone&apos;s camera</span>
             </div>
+
+            {/* Clickable direct link */}
+            <a
+              href={targetUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="dqr-target-url"
+              title="Click to test link directly"
+            >
+              {targetUrl}
+            </a>
 
             <p className="dqr-qr-privacy">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -67,11 +67,10 @@ function VirtualTryOn() {
 
   const shouldShowTryOn = Boolean(isMobile || forceMobile);
 
-  // ── 2. Choose default camera on mobile ──
+  // ── 2. Always use rear camera on mobile ──
   useEffect(() => {
     if (!shouldShowTryOn) return;
-    const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    setFrontCamera(!isMobileDevice);
+    setFrontCamera(false); // rear camera only — back-of-wrist AR requires environment camera
   }, [setFrontCamera, shouldShowTryOn]);
 
   // ── 3. Fetch the catalogue (only when running try-on) ──
