@@ -50,7 +50,7 @@ export function palmNormal(world: Vec3[]): Vec3 | null {
 export function isBackFacing(hand: HandObservation, mirrored = true): boolean {
   // For the rear camera (mirrored=false) the world-space z-axis is flipped
   // compared to what the BACK_FACING_SIGN calibration assumed (front camera).
-  const signMultiplier = mirrored ? 1 : -1;
+  const signMultiplier = mirrored ? -1 : 1;
 
   const n = palmNormal(hand.worldLandmarks);
   if (n) {
