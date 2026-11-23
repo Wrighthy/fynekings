@@ -41,7 +41,6 @@ export default function SnapshotTryOn({ products }: Props) {
   const [flash, setFlash] = useState(false);
   const [step, setStep] = useState<string>(GUIDANCE.analysing);
   const [paintKey, setPaintKey] = useState(0);
-  const [canFlip, setCanFlip] = useState(false);
   const [processError, setProcessError] = useState<string | null>(null);
   const [cameraAttempt, setCameraAttempt] = useState(0);
 
@@ -60,7 +59,6 @@ export default function SnapshotTryOn({ products }: Props) {
   const setLowConfidence = useTryOnStore((s) => s.setLowConfidence);
   const setSnapshotSize = useTryOnStore((s) => s.setSnapshotSize);
   const selectWatch = useTryOnStore((s) => s.selectWatch);
-  const toggleCamera = useTryOnStore((s) => s.toggleCamera);
 
   useEffect(() => {
     phaseRef.current = phase;
@@ -84,7 +82,8 @@ export default function SnapshotTryOn({ products }: Props) {
         frame.width,
         frame.height,
         frame.quality,
-        "live"
+        "live",
+        isFrontCamera
       );
       const messageId = forcedRef.current && forcedRef.current !== gates.messageId
         ? gates.messageId
@@ -196,12 +195,6 @@ export default function SnapshotTryOn({ products }: Props) {
       if (video) video.srcObject = null;
     };
   }, [showLive, isFrontCamera, cameraAttempt, setCameraError, setCameraReady, setPhase, start, stop]);
-
-  useEffect(() => {
-    navigator.mediaDevices?.enumerateDevices?.().then((devices) => {
-      setCanFlip(devices.filter((device) => device.kind === "videoinput").length > 1);
-    }).catch(() => setCanFlip(false));
-  }, [cameraAttempt]);
 
   useEffect(() => {
     if (phase !== "RESULT" || !selectedWatch) return;
@@ -334,11 +327,7 @@ export default function SnapshotTryOn({ products }: Props) {
               <span className="tryon-watch-info-price">{fmt(selectedWatch.price)}</span>
             </div>
           )}
-          {canFlip && showLive && (
-            <button type="button" className="tryon-flip-btn" onClick={toggleCamera} aria-label="Switch camera">
-              Flip
-            </button>
-          )}
+
         </div>
       </div>
 

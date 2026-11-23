@@ -4917,23 +4917,56 @@ footer {
 .dqr-qr-frame {
   position: relative;
   display: inline-flex;
-  padding: 8px;
+  padding: 10px;
 }
 
-/* The rendered QR code SVG */
-.dqr-qr-svg {
-  width: 230px;
-  height: 230px;
+/* Pure white QR code container for 100% scan reliability */
+.dqr-qr-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  padding: 16px;
+  border-radius: 4px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+.dqr-qr-container svg,
+.dqr-qr-container img {
+  width: 250px;
+  height: 250px;
   display: block;
-  background: #F8F5EE;
-  padding: 12px;
-  box-sizing: border-box;
+}
+
+.dqr-target-url {
+  font-size: .62rem;
+  letter-spacing: .06em;
+  color: var(--gold);
+  background: rgba(196, 169, 98, 0.08);
+  border: 1px solid rgba(196, 169, 98, 0.22);
+  padding: 8px 16px;
+  border-radius: 4px;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  text-decoration: none;
+  font-family: monospace;
+  display: inline-block;
+  transition: all .2s ease;
+}
+
+.dqr-target-url:hover {
+  background: rgba(196, 169, 98, 0.16);
+  color: var(--gold-lt);
+  border-color: var(--gold);
 }
 
 /* Skeleton while URL resolves */
 .dqr-qr-skeleton {
-  width: 230px;
-  height: 230px;
+  width: 250px;
+  height: 250px;
   background: var(--dark2);
   border: 1px dashed var(--dark5);
   display: flex;
@@ -4945,37 +4978,37 @@ footer {
   text-transform: uppercase;
 }
 
-/* Gold corner brackets */
+/* Gold corner brackets positioned cleanly outside the white QR code quiet zone */
 .dqr-corner {
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-color: var(--gold);
   border-style: solid;
-  opacity: .8;
+  opacity: .85;
 }
 
 .dqr-corner-tl {
-  top: -2px;
-  left: -2px;
+  top: -6px;
+  left: -6px;
   border-width: 2px 0 0 2px;
 }
 
 .dqr-corner-tr {
-  top: -2px;
-  right: -2px;
+  top: -6px;
+  right: -6px;
   border-width: 2px 2px 0 0;
 }
 
 .dqr-corner-bl {
-  bottom: -2px;
-  left: -2px;
+  bottom: -6px;
+  left: -6px;
   border-width: 0 0 2px 2px;
 }
 
 .dqr-corner-br {
-  bottom: -2px;
-  right: -2px;
+  bottom: -6px;
+  right: -6px;
   border-width: 0 2px 2px 0;
 }
 

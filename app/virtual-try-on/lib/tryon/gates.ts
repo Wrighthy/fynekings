@@ -65,7 +65,8 @@ export function evaluateGates(
   width: number,
   height: number,
   quality: QualitySample | null,
-  mode: "live" | "still" = "live"
+  mode: "live" | "still" = "live",
+  mirrored = true
 ): GateEvaluation {
   // Vertical wrist presentation is fully enabled on all devices (no 45° sideways requirement).
   const hint = false;
@@ -113,7 +114,7 @@ export function evaluateGates(
   const g2 = wristInFrame && placementInFrame;
 
   // G3: Back of hand facing the camera
-  const g3 = isBackFacing(hand);
+  const g3 = isBackFacing(hand, mirrored);
 
   const tilt = handTiltDeg(hand);
   const pitch = forearmPitchDeg(hand);
