@@ -46,6 +46,8 @@ export default function SnapshotTryOn({ products }: Props) {
 
   const selectedWatch = useTryOnStore((s) => s.selectedWatch);
   const isFrontCamera = useTryOnStore((s) => s.isFrontCamera);
+  const wrist = useTryOnStore((s) => s.wrist);
+  const setWrist = useTryOnStore((s) => s.setWrist);
   const cameraError = useTryOnStore((s) => s.cameraError);
   const phase = useTryOnStore((s) => s.phase);
   const measurements = useTryOnStore((s) => s.measurements);
@@ -110,8 +112,15 @@ export default function SnapshotTryOn({ products }: Props) {
         }
       }
     },
-    { mirrored: isFrontCamera, enabled: showLive }
+    { mirrored: isFrontCamera, enabled: showLive, wrist }
   );
+
+  // Switching wrists invalidates the stability history and the hold timer.
+  useEffect(() => {
+    historyRef.current = [];
+    lastHandRef.current = null;
+    holdStartRef.current = null;
+  }, [wrist]);
 
   const capture = useCallback(async (manual: boolean) => {
     if (busyRef.current) return;
@@ -132,7 +141,7 @@ export default function SnapshotTryOn({ products }: Props) {
       const product = useTryOnStore.getState().selectedWatch;
       if (!product) throw new Error(GUIDANCE.genericProcessing);
       const watch = await loadWatch(product);
-      const outcome = await runSnapshotPipeline(source, watch, isFrontCamera, setStep, lastHandRef.current);
+      const outcome = await runSnapshotPipeline(source, watch, isFrontCamera, setStep, lastHandRef.current, wrist);
       if (!outcome.ok) {
         forcedRef.current = outcome.messageId;
         setForcedId(outcome.messageId);
@@ -155,7 +164,7 @@ export default function SnapshotTryOn({ products }: Props) {
     } finally {
       busyRef.current = false;
     }
-  }, [grabFrame, isFrontCamera, ready, setAdjustments, setLowConfidence, setMeasurements, setPhase, setSnapshotSize]);
+  }, [grabFrame, isFrontCamera, ready, wrist, setAdjustments, setLowConfidence, setMeasurements, setPhase, setSnapshotSize]);
 
   showLiveRef.current = showLive;
   forcedRef.current = forcedId;
@@ -325,6 +334,22 @@ export default function SnapshotTryOn({ products }: Props) {
             <div className="tryon-watch-info">
               <span className="tryon-watch-info-name">{selectedWatch.name}</span>
               <span className="tryon-watch-info-price">{fmt(selectedWatch.price)}</span>
+            </div>
+          )}
+          {showLive && (
+            <div className="tryon-wrist-toggle" role="radiogroup" aria-label="Which wrist are you trying the watch on?">
+              {(["left", "right"] as const).map((side) => (
+                <button
+                  key={side}
+                  type="button"
+                  role="radio"
+                  aria-checked={wrist === side}
+                  className={wrist === side ? "active" : ""}
+                  onClick={() => setWrist(side)}
+                >
+                  {side === "left" ? "Left wrist" : "Right wrist"}
+                </button>
+              ))}
             </div>
           )}
 

@@ -48,10 +48,16 @@ function to3(point: RawLandmark): Vec3 {
  * null / 0. The gates and geometry modules already handle null pose data
  * gracefully (forearmAxis falls back to L0→L9, forearmPitchDeg returns null,
  * G1/G2 skip pose checks).
+ *
+ * `wrist` is the hand the user said they are using. When given it replaces
+ * MediaPipe's left/right label. That label is unreliable when the back of the
+ * hand faces the camera (it often reports a right hand's back as a left
+ * hand's palm), and the back-of-hand check is only correct with the real hand.
  */
 export function observationsFromHandLandmarker(
   result: HandLandmarkerResult,
-  mirrored: boolean
+  mirrored: boolean,
+  wrist?: Handedness
 ): HandObservation[] {
   const hands: HandObservation[] = [];
 
@@ -67,7 +73,7 @@ export function observationsFromHandLandmarker(
       rawLabel.toLowerCase() === "right" ? "right" : "left";
 
     hands.push({
-      handedness: resolveHandedness(mediaPipeSide, mirrored),
+      handedness: wrist ?? resolveHandedness(mediaPipeSide, mirrored),
       landmarks: lm.slice(0, 21).map(to2),
       worldLandmarks: wl.slice(0, 21).map(to3),
       poseWrist: null,
@@ -92,7 +98,8 @@ export function observationsFromHandLandmarker(
  */
 export function observationsFromHolistic(
   result: HandLandmarkerResult,
-  mirrored: boolean
+  mirrored: boolean,
+  wrist?: Handedness
 ): HandObservation[] {
-  return observationsFromHandLandmarker(result, mirrored);
+  return observationsFromHandLandmarker(result, mirrored, wrist);
 }

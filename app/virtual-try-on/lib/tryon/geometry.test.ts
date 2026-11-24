@@ -78,6 +78,31 @@ describe("snapshot geometry", () => {
     assert.equal(left.hand?.handedness, "left");
   });
 
+  it("tells the back of the wrist from the palm on the rear camera", () => {
+    // Real right hand, fingers up, seen unmirrored by the rear camera.
+    // Back of the hand: thumb side (index MCP) on the left of the picture.
+    const pose = (indexX: number, pinkyX: number) => {
+      const landmarks = Array.from({ length: 21 }, () => ({ x: 0.5, y: 0.5 }));
+      landmarks[0] = { x: 0.5, y: 0.7 };
+      landmarks[5] = { x: indexX, y: 0.4 };
+      landmarks[17] = { x: pinkyX, y: 0.4 };
+      const worldLandmarks = landmarks.map((p) => ({ x: p.x, y: p.y, z: 0 }));
+      return { landmarks, worldLandmarks };
+    };
+    const back = pose(0.4, 0.6);
+    const palm = pose(0.6, 0.4);
+
+    assert.equal(isBackFacing(hand({ handedness: "right", ...back }), false), true);
+    assert.equal(isBackFacing(hand({ handedness: "right", ...palm }), false), false);
+    // A left hand is the mirror image: thumb on the right means its back.
+    assert.equal(isBackFacing(hand({ handedness: "left", ...palm }), false), true);
+    assert.equal(isBackFacing(hand({ handedness: "left", ...back }), false), false);
+
+    // The same right-hand back, mirrored for a front camera, still passes.
+    const mirroredBack = pose(0.6, 0.4);
+    assert.equal(isBackFacing(hand({ handedness: "right", ...mirroredBack }), true), true);
+  });
+
   it("names the hand from the mirrored bitmap", () => {
     assert.equal(resolveHandedness("left", true), "right");
     assert.equal(resolveHandedness("right", true), "left");

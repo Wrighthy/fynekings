@@ -41,16 +41,23 @@ export function palmNormal(world: Vec3[]): Vec3 | null {
  * A dead-zone around n.z ≈ 0 is treated as not back-facing so an edge-on
  * hand does not pass.
  *
- * `mirrored` must be true for a front/selfie camera (bitmap is horizontally
- * flipped) and false for a rear camera (unmirrored). MediaPipe world-landmark
- * z-coordinates point away from the camera in the original frame; when the
- * bitmap is NOT mirrored (rear camera) the z-axis sign is opposite relative
- * to what the BACK_FACING_SIGN constants expect, so we negate the sign.
+ * How it works: n = (index MCP − wrist) × (pinky MCP − wrist). Its z part
+ * only depends on x and y, so it tells us which side of the hand the thumb is
+ * on in the picture, nothing more. That becomes "palm or back" only once we
+ * know the REAL hand: in an unmirrored picture (rear camera) the back of a
+ * right hand has the thumb on the left (n.z > 0), while its palm has the thumb
+ * on the right (n.z < 0). A left hand is the opposite, and mirroring the
+ * picture (front camera) flips both.
+ *
+ * So `hand.handedness` must be the real hand (the wrist the user chose), not
+ * MediaPipe's guess — that guess often swaps left/right exactly when the back
+ * of the hand is shown, which makes a palm pass this check.
+ *
+ * BACK_FACING_SIGN_* are calibrated for a mirrored picture, so an unmirrored
+ * (rear camera) picture negates them.
  */
 export function isBackFacing(hand: HandObservation, mirrored = true): boolean {
-  // For the rear camera (mirrored=false) the world-space z-axis is flipped
-  // compared to what the BACK_FACING_SIGN calibration assumed (front camera).
-  const signMultiplier = mirrored ? -1 : 1;
+  const signMultiplier = mirrored ? 1 : -1;
 
   const n = palmNormal(hand.worldLandmarks);
   if (n) {
@@ -62,10 +69,8 @@ export function isBackFacing(hand: HandObservation, mirrored = true): boolean {
     }
   }
 
-  // 2D image-space fallback using landmarks (wrist 0 -> index 5 x wrist 0 -> pinky 17)
-  // The 2D cross-product sign is NOT affected by z-axis flip, but the bitmap
-  // IS horizontally mirrored for the front camera, which flips the 2D cross
-  // sign. Apply the same signMultiplier for consistency.
+  // 2D image-space fallback using landmarks (wrist 0 -> index 5 x wrist 0 -> pinky 17).
+  // Same chirality test as above, so the same sign rules apply.
   if (hand.landmarks && hand.landmarks.length >= 18) {
     const v1x = hand.landmarks[5].x - hand.landmarks[0].x;
     const v1y = hand.landmarks[5].y - hand.landmarks[0].y;
