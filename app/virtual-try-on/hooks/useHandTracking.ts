@@ -7,7 +7,7 @@ import { OneEuroFilter } from "../lib/tryon/oneEuro";
 import { observationsFromHandLandmarker } from "../lib/tryon/observe";
 import { getHandLandmarker } from "../lib/tryon/models";
 import { isTrackingPaused } from "../lib/tryon/trackingPause";
-import type { HandObservation, QualitySample, Vec2 } from "../lib/tryon/types";
+import type { Handedness, HandObservation, QualitySample, Vec2 } from "../lib/tryon/types";
 
 export type TrackingFrame = {
   hands: HandObservation[];
@@ -20,6 +20,8 @@ export type TrackingFrame = {
 type Options = {
   mirrored: boolean;
   enabled: boolean;
+  /** The wrist the user chose; overrides MediaPipe's left/right guess. */
+  wrist?: Handedness;
 };
 
 function channel(bank: OneEuroFilter[], slot: number, value: number, t: number): number {
@@ -125,7 +127,7 @@ export function useHandTracking(onFrame: (frame: TrackingFrame) => void, options
     let hands: HandObservation[] = [];
     try {
       const result = landmarker.detectForVideo(canvas, started);
-      hands = observationsFromHandLandmarker(result, optionsRef.current.mirrored);
+      hands = observationsFromHandLandmarker(result, optionsRef.current.mirrored, optionsRef.current.wrist);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Wrist tracking stopped");
       return;

@@ -10,7 +10,7 @@ import { renderComposite } from "./render";
 import { snapshotSession } from "./snapshotSession";
 import { setTrackingPaused } from "./trackingPause";
 import { fitMask, prepareSkinMask, splitCategories } from "./segmentation";
-import type { GuidanceId, HandObservation, LoadedWatch, MaskBuffer } from "./types";
+import type { GuidanceId, Handedness, HandObservation, LoadedWatch, MaskBuffer } from "./types";
 import { DEFAULT_ADJUSTMENTS } from "./types";
 
 export type PipelineResult =
@@ -116,7 +116,8 @@ async function analyse(
   mirrored: boolean,
   onProgress: (step: string) => void,
   state: { cancelled: boolean },
-  fallbackHand?: HandObservation | null
+  fallbackHand?: HandObservation | null,
+  wrist?: Handedness
 ): Promise<PipelineResult> {
   onProgress("Reading the photo");
   const { observationsFromHandLandmarker } = await import("./observe");
@@ -127,7 +128,7 @@ async function analyse(
   try {
     // Detect directly on the snapshot canvas without toggling runningMode to avoid state crashes
     const result = landmarker.detectForVideo(source, performance.now());
-    hands = observationsFromHandLandmarker(result, mirrored);
+    hands = observationsFromHandLandmarker(result, mirrored, wrist);
   } catch (err) {
     console.warn("Snapshot landmarker detection fallback:", err);
   }
@@ -203,10 +204,11 @@ export async function runSnapshotPipeline(
   watch: LoadedWatch,
   mirrored: boolean,
   onProgress: (step: string) => void,
-  fallbackHand?: HandObservation | null
+  fallbackHand?: HandObservation | null,
+  wrist?: Handedness
 ): Promise<PipelineResult> {
   const state = { cancelled: false };
-  const run = () => analyse(source, watch, mirrored, onProgress, state, fallbackHand);
+  const run = () => analyse(source, watch, mirrored, onProgress, state, fallbackHand, wrist);
   let timer: ReturnType<typeof setTimeout> | undefined;
   setTrackingPaused(true);
   try {
@@ -224,7 +226,7 @@ export async function runSnapshotPipeline(
     if (err instanceof Error && err.message === GUIDANCE.processingTimeout) throw err;
     if (isMemoryError(err) && Math.max(source.width, source.height) > 1280) {
       const smaller = downscaleCanvas(source, 1280);
-      return analyse(smaller, watch, mirrored, onProgress, state, fallbackHand);
+      return analyse(smaller, watch, mirrored, onProgress, state, fallbackHand, wrist);
     }
     console.error("runSnapshotPipeline failed:", err);
     throw new Error(GUIDANCE.genericProcessing);

@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import {
   DEFAULT_ADJUSTMENTS,
+  type Handedness,
   type ManualAdjustments,
   type SnapshotMeasurements,
   type TryOnPhase,
@@ -36,6 +37,12 @@ type TryOnState = {
   selectedWatch: TryOnProduct | null;
   isCameraReady: boolean;
   isFrontCamera: boolean;
+  /**
+   * Which wrist the user is trying the watch on. Chosen by the user because
+   * MediaPipe's left/right guess is unreliable for back-of-hand views, and the
+   * back-of-hand check is only correct when the real hand is known.
+   */
+  wrist: Handedness;
   cameraError: string | null;
   phase: TryOnPhase;
   measurements: SnapshotMeasurements | null;
@@ -47,6 +54,7 @@ type TryOnState = {
   setCameraReady: (ready: boolean) => void;
   setFrontCamera: (front: boolean) => void;
   toggleCamera: () => void;
+  setWrist: (wrist: Handedness) => void;
   setCameraError: (message: string | null) => void;
   setPhase: (phase: TryOnPhase) => void;
   setMeasurements: (measurements: SnapshotMeasurements | null) => void;
@@ -60,6 +68,7 @@ const INITIAL_STATE = {
   selectedWatch: null as TryOnProduct | null,
   isCameraReady: false,
   isFrontCamera: false,
+  wrist: "left" as Handedness,
   cameraError: null as string | null,
   phase: "IDLE" as TryOnPhase,
   measurements: null as SnapshotMeasurements | null,
@@ -77,6 +86,7 @@ export const useTryOnStore = create<TryOnState>((set) => ({
   setFrontCamera: (front) =>
     set((s) => (s.isFrontCamera === front ? s : { isFrontCamera: front })),
   toggleCamera: () => set((s) => ({ isFrontCamera: !s.isFrontCamera })),
+  setWrist: (wrist) => set((s) => (s.wrist === wrist ? s : { wrist })),
   setCameraError: (message) => set({ cameraError: message }),
   setPhase: (phase) => set((s) => (s.phase === phase ? s : { phase })),
   setMeasurements: (measurements) => set({ measurements }),
@@ -84,6 +94,7 @@ export const useTryOnStore = create<TryOnState>((set) => ({
   setLowConfidence: (lowConfidence) =>
     set((s) => (s.lowConfidence === lowConfidence ? s : { lowConfidence })),
   setSnapshotSize: (snapshotSize) => set({ snapshotSize }),
-  reset: () => set({ ...INITIAL_STATE, adjustments: { ...DEFAULT_ADJUSTMENTS } }),
+  // Keep the user's wrist choice across resets.
+  reset: () => set((s) => ({ ...INITIAL_STATE, wrist: s.wrist, adjustments: { ...DEFAULT_ADJUSTMENTS } })),
 }));
 

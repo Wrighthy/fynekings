@@ -3841,6 +3841,31 @@ footer {
   border-color: var(--gold);
 }
 
+.tryon-wrist-toggle {
+  display: inline-flex;
+  background: rgba(10, 10, 10, .6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--dark4);
+}
+
+.tryon-wrist-toggle button {
+  padding: 9px 12px;
+  font-size: .5rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  cursor: none;
+  transition: color .3s, background .3s;
+}
+
+.tryon-wrist-toggle button.active {
+  color: var(--dark);
+  background: var(--gold);
+}
+
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Controls bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .tryon-controls {

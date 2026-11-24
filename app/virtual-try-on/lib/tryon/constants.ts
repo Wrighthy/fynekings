@@ -54,7 +54,9 @@ export const FOREARM_HINT_DEG = 45;
 export const SWAP_HANDEDNESS_ON_MIRRORED_BITMAP = true;
 
 /**
- * Back of the hand faces the camera when `n.z * sign > 0`.
+ * Back of the hand faces the camera when `n.z * sign > 0` in a MIRRORED
+ * picture (front camera), where `sign` is for the real hand. An unmirrored
+ * picture (rear camera) negates this; see isBackFacing in geometry.ts.
  * Axes assumed for world landmarks: x right, y down, z away from the camera
  * (MediaPipe: smaller z is closer).
  */
