@@ -3,6 +3,7 @@ import {
   BACK_FACING_SIGN_RIGHT,
   HAND_BREADTH_MM,
   LANDMARK_WRIST_TO_BREADTH,
+  MAX_FORESHORTENING_CORRECTION,
   PALM_NORMAL_DEADZONE,
   POSE,
   RIGHT_WRIST_CROWN_SIDE,
@@ -105,10 +106,43 @@ export function forearmPitchDeg(hand: HandObservation): number | null {
   return (pitch * 180) / Math.PI;
 }
 
+/** Rigid palm landmark pairs used to recover image scale from a tilted hand. */
+const PALM_PAIRS: ReadonlyArray<readonly [number, number]> = [
+  [5, 17],
+  [0, 5],
+  [0, 17],
+  [0, 9],
+  [5, 13],
+  [9, 17],
+];
+
+/**
+ * Knuckle breadth (index MCP to pinky MCP) in pixels, as it would look with
+ * the back of the hand flat to the screen.
+ *
+ * A slanted hand is foreshortened, which shrinks the raw 2D breadth and with
+ * it the watch. Tilting only ever shortens a segment in the picture, so the
+ * palm segment with the highest pixels-per-world-unit ratio is the one closest
+ * to the image plane and gives the true scale. That scale times the 3D
+ * knuckle breadth undoes the foreshortening. For a flat hand it equals the raw
+ * breadth, so existing calibration is unchanged.
+ */
 export function handBreadthPx(hand: HandObservation, width: number, height: number): number {
-  const a = denorm(hand.landmarks[5], width, height);
-  const b = denorm(hand.landmarks[17], width, height);
-  return len2(sub2(a, b));
+  const px = (i: number) => denorm(hand.landmarks[i], width, height);
+  const raw = len2(sub2(px(5), px(17)));
+  const world = hand.worldLandmarks;
+  if (!world || world.length < 18) return raw;
+
+  let scale = 0;
+  for (const [a, b] of PALM_PAIRS) {
+    const d3 = len3(sub3(world[a], world[b]));
+    if (d3 < 1e-4) continue;
+    scale = Math.max(scale, len2(sub2(px(a), px(b))) / d3);
+  }
+  const breadth3 = len3(sub3(world[5], world[17]));
+  if (scale <= 0 || breadth3 < 1e-4) return raw;
+  const corrected = scale * breadth3;
+  return Math.min(Math.max(raw, corrected), raw * MAX_FORESHORTENING_CORRECTION);
 }
 
 export function forearmAxis(hand: HandObservation, width: number, height: number): Vec2 {
@@ -191,10 +225,10 @@ export function placementOf(hand: HandObservation, width: number, height: number
   const perp = rot90(axis);
   const lateralMm = getWatchLateralOffsetMm(hand.handedness);
   const basePlacement = add2(wrist, scale2(axis, WATCH_OFFSET_MM * pxPerMm));
-  const placement = {
-    x: basePlacement.x + lateralMm * pxPerMm,
-    y: basePlacement.y,
-  };
+  // Lateral shift across the forearm, so it follows a slanted arm. For an
+  // upright arm (axis pointing down the screen) this is screen-right.
+  const across = { x: axis.y, y: -axis.x };
+  const placement = add2(basePlacement, scale2(across, lateralMm * pxPerMm));
   const trigWidth = trigonometricWristWidthPx(hand, width, height);
   const estimatedWristPx = trigWidth > 0 ? trigWidth : LANDMARK_WRIST_TO_BREADTH * breadthPx;
   return {

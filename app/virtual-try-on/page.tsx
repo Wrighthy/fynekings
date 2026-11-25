@@ -49,7 +49,6 @@ function VirtualTryOn() {
   const isCameraReady = useTryOnStore((s) => s.isCameraReady);
   const cameraError = useTryOnStore((s) => s.cameraError);
   const selectWatch = useTryOnStore((s) => s.selectWatch);
-  const setFrontCamera = useTryOnStore((s) => s.setFrontCamera);
 
   // Keep the latest slug available to the fetch effect without re-fetching when
   // the query string changes after products have already loaded.
@@ -66,12 +65,6 @@ function VirtualTryOn() {
   }, []);
 
   const shouldShowTryOn = Boolean(isMobile || forceMobile);
-
-  // ── 2. Always use rear camera on mobile ──
-  useEffect(() => {
-    if (!shouldShowTryOn) return;
-    setFrontCamera(false); // rear camera only — back-of-wrist AR requires environment camera
-  }, [setFrontCamera, shouldShowTryOn]);
 
   // ── 3. Fetch the catalogue (only when running try-on) ──
   useEffect(() => {
