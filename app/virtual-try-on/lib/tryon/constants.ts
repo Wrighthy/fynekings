@@ -8,12 +8,8 @@
  */
 
 export const HOLD_MS = 1000;
-/**
- * Maximum hand tilt in degrees (palm plane vs the screen). Wide enough that a
- * wrist held at a natural slant passes; scale is corrected for the tilt in
- * handBreadthPx, so a slanted hand does not shrink the watch.
- */
-export const MAX_HAND_TILT_DEG = 55;
+/** Maximum hand tilt in degrees. Relaxed from 15° to 35° for natural, unconstrained positioning. */
+export const MAX_HAND_TILT_DEG = 35;
 export const MAX_FOREARM_PITCH_DEG = 25;
 export const FRAME_MARGIN = 0.05;
 export const HAND_BREADTH_MM = 80;
@@ -28,14 +24,8 @@ export function getWatchLateralOffsetMm(handedness: "left" | "right"): number {
   return WATCH_LATERAL_OFFSET_MM[handedness] ?? (handedness === "right" ? 4 : -16);
 }
 
-/**
- * Knuckle breadth as a share of the frame's short side. The upper bound is
- * high so the wrist can be held close, with the fingers out of the frame.
- */
-export const HAND_BREADTH_FRAC_MIN = 0.08;
-export const HAND_BREADTH_FRAC_MAX = 0.6;
-/** Upper limit on how much the tilt correction may enlarge the measured breadth. */
-export const MAX_FORESHORTENING_CORRECTION = 2.5;
+export const HAND_BREADTH_FRAC_MIN = 0.1;
+export const HAND_BREADTH_FRAC_MAX = 0.35;
 /** Relaxed depth flatness threshold. */
 export const DEPTH_FLATNESS_MAX = 0.60;
 export const ENABLE_DEPTH_SCALE_CORRECTION = false;
@@ -159,11 +149,11 @@ export const DEPTH_MODEL_ID = "onnx-community/depth-anything-v2-small";
 export const DEPTH_MODEL_REVISION = "4472b7362082ad9968fee890ca0f1e5aca36b93d";
 
 export const GUIDANCE = {
-  noWrist: "Point the camera at the back of your wrist",
+  noWrist: "Place your wrist in view",
   oneWrist: "Show only one wrist",
-  inFrame: "Bring your wrist into the frame. Your fingers can be cut off",
+  inFrame: "Move your wrist fully into the frame",
   backOfHand: "Turn your hand over to show the back of your wrist",
-  flat: "Turn the back of your wrist a little more toward the camera",
+  flat: "Flatten your wrist, keep the back of your hand parallel to the screen",
   closer: "Move closer",
   farther: "Move back a little",
   lighting: "Find better lighting",
@@ -196,7 +186,5 @@ export const CAMERA = {
     "Camera is in use by another application. Please close other camera apps and try again.",
   insecure:
     "Camera access requires a secure connection (HTTPS). Please open this page over HTTPS.",
-  noRear:
-    "Virtual try-on needs your phone's back camera, and we couldn't open it. Close other camera apps and try again.",
   generic: "Could not access the camera. Please check your browser permissions.",
 } as const;
