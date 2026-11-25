@@ -38,9 +38,11 @@ async function createHandLandmarker(delegate: "GPU" | "CPU"): Promise<HandLandma
     },
     runningMode: "VIDEO",
     numHands: 2,
-    minHandDetectionConfidence: 0.5,
-    minHandPresenceConfidence: 0.5,
-    minTrackingConfidence: 0.5,
+    // Lower than the defaults so a wrist with the fingers out of the frame,
+    // or held at a slant, is still found and kept.
+    minHandDetectionConfidence: 0.35,
+    minHandPresenceConfidence: 0.35,
+    minTrackingConfidence: 0.35,
   });
 }
 

@@ -45,8 +45,14 @@ function hand(partial: Partial<HandObservation> & Pick<HandObservation, "handedn
   };
 }
 
+/** A flat hand whose 3D landmarks match its 2D ones (no foreshortening). */
+function flatHand(handedness: "left" | "right"): HandObservation {
+  const base = hand({ handedness });
+  return { ...base, worldLandmarks: base.landmarks.map((p) => ({ x: p.x, y: p.y, z: 0 })) };
+}
+
 describe("snapshot geometry", () => {
-  it("keeps a flat back-of-hand pose and rejects a palm and a 30 degree tilt", () => {
+  it("keeps a flat back-of-hand pose and rejects a palm and a near edge-on tilt", () => {
     const width = 1000;
     const height = 1000;
     const right = hand({ handedness: "right" });
@@ -59,10 +65,14 @@ describe("snapshot geometry", () => {
     const palm = hand({ handedness: "right", worldLandmarks: worldFor(0, "right", true) });
     assert.equal(isBackFacing(palm), false);
 
+    // A natural slant passes; a hand turned nearly edge-on does not.
     const tilt45 = hand({ handedness: "right", worldLandmarks: worldFor(45, "right", false) });
-    const tilted = evaluateGates([tilt45], history, width, height, { luminance: 120, sharpness: 80 });
+    const slanted = evaluateGates([tilt45], Array.from({ length: 8 }, () => tilt45), width, height, { luminance: 120, sharpness: 80 });
+    assert.equal(slanted.allPassed, true);
+    const tilt65 = hand({ handedness: "right", worldLandmarks: worldFor(65, "right", false) });
+    const tilted = evaluateGates([tilt65], history, width, height, { luminance: 120, sharpness: 80 });
     assert.equal(tilted.messageId, "flat");
-    assert.ok((handTiltDeg(tilt45) ?? 0) > 35);
+    assert.ok((handTiltDeg(tilt65) ?? 0) > 55);
 
     const tilt15 = hand({ handedness: "left", worldLandmarks: worldFor(15, "left", false) });
     assert.equal(isBackFacing(tilt15), true);
@@ -110,11 +120,13 @@ describe("snapshot geometry", () => {
   });
 
   it("scales from hand breadth and turns the crown upright", () => {
-    const right = hand({ handedness: "right" });
+    const right = flatHand("right");
     const place = placementOf(right, 1000, 1000);
     assert.ok(Math.abs(place.breadthPx - 200) < 1);
     assert.ok(Math.abs(place.pxPerMm - 200 / HAND_BREADTH_MM) < 1e-6);
-    assert.ok(Math.abs(place.placement.x - (500 + (WATCH_OFFSET_MM + WATCH_LATERAL_OFFSET_MM.right) * place.pxPerMm)) < 1);
+    // Forearm points right (toward the elbow), so the lateral shift runs across it.
+    assert.ok(Math.abs(place.placement.x - (500 + WATCH_OFFSET_MM * place.pxPerMm)) < 1);
+    assert.ok(Math.abs(place.placement.y - (550 - WATCH_LATERAL_OFFSET_MM.right * place.pxPerMm)) < 1);
 
     const leftTurn = crownRotation("left", { x: -1, y: 0 });
     const rightTurn = crownRotation("right", { x: -1, y: 0 });
@@ -122,8 +134,21 @@ describe("snapshot geometry", () => {
     assert.ok(Math.abs(Math.cos(rightTurn) - 1) < 1e-6);
   });
 
+  it("keeps the knuckle breadth when the hand is slanted away from the screen", () => {
+    const flat = flatHand("right");
+    // Turn the hand 50 degrees about the vertical axis: x shrinks in the picture.
+    const squash = Math.cos((50 * Math.PI) / 180);
+    const slanted: HandObservation = {
+      ...flat,
+      landmarks: flat.landmarks.map((p) => ({ x: 0.5 + (p.x - 0.5) * squash, y: p.y })),
+    };
+    const flatBreadth = placementOf(flat, 1000, 1000).breadthPx;
+    const slantBreadth = placementOf(slanted, 1000, 1000).breadthPx;
+    assert.ok(Math.abs(slantBreadth - flatBreadth) / flatBreadth < 0.05);
+  });
+
   it("uses the mask width when the ratio is sane", () => {
-    const sample = hand({ handedness: "right" });
+    const sample = flatHand("right");
     const place = placementOf(sample, 1000, 1000);
     const mask = new Uint8Array(1000 * 1000);
     const half = 70;

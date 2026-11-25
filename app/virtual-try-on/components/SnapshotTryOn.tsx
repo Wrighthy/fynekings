@@ -18,6 +18,12 @@ import { DEFAULT_ADJUSTMENTS, type HandObservation, type ManualAdjustments } fro
 
 type Props = { products: TryOnProduct[] };
 
+/**
+ * The try-on only uses the phone's back camera, so the picture is never
+ * mirrored. There is deliberately no way to switch to the front camera.
+ */
+const MIRRORED = false;
+
 export default function SnapshotTryOn({ products }: Props) {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -45,7 +51,6 @@ export default function SnapshotTryOn({ products }: Props) {
   const [cameraAttempt, setCameraAttempt] = useState(0);
 
   const selectedWatch = useTryOnStore((s) => s.selectedWatch);
-  const isFrontCamera = useTryOnStore((s) => s.isFrontCamera);
   const wrist = useTryOnStore((s) => s.wrist);
   const setWrist = useTryOnStore((s) => s.setWrist);
   const cameraError = useTryOnStore((s) => s.cameraError);
@@ -85,7 +90,7 @@ export default function SnapshotTryOn({ products }: Props) {
         frame.height,
         frame.quality,
         "live",
-        isFrontCamera
+        MIRRORED
       );
       const messageId = forcedRef.current && forcedRef.current !== gates.messageId
         ? gates.messageId
@@ -112,7 +117,7 @@ export default function SnapshotTryOn({ products }: Props) {
         }
       }
     },
-    { mirrored: isFrontCamera, enabled: showLive, wrist }
+    { mirrored: MIRRORED, enabled: showLive, wrist }
   );
 
   // Switching wrists invalidates the stability history and the hold timer.
@@ -141,7 +146,7 @@ export default function SnapshotTryOn({ products }: Props) {
       const product = useTryOnStore.getState().selectedWatch;
       if (!product) throw new Error(GUIDANCE.genericProcessing);
       const watch = await loadWatch(product);
-      const outcome = await runSnapshotPipeline(source, watch, isFrontCamera, setStep, lastHandRef.current, wrist);
+      const outcome = await runSnapshotPipeline(source, watch, MIRRORED, setStep, lastHandRef.current, wrist);
       if (!outcome.ok) {
         forcedRef.current = outcome.messageId;
         setForcedId(outcome.messageId);
@@ -164,7 +169,7 @@ export default function SnapshotTryOn({ products }: Props) {
     } finally {
       busyRef.current = false;
     }
-  }, [grabFrame, isFrontCamera, ready, wrist, setAdjustments, setLowConfidence, setMeasurements, setPhase, setSnapshotSize]);
+  }, [grabFrame, ready, wrist, setAdjustments, setLowConfidence, setMeasurements, setPhase, setSnapshotSize]);
 
   showLiveRef.current = showLive;
   forcedRef.current = forcedId;
@@ -177,7 +182,7 @@ export default function SnapshotTryOn({ products }: Props) {
     const run = async () => {
       try {
         setPhase("CAMERA_PERMISSION");
-        stream = await openCamera(isFrontCamera);
+        stream = await openCamera();
         if (cancelled) {
           stream.getTracks().forEach((track) => track.stop());
           return;
@@ -203,7 +208,7 @@ export default function SnapshotTryOn({ products }: Props) {
       const video = videoRef.current;
       if (video) video.srcObject = null;
     };
-  }, [showLive, isFrontCamera, cameraAttempt, setCameraError, setCameraReady, setPhase, start, stop]);
+  }, [showLive, cameraAttempt, setCameraError, setCameraReady, setPhase, start, stop]);
 
   useEffect(() => {
     if (phase !== "RESULT" || !selectedWatch) return;
@@ -275,7 +280,7 @@ export default function SnapshotTryOn({ products }: Props) {
     <div className="tryon-experience">
       <video
         ref={videoRef}
-        className={`tryon-video ${isFrontCamera ? "mirrored" : ""} ${showLive ? "" : "tryon-hidden"}`}
+        className={`tryon-video ${showLive ? "" : "tryon-hidden"}`}
         autoPlay
         playsInline
         muted
