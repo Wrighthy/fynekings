@@ -3822,6 +3822,25 @@ footer {
   color: var(--gold);
 }
 
+.tryon-flip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--gold);
+  background: rgba(10, 10, 10, .6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--dark4);
+  cursor: none;
+  transition: border-color .3s, background .3s;
+}
+
+.tryon-flip-btn:hover {
+  border-color: var(--gold);
+}
+
 .tryon-wrist-toggle {
   display: inline-flex;
   background: rgba(10, 10, 10, .6);

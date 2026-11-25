@@ -2,7 +2,7 @@ import { CROP_EXPAND, GUIDANCE, PROCESSING_TIMEOUT_MS } from "./constants";
 import { downscaleCanvas } from "./camera";
 import { estimateDepth, resetDepthWorker } from "./depthClient";
 import { depthFlatness } from "./depthFlatness";
-import { isBackFacing, placementOf } from "./geometry";
+import { placementOf } from "./geometry";
 import { capsuleMask } from "./mask";
 import { measureWrist } from "./measure";
 import { categoryIndices, getSegmenter } from "./models";
@@ -137,11 +137,6 @@ async function analyse(
   const hand = (hands.length > 0 ? hands[0] : null) ?? fallbackHand ?? null;
   if (!hand) {
     return { ok: false, messageId: "noWrist" };
-  }
-  // The photo itself must show the back of the wrist, not just the live frame
-  // that triggered the capture.
-  if (!isBackFacing(hand, mirrored)) {
-    return { ok: false, messageId: "backOfHand" };
   }
 
   if (state.cancelled) throw new Error(GUIDANCE.processingTimeout);
