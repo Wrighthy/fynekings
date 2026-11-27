@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type PointerEvent } from "react";
+import { useEffect, useRef } from "react";
 import { ADJUST_ROTATION_DEG, ADJUST_SCALE_MAX, ADJUST_SCALE_MIN, GUIDANCE } from "../lib/tryon/constants";
 import { snapshotSession } from "../lib/tryon/snapshotSession";
 import type { ManualAdjustments, SnapshotMeasurements } from "../lib/tryon/types";
@@ -27,7 +27,6 @@ export default function ResultView({
   onSave,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const dragRef = useRef<{ x: number; y: number; along: number; lateral: number } | null>(null);
 
   useEffect(() => {
     const source = snapshotSession.composite;
@@ -38,59 +37,16 @@ export default function ResultView({
     canvas.getContext("2d")?.drawImage(source, 0, 0);
   }, [paintKey]);
 
-  const onPointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
-    event.currentTarget.setPointerCapture(event.pointerId);
-    dragRef.current = {
-      x: event.clientX,
-      y: event.clientY,
-      along: adjustments.alongPx,
-      lateral: adjustments.lateralPx ?? 0,
-    };
-  };
-
-  const onPointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
-    const drag = dragRef.current;
-    const canvas = canvasRef.current;
-    if (!drag || !canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
-    const dx = ((event.clientX - drag.x) * canvas.width) / rect.width;
-    const dy = ((event.clientY - drag.y) * canvas.height) / rect.height;
-    const dAlong = dx * measurements.forearmAxis.x + dy * measurements.forearmAxis.y;
-    const dLateral = dx * measurements.perp.x + dy * measurements.perp.y;
-    const along = drag.along + dAlong;
-    const lateral = drag.lateral + dLateral;
-    const alongLimit = Math.max(60, measurements.wristWidthPx * 1.5);
-    const lateralLimit = Math.max(60, measurements.wristWidthPx * 1.2);
-    onAdjust({
-      ...adjustments,
-      alongPx: Math.max(-alongLimit, Math.min(alongLimit, along)),
-      lateralPx: Math.max(-lateralLimit, Math.min(lateralLimit, lateral)),
-    });
-  };
-
-  const endDrag = () => {
-    dragRef.current = null;
-  };
-
+  // The watch position is fixed by the measurement; only rotation and size
+  // can be adjusted (sliders below). The image itself is not draggable.
   return (
     <div className="tryon-result">
       <div className="tryon-result-stage">
         <canvas
           ref={canvasRef}
           className="tryon-result-canvas"
-          aria-label="Watch fitted on your wrist. Drag the watch to adjust its position."
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
+          aria-label="Watch fitted on your wrist"
         />
-        <span className="tryon-result-hint" aria-hidden="true">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3" />
-          </svg>
-          Drag to adjust
-        </span>
       </div>
 
       {lowConfidence && (

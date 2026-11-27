@@ -4405,7 +4405,7 @@ footer {
   position: absolute;
   top: 46%;
   left: 50%;
-  width: min(46vw, 240px);
+  width: min(40vw, 340px);
   transform: translate(-50%, -50%);
   color: rgba(255, 255, 255, .55);
 }
@@ -4483,31 +4483,6 @@ footer {
   height: auto;
   border: 1px solid var(--dark4);
   border-radius: 4px;
-  touch-action: none;
-  cursor: grab;
-}
-
-.tryon-result-canvas:active {
-  cursor: grabbing;
-}
-
-.tryon-result-hint {
-  position: absolute;
-  left: 50%;
-  bottom: 10px;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: rgba(5, 5, 5, .72);
-  color: var(--text);
-  font-size: 10px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  pointer-events: none;
 }
 
 .tryon-result-warn {
@@ -4758,7 +4733,7 @@ footer {
 
   .tryon-wrist-outline {
     top: 47%;
-    width: min(54vw, 220px);
+    width: min(80vw, 300px);
   }
 
   /* Bottom bar: watch name on top, picker and capture on one row below. */

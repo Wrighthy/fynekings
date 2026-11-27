@@ -4,12 +4,13 @@ import { GUIDANCE, type GuidanceId } from "../lib/tryon/constants";
 import { LEFT_HAND_ICON, RIGHT_HAND_ICON } from "./handIcons";
 
 /**
- * Tilt of the on-screen hand guide, in degrees. The guide leans the fingers
- * inward (as a raised forearm naturally sits in front of a phone) so the
- * user sees how to angle the back of the wrist toward the camera. The left
- * hand is a mirror image, so it leans the other way.
+ * Tilt of the on-screen hand guide, in degrees. The hand lies close to
+ * horizontal, about 20° above it (fingers pointing across the screen, wrist
+ * toward the lower side), which is how a forearm naturally sits in front of a
+ * phone with the back of the wrist toward the camera. The left hand is a
+ * mirror image, so it points the other way.
  */
-const GUIDE_TILT_DEG = -16;
+const GUIDE_TILT_DEG = -70;
 
 type Props = {
   messageId: GuidanceId;
@@ -69,7 +70,9 @@ export default function GuidanceOverlay({ messageId, ready, progress, hand, wris
         </p>
       )}
       {hint && <p className="tryon-guide-hint">{GUIDANCE.forearmHint}</p>}
-      <svg className={`tryon-wrist-outline ${ready ? "ready" : ""}`} viewBox="0 0 200 280" aria-hidden="true">
+      {/* Wide box: the tilted hand spans roughly x -32..240, y 43..250. Centred on
+          x = 100 so the left-hand mirror (about x = 100) stays inside it. */}
+      <svg className={`tryon-wrist-outline ${ready ? "ready" : ""}`} viewBox="-50 35 300 225" aria-hidden="true">
         <g transform={side === "left" ? "translate(200, 0) scale(-1, 1)" : undefined}>
           <g transform={`rotate(${GUIDE_TILT_DEG} 100 150)`}>
             {/* Hand and wrist guide outline */}
