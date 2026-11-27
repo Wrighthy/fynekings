@@ -62,7 +62,7 @@ export default function Cart() {
 
         <div className="cart-footer">
           <div className="cart-row">
-            <span style={{ textTransform: "uppercase", letterSpacing: ".18em", color: "var(--muted)", fontSize: ".55rem" }}>Subtotal</span>
+            <span style={{ textTransform: "uppercase", letterSpacing: ".18em", color: "var(--muted)", fontSize: "14px" }}>Subtotal</span>
             <span>{fmt(subtotal)}</span>
           </div>
           <div className="cart-row muted">

@@ -101,7 +101,7 @@ export default function AuthModal() {
         </button>
 
         <div style={{ textAlign: "center", marginBottom: "28px" }}>
-          <div style={{ fontSize: ".45rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
             Collector Portal
           </div>
           <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "var(--white)", fontWeight: 300 }}>
@@ -110,7 +110,7 @@ export default function AuthModal() {
         </div>
 
         {error && (
-          <div style={{ padding: "12px", background: "rgba(139, 32, 32, 0.2)", border: "1px solid var(--crimson)", color: "#ff6b6b", fontSize: ".65rem", marginBottom: "20px", textAlign: "center" }}>
+          <div style={{ padding: "12px", background: "rgba(139, 32, 32, 0.2)", border: "1px solid var(--crimson)", color: "#ff6b6b", fontSize: "14px", marginBottom: "20px", textAlign: "center" }}>
             {error}
           </div>
         )}
@@ -118,63 +118,63 @@ export default function AuthModal() {
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {mode === "register" && (
             <div>
-              <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Full Name *</label>
+              <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Full Name *</label>
               <input
                 type="text"
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Prince Olayemi"
-                style={{ width: "100%", padding: "12px 14px", background: "var(--dark2)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".8rem", outline: "none" }}
+                style={{ width: "100%", padding: "12px 14px", background: "var(--dark2)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
               />
             </div>
           )}
 
           <div>
-            <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Email Address *</label>
+            <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Email Address *</label>
             <input
               type="email"
               required
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="olayemi@example.com"
-              style={{ width: "100%", padding: "12px 14px", background: "var(--dark2)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".8rem", outline: "none" }}
+              style={{ width: "100%", padding: "12px 14px", background: "var(--dark2)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Password *</label>
+            <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Password *</label>
             <input
               type="password"
               required
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               placeholder="••••••••••••"
-              style={{ width: "100%", padding: "12px 14px", background: "var(--dark2)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".8rem", outline: "none" }}
+              style={{ width: "100%", padding: "12px 14px", background: "var(--dark2)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
             />
           </div>
 
           {mode === "register" && (
             <>
               <div>
-                <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Phone / WhatsApp</label>
+                <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Phone / WhatsApp</label>
                 <input
                   type="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   placeholder="+234 803 000 0000"
-                  style={{ width: "100%", padding: "12px 14px", background: "var(--dark2)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".8rem", outline: "none" }}
+                  style={{ width: "100%", padding: "12px 14px", background: "var(--dark2)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: ".48rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Default Delivery Address</label>
+                <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Default Delivery Address</label>
                 <input
                   type="text"
                   value={form.shippingAddress}
                   onChange={(e) => setForm({ ...form, shippingAddress: e.target.value })}
                   placeholder="Ahmadu Bello Way, Victoria Island"
-                  style={{ width: "100%", padding: "12px 14px", background: "var(--dark2)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".8rem", outline: "none" }}
+                  style={{ width: "100%", padding: "12px 14px", background: "var(--dark2)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
                 />
               </div>
             </>
@@ -189,8 +189,8 @@ export default function AuthModal() {
               background: "var(--gold)",
               color: "var(--black)",
               border: "none",
-              fontSize: ".58rem",
-              letterSpacing: ".3em",
+              fontSize: "14px",
+              letterSpacing: ".12em",
               textTransform: "uppercase",
               fontWeight: 600,
               cursor: loading ? "wait" : "none",
@@ -203,14 +203,14 @@ export default function AuthModal() {
 
         <div style={{ marginTop: "24px", textAlign: "center", borderTop: "1px solid var(--dark3)", paddingTop: "16px" }}>
           {mode === "login" ? (
-            <span style={{ fontSize: ".6rem", color: "var(--muted)" }}>
+            <span style={{ fontSize: "14px", color: "var(--muted)" }}>
               Don&rsquo;t have an account?{" "}
               <button onClick={() => setMode("register")} style={{ background: "none", border: "none", color: "var(--gold)", cursor: "pointer", textDecoration: "underline" }}>
                 Create one now
               </button>
             </span>
           ) : (
-            <span style={{ fontSize: ".6rem", color: "var(--muted)" }}>
+            <span style={{ fontSize: "14px", color: "var(--muted)" }}>
               Already registered?{" "}
               <button onClick={() => setMode("login")} style={{ background: "none", border: "none", color: "var(--gold)", cursor: "pointer", textDecoration: "underline" }}>
                 Sign In

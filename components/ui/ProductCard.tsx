@@ -109,7 +109,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           {isSoldOut ? (
             <span
               style={{
-                fontSize: ".62rem",
+                fontSize: "12px",
                 letterSpacing: ".15em",
                 textTransform: "uppercase",
                 padding: "4px 10px",
@@ -125,7 +125,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           ) : isLowStock ? (
             <span
               style={{
-                fontSize: ".62rem",
+                fontSize: "12px",
                 letterSpacing: ".15em",
                 textTransform: "uppercase",
                 padding: "4px 10px",
@@ -141,7 +141,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           ) : (
             <span
               style={{
-                fontSize: ".62rem",
+                fontSize: "12px",
                 letterSpacing: ".15em",
                 textTransform: "uppercase",
                 padding: "4px 10px",
@@ -160,7 +160,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           {p.badge && (
             <span
               style={{
-                fontSize: ".58rem",
+                fontSize: "12px",
                 letterSpacing: ".12em",
                 textTransform: "uppercase",
                 padding: "4px 10px",
@@ -176,7 +176,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           {p.badgeNew && (
             <span
               style={{
-                fontSize: ".58rem",
+                fontSize: "12px",
                 letterSpacing: ".12em",
                 textTransform: "uppercase",
                 padding: "4px 10px",
@@ -404,7 +404,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
                 background: "rgba(255, 75, 75, 0.15)",
                 border: "1px solid rgba(255, 75, 75, 0.5)",
                 color: "#ff8b8b",
-                fontSize: ".72rem",
+                fontSize: "13px",
                 letterSpacing: ".18em",
                 textTransform: "uppercase",
                 fontWeight: 600,
@@ -425,7 +425,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
                 background: added ? "#2ed573" : "var(--gold)",
                 border: added ? "1px solid #2ed573" : "1px solid var(--gold)",
                 color: "var(--black)",
-                fontSize: ".74rem",
+                fontSize: "14px",
                 letterSpacing: ".2em",
                 textTransform: "uppercase",
                 fontWeight: 700,
@@ -463,11 +463,11 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
         <div>
           {/* Tag & Movement Row */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-            <span style={{ fontSize: "12.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
+            <span style={{ fontSize: "13px", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
               {p.tag}
             </span>
             {p.movement && (
-              <span style={{ fontSize: "12px", letterSpacing: ".1em", color: "#a5a5a5", textTransform: "uppercase" }}>
+              <span style={{ fontSize: "13px", letterSpacing: ".1em", color: "#b8b8b8", textTransform: "uppercase" }}>
                 {p.movement}
               </span>
             )}
@@ -493,7 +493,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
           </Link>
 
           {/* Series */}
-          <div style={{ fontSize: "12.5px", letterSpacing: ".12em", textTransform: "uppercase", color: "#9e9e9e", marginBottom: "18px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", textTransform: "uppercase", color: "#b8b8b8", marginBottom: "18px" }}>
             {p.series}
           </div>
         </div>
@@ -505,7 +505,7 @@ export default function ProductCard({ product: p, onQuickView }: ProductCardProp
               <span style={{ fontFamily: "Playfair Display, serif", fontSize: "22px", color: "var(--gold)", fontWeight: 600 }}>
                 {fmt(p.price)}
               </span>
-              <span style={{ fontSize: "12px", color: "#808080", marginLeft: "8px" }}>
+              <span style={{ fontSize: "13px", color: "#b8b8b8", marginLeft: "8px" }}>
                 + fees
               </span>
             </div>

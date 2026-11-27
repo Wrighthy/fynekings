@@ -174,7 +174,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                 ))}
               </>
             ) : (
-              <div style={{ color: "var(--gold)", fontSize: ".8rem", letterSpacing: ".2em" }}>
+              <div style={{ color: "var(--gold)", fontSize: "15px", letterSpacing: ".2em" }}>
                 FYNEKINGS
               </div>
             )}
@@ -248,13 +248,13 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
           <div>
             {/* Top Status & Series */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px", gap: "10px" }}>
-              <span style={{ fontSize: ".68rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
+              <span style={{ fontSize: "14px", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
                 {product.series}
               </span>
               {isSoldOut ? (
                 <span
                   style={{
-                    fontSize: ".62rem",
+                    fontSize: "14px",
                     letterSpacing: ".15em",
                     textTransform: "uppercase",
                     padding: "3px 8px",
@@ -269,7 +269,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
               ) : isLowStock ? (
                 <span
                   style={{
-                    fontSize: ".62rem",
+                    fontSize: "14px",
                     letterSpacing: ".15em",
                     textTransform: "uppercase",
                     padding: "3px 8px",
@@ -284,7 +284,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
               ) : (
                 <span
                   style={{
-                    fontSize: ".62rem",
+                    fontSize: "14px",
                     letterSpacing: ".15em",
                     textTransform: "uppercase",
                     padding: "3px 8px",
@@ -314,7 +314,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
             </h2>
 
             {/* Tag / Category */}
-            <div style={{ fontSize: ".72rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".12em", marginBottom: "16px" }}>
+            <div style={{ fontSize: "14px", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".12em", marginBottom: "16px" }}>
               {product.tag} {product.movement ? `· ${product.movement}` : ""}
             </div>
 
@@ -323,13 +323,13 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
               <span style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--gold)", fontWeight: 500 }}>
                 {fmt(product.price)}
               </span>
-              <span style={{ fontSize: ".7rem", color: "#888", letterSpacing: ".05em" }}>
+              <span style={{ fontSize: "14px", color: "#888", letterSpacing: ".05em" }}>
                 + standard checkout fees
               </span>
             </div>
 
             {/* Description */}
-            <p style={{ fontSize: ".82rem", lineHeight: 1.6, color: "#d0d0d0", margin: "0 0 20px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.6, color: "#d0d0d0", margin: "0 0 20px" }}>
               {product.description ||
                 "A distinguished luxury timepiece crafted with meticulous attention to detail and hand-finished in our Lagos atelier."}
             </p>
@@ -349,26 +349,26 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
               >
                 {product.specs.movement && (
                   <div>
-                    <div style={{ fontSize: ".58rem", color: "#888", textTransform: "uppercase", letterSpacing: ".1em" }}>Movement</div>
-                    <div style={{ fontSize: ".74rem", color: "var(--white)", fontWeight: 500 }}>{product.specs.movement}</div>
+                    <div style={{ fontSize: "13px", color: "#888", textTransform: "uppercase", letterSpacing: ".1em" }}>Movement</div>
+                    <div style={{ fontSize: "14px", color: "var(--white)", fontWeight: 500 }}>{product.specs.movement}</div>
                   </div>
                 )}
                 {product.specs.caseDiameter && (
                   <div>
-                    <div style={{ fontSize: ".58rem", color: "#888", textTransform: "uppercase", letterSpacing: ".1em" }}>Case Size</div>
-                    <div style={{ fontSize: ".74rem", color: "var(--white)", fontWeight: 500 }}>{product.specs.caseDiameter}</div>
+                    <div style={{ fontSize: "13px", color: "#888", textTransform: "uppercase", letterSpacing: ".1em" }}>Case Size</div>
+                    <div style={{ fontSize: "14px", color: "var(--white)", fontWeight: 500 }}>{product.specs.caseDiameter}</div>
                   </div>
                 )}
                 {product.specs.waterResistance && (
                   <div>
-                    <div style={{ fontSize: ".58rem", color: "#888", textTransform: "uppercase", letterSpacing: ".1em" }}>Water Resistance</div>
-                    <div style={{ fontSize: ".74rem", color: "var(--white)", fontWeight: 500 }}>{product.specs.waterResistance}</div>
+                    <div style={{ fontSize: "13px", color: "#888", textTransform: "uppercase", letterSpacing: ".1em" }}>Water Resistance</div>
+                    <div style={{ fontSize: "14px", color: "var(--white)", fontWeight: 500 }}>{product.specs.waterResistance}</div>
                   </div>
                 )}
                 {product.specs.strap && (
                   <div>
-                    <div style={{ fontSize: ".58rem", color: "#888", textTransform: "uppercase", letterSpacing: ".1em" }}>Strap / Bracelet</div>
-                    <div style={{ fontSize: ".74rem", color: "var(--white)", fontWeight: 500 }}>{product.specs.strap}</div>
+                    <div style={{ fontSize: "13px", color: "#888", textTransform: "uppercase", letterSpacing: ".1em" }}>Strap / Bracelet</div>
+                    <div style={{ fontSize: "14px", color: "var(--white)", fontWeight: 500 }}>{product.specs.strap}</div>
                   </div>
                 )}
               </div>
@@ -409,7 +409,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                       textAlign: "center",
                       color: "var(--gold)",
                       fontWeight: 600,
-                      fontSize: ".85rem",
+                      fontSize: "15px",
                     }}
                   >
                     {qty}
@@ -439,7 +439,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                     background: added ? "#2ed573" : "var(--gold)",
                     color: "var(--black)",
                     border: "none",
-                    fontSize: ".75rem",
+                    fontSize: "15px",
                     letterSpacing: ".2em",
                     textTransform: "uppercase",
                     fontWeight: 700,
@@ -490,7 +490,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                   background: "rgba(255, 75, 75, 0.08)",
                   border: "1px solid rgba(255, 75, 75, 0.25)",
                   color: "#ff8b8b",
-                  fontSize: ".78rem",
+                  fontSize: "15px",
                   textAlign: "center",
                   textTransform: "uppercase",
                   letterSpacing: ".15em",
@@ -509,7 +509,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                 display: "block",
                 textAlign: "center",
                 padding: "10px",
-                fontSize: ".72rem",
+                fontSize: "14px",
                 letterSpacing: ".15em",
                 textTransform: "uppercase",
                 color: "var(--gold)",

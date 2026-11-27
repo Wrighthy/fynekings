@@ -91,8 +91,8 @@ export default function BestSellers() {
             <p
               className="sec-tag"
               style={{
-                fontSize: "0.74rem",
-                letterSpacing: ".3em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 color: "var(--gold)",
                 textTransform: "uppercase",
                 marginBottom: "8px",
@@ -118,9 +118,9 @@ export default function BestSellers() {
             <p
               className="sec-desc"
               style={{
-                fontSize: "0.88rem",
+                fontSize: "17px",
                 color: "var(--muted)",
-                lineHeight: 1.6,
+                lineHeight: 1.7,
                 maxWidth: "540px",
                 margin: 0,
               }}
@@ -148,8 +148,8 @@ export default function BestSellers() {
                   background: activeFilter === f ? "var(--gold)" : "var(--dark2)",
                   color: activeFilter === f ? "var(--black)" : "var(--muted)",
                   border: activeFilter === f ? "1px solid var(--gold)" : "1px solid var(--dark3)",
-                  fontSize: "0.74rem",
-                  letterSpacing: ".15em",
+                  fontSize: "14px",
+                  letterSpacing: ".12em",
                   textTransform: "uppercase",
                   fontWeight: activeFilter === f ? 700 : 500,
                   cursor: "pointer",
@@ -225,7 +225,7 @@ export default function BestSellers() {
               border: "1px solid var(--gold)",
               color: "var(--gold)",
               textDecoration: "none",
-              fontSize: "0.78rem",
+              fontSize: "14px",
               letterSpacing: ".25em",
               textTransform: "uppercase",
               fontWeight: 600,

@@ -36,6 +36,7 @@ export type TryOnProduct = {
 type TryOnState = {
   selectedWatch: TryOnProduct | null;
   isCameraReady: boolean;
+  isFrontCamera: boolean;
   /**
    * Which wrist the user is trying the watch on. Chosen by the user because
    * MediaPipe's left/right guess is unreliable for back-of-hand views, and the
@@ -51,6 +52,8 @@ type TryOnState = {
 
   selectWatch: (watch: TryOnProduct) => void;
   setCameraReady: (ready: boolean) => void;
+  setFrontCamera: (front: boolean) => void;
+  toggleCamera: () => void;
   setWrist: (wrist: Handedness) => void;
   setCameraError: (message: string | null) => void;
   setPhase: (phase: TryOnPhase) => void;
@@ -64,6 +67,7 @@ type TryOnState = {
 const INITIAL_STATE = {
   selectedWatch: null as TryOnProduct | null,
   isCameraReady: false,
+  isFrontCamera: false,
   wrist: "left" as Handedness,
   cameraError: null as string | null,
   phase: "IDLE" as TryOnPhase,
@@ -79,6 +83,9 @@ export const useTryOnStore = create<TryOnState>((set) => ({
   selectWatch: (watch) => set({ selectedWatch: watch }),
   setCameraReady: (ready) =>
     set((s) => (s.isCameraReady === ready ? s : { isCameraReady: ready })),
+  setFrontCamera: (front) =>
+    set((s) => (s.isFrontCamera === front ? s : { isFrontCamera: front })),
+  toggleCamera: () => set((s) => ({ isFrontCamera: !s.isFrontCamera })),
   setWrist: (wrist) => set((s) => (s.wrist === wrist ? s : { wrist })),
   setCameraError: (message) => set({ cameraError: message }),
   setPhase: (phase) => set((s) => (s.phase === phase ? s : { phase })),

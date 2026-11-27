@@ -94,8 +94,8 @@ function SignupForm() {
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
           <div
             style={{
-              fontSize: ".52rem",
-              letterSpacing: ".45em",
+              fontSize: "14px",
+              letterSpacing: ".12em",
               color: "var(--gold)",
               textTransform: "uppercase",
               marginBottom: "12px",
@@ -114,7 +114,7 @@ function SignupForm() {
           >
             Create <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Account</em>
           </h1>
-          <p style={{ fontSize: ".72rem", letterSpacing: ".08em", color: "var(--muted)", lineHeight: 1.8 }}>
+          <p style={{ fontSize: "15px", letterSpacing: ".08em", color: "var(--muted)", lineHeight: 1.8 }}>
             Join the FYNEKINGS client community to track orders, save timepieces, and access private events.
           </p>
         </div>
@@ -126,7 +126,7 @@ function SignupForm() {
               border: "1px solid rgba(220, 53, 69, 0.4)",
               color: "#ff6b6b",
               padding: "14px 18px",
-              fontSize: ".75rem",
+              fontSize: "15px",
               marginBottom: "24px",
               textAlign: "center",
               letterSpacing: ".04em",
@@ -149,8 +149,8 @@ function SignupForm() {
             <label
               style={{
                 display: "block",
-                fontSize: ".55rem",
-                letterSpacing: ".25em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 color: "var(--gold)",
                 marginBottom: "8px",
@@ -170,7 +170,7 @@ function SignupForm() {
                 border: "1px solid var(--dark3)",
                 color: "var(--white)",
                 padding: "14px 16px",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 outline: "none",
                 transition: "border-color .2s",
                 fontFamily: "inherit",
@@ -184,8 +184,8 @@ function SignupForm() {
             <label
               style={{
                 display: "block",
-                fontSize: ".55rem",
-                letterSpacing: ".25em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 color: "var(--gold)",
                 marginBottom: "8px",
@@ -205,7 +205,7 @@ function SignupForm() {
                 border: "1px solid var(--dark3)",
                 color: "var(--white)",
                 padding: "14px 16px",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 outline: "none",
                 transition: "border-color .2s",
                 fontFamily: "inherit",
@@ -220,8 +220,8 @@ function SignupForm() {
               <label
                 style={{
                   display: "block",
-                  fontSize: ".55rem",
-                  letterSpacing: ".25em",
+                  fontSize: "14px",
+                  letterSpacing: ".12em",
                   textTransform: "uppercase",
                   color: "var(--gold)",
                   marginBottom: "8px",
@@ -241,7 +241,7 @@ function SignupForm() {
                   border: "1px solid var(--dark3)",
                   color: "var(--white)",
                   padding: "14px 16px",
-                  fontSize: ".85rem",
+                  fontSize: "15px",
                   outline: "none",
                   transition: "border-color .2s",
                   fontFamily: "inherit",
@@ -255,8 +255,8 @@ function SignupForm() {
               <label
                 style={{
                   display: "block",
-                  fontSize: ".55rem",
-                  letterSpacing: ".25em",
+                  fontSize: "14px",
+                  letterSpacing: ".12em",
                   textTransform: "uppercase",
                   color: "var(--gold)",
                   marginBottom: "8px",
@@ -276,7 +276,7 @@ function SignupForm() {
                   border: "1px solid var(--dark3)",
                   color: "var(--white)",
                   padding: "14px 16px",
-                  fontSize: ".85rem",
+                  fontSize: "15px",
                   outline: "none",
                   transition: "border-color .2s",
                   fontFamily: "inherit",
@@ -291,8 +291,8 @@ function SignupForm() {
             <label
               style={{
                 display: "block",
-                fontSize: ".55rem",
-                letterSpacing: ".25em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 color: "var(--gold)",
                 marginBottom: "8px",
@@ -311,7 +311,7 @@ function SignupForm() {
                 border: "1px solid var(--dark3)",
                 color: "var(--white)",
                 padding: "14px 16px",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 outline: "none",
                 transition: "border-color .2s",
                 fontFamily: "inherit",
@@ -325,8 +325,8 @@ function SignupForm() {
             <label
               style={{
                 display: "block",
-                fontSize: ".55rem",
-                letterSpacing: ".25em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 color: "var(--gold)",
                 marginBottom: "8px",
@@ -345,7 +345,7 @@ function SignupForm() {
                 border: "1px solid var(--dark3)",
                 color: "var(--white)",
                 padding: "14px 16px",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 outline: "none",
                 transition: "border-color .2s",
                 fontFamily: "inherit",
@@ -363,7 +363,7 @@ function SignupForm() {
               width: "100%",
               justifyContent: "center",
               padding: "16px",
-              fontSize: ".75rem",
+              fontSize: "15px",
               letterSpacing: ".2em",
               cursor: loading ? "not-allowed" : "pointer",
               opacity: loading ? 0.7 : 1,
@@ -373,7 +373,7 @@ function SignupForm() {
           </button>
         </form>
 
-        <div style={{ textAlign: "center", marginTop: "32px", fontSize: ".75rem", color: "var(--muted)" }}>
+        <div style={{ textAlign: "center", marginTop: "32px", fontSize: "15px", color: "var(--muted)" }}>
           Already have an account?{" "}
           <Link
             href={`/login${rawRedirect ? `?redirect=${encodeURIComponent(rawRedirect)}` : ""}`}

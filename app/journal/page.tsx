@@ -14,18 +14,18 @@ export default function JournalPage() {
             <div style={{ background: "var(--dark)", borderBottom: "1px solid var(--dark3)", padding: "140px 64px 60px" }}>
                 <div style={{ maxWidth: "1300px", margin: "0 auto" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "24px" }}>
-                        <Link href="/" style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--muted)", textDecoration: "none", textTransform: "uppercase" }}>Home</Link>
+                        <Link href="/" style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textDecoration: "none", textTransform: "uppercase" }}>Home</Link>
                         <span style={{ color: "var(--dark4)" }}>→</span>
-                        <span style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase" }}>Journal</span>
+                        <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase" }}>Journal</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "20px" }}>
                         <span style={{ width: "24px", height: "1px", background: "var(--gold-dk)", display: "inline-block" }}></span>
-                        <span style={{ fontSize: ".5rem", letterSpacing: ".5em", color: "var(--gold-dk)", textTransform: "uppercase" }}>The Craft · Watch Education</span>
+                        <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase" }}>The Craft · Watch Education</span>
                     </div>
                     <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.5rem, 6vw, 5rem)", fontWeight: 300, color: "var(--white)", marginBottom: "24px", letterSpacing: "-.02em" }}>
                         The Fynekings <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Journal</em>
                     </h1>
-                    <p style={{ fontSize: ".7rem", letterSpacing: ".12em", color: "var(--text)", lineHeight: 2.4, maxWidth: "600px" }}>
+                    <p style={{ fontSize: "15px", letterSpacing: ".12em", color: "var(--text)", lineHeight: 2.4, maxWidth: "600px" }}>
                         Six volumes of horological knowledge written by our master curators in Lagos, Nigeria. Understanding what you wear transforms how you wear it.
                     </p>
                 </div>
@@ -47,22 +47,22 @@ export default function JournalPage() {
 
                             <div style={{ position: "relative", zIndex: 1 }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-                                    <span style={{ fontSize: ".45rem", letterSpacing: ".3em", color: "var(--gold-dk)", textTransform: "uppercase" }}>Vol. {article.vol}</span>
+                                    <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase" }}>Vol. {article.vol}</span>
                                     <span style={{ width: "20px", height: "1px", background: "var(--dark4)", display: "inline-block" }}></span>
-                                    <span style={{ fontSize: ".45rem", letterSpacing: ".25em", color: "var(--muted)", textTransform: "uppercase" }}>{article.category}</span>
+                                    <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textTransform: "uppercase" }}>{article.category}</span>
                                 </div>
 
                                 <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", fontWeight: 300, color: "var(--white)", marginBottom: "16px", letterSpacing: "-.01em", lineHeight: 1.1 }}>
                                     {article.title}
                                 </h2>
 
-                                <p style={{ fontSize: ".62rem", letterSpacing: ".06em", lineHeight: 2.2, color: "var(--text)", marginBottom: "32px" }}>
+                                <p style={{ fontSize: "14px", letterSpacing: ".06em", lineHeight: 2.2, color: "var(--text)", marginBottom: "32px" }}>
                                     {article.subtitle}
                                 </p>
 
                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                    <span style={{ fontSize: ".5rem", letterSpacing: ".25em", color: "var(--muted)", textTransform: "uppercase" }}>{article.readTime}</span>
-                                    <span className="journal-read-link" style={{ fontSize: ".52rem", letterSpacing: ".25em", color: "var(--gold)", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "8px" }}>
+                                    <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textTransform: "uppercase" }}>{article.readTime}</span>
+                                    <span className="journal-read-link" style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "8px" }}>
                                         Read
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ transition: "transform .3s ease" }}><path d="M5 12h14M13 5l7 7-7 7" /></svg>
                                     </span>

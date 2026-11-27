@@ -41,13 +41,13 @@ export default function ContactPage() {
 
       {/* Header */}
       <div style={{ padding: "160px 24px 60px", maxWidth: "1200px", margin: "0 auto", textAlign: "center" }}>
-        <div style={{ fontSize: ".52rem", letterSpacing: ".45em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
+        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
           Client Concierge & Horological Support
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.8rem, 6vw, 4.5rem)", fontWeight: 300, color: "var(--white)", marginBottom: "20px" }}>
           Contact <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Fynekings</em>
         </h1>
-        <p style={{ fontSize: ".7rem", letterSpacing: ".1em", lineHeight: 2.2, color: "var(--text)", maxWidth: "600px", margin: "0 auto" }}>
+        <p style={{ fontSize: "15px", letterSpacing: ".1em", lineHeight: 2.2, color: "var(--text)", maxWidth: "600px", margin: "0 auto" }}>
           Have a question about a timepiece, custom order, or private gallery viewing? Our horological concierge team is at your service.
         </p>
       </div>
@@ -65,7 +65,7 @@ export default function ContactPage() {
               style={{
                 padding: "14px 20px",
                 marginBottom: "24px",
-                fontSize: ".65rem",
+                fontSize: "14px",
                 letterSpacing: ".08em",
                 background: statusMsg.type === "success" ? "rgba(196, 169, 98, 0.1)" : "rgba(139, 32, 32, 0.15)",
                 border: statusMsg.type === "success" ? "1px solid var(--gold)" : "1px solid var(--crimson)",
@@ -78,47 +78,47 @@ export default function ContactPage() {
 
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <div>
-              <label style={{ display: "block", fontSize: ".5rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Full Name *</label>
+              <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Full Name *</label>
               <input
                 type="text"
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="e.g. Prince Olayemi"
-                style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".8rem", outline: "none" }}
+                style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
               />
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               <div>
-                <label style={{ display: "block", fontSize: ".5rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Email Address *</label>
+                <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Email Address *</label>
                 <input
                   type="email"
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="olayemi@example.com"
-                  style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".8rem", outline: "none" }}
+                  style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: ".5rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Phone / WhatsApp</label>
+                <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Phone / WhatsApp</label>
                 <input
                   type="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   placeholder="+234 803 000 0000"
-                  style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".8rem", outline: "none" }}
+                  style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: ".5rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Subject</label>
+              <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Subject</label>
               <select
                 value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".75rem", outline: "none" }}
+                style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none" }}
               >
                 <option value="General Inquiry">General Inquiry</option>
                 <option value="Custom Order Inquiry">Custom Watch Build</option>
@@ -129,14 +129,14 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: ".5rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Your Message *</label>
+              <label style={{ display: "block", fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Your Message *</label>
               <textarea
                 required
                 rows={5}
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 placeholder="How can our concierge assist you today?"
-                style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: ".8rem", outline: "none", resize: "vertical" }}
+                style={{ width: "100%", padding: "14px", background: "var(--dark)", border: "1px solid var(--dark4)", color: "var(--white)", fontSize: "15px", outline: "none", resize: "vertical" }}
               />
             </div>
 
@@ -149,8 +149,8 @@ export default function ContactPage() {
                 background: "var(--gold)",
                 color: "var(--black)",
                 border: "none",
-                fontSize: ".58rem",
-                letterSpacing: ".3em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 fontWeight: 600,
                 cursor: loading ? "wait" : "pointer",
@@ -165,24 +165,24 @@ export default function ContactPage() {
         {/* Contact Info & Gallery Details */}
         <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
           <div style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "32px" }}>
-            <div style={{ fontSize: ".5rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Horological Headquarters</div>
+            <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Horological Headquarters</div>
             <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.5rem", color: "var(--white)", fontWeight: 300, marginBottom: "16px" }}>Lagos Island Gallery & Archive</h3>
-            <p style={{ fontSize: ".68rem", lineHeight: 2, color: "var(--text)", marginBottom: "16px" }}>
+            <p style={{ fontSize: "14px", lineHeight: 2, color: "var(--text)", marginBottom: "16px" }}>
               35/37 Isale Agbade street, off Idumagbo Avenue, Lagos Island<br />
               Lagos, Nigeria
             </p>
-            <div style={{ fontSize: ".6rem", color: "var(--muted)", lineHeight: 1.8 }}>
+            <div style={{ fontSize: "14px", color: "var(--muted)", lineHeight: 1.8 }}>
               <div><strong>Hours:</strong> Mon – Sat, 9:00 AM – 6:00 PM WAT</div>
               <div><strong>Private Appointments:</strong> By Reservation Only</div>
             </div>
           </div>
 
           <div style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "32px" }}>
-            <div style={{ fontSize: ".5rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Direct Channels</div>
+            <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Direct Channels</div>
             <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.5rem", color: "var(--white)", fontWeight: 300, marginBottom: "16px" }}>Immediate Support</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontSize: ".68rem", color: "var(--text)" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontSize: "14px", color: "var(--text)" }}>
               <div><strong>WhatsApp Concierge:</strong> +234 803 337 6287</div>
-              <div><strong>Email Desk:</strong> concierge@fynekings.com</div>
+              <div><strong>Email Desk:</strong> dicksonwr2@gmail.com</div>
               <div><strong>Response Time:</strong> Under 2 hours during concierge operating hours</div>
             </div>
           </div>

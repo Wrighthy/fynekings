@@ -42,8 +42,8 @@ function InnerCircleContent() {
       >
         <div
           style={{
-            fontSize: ".55rem",
-            letterSpacing: ".5em",
+            fontSize: "14px",
+            letterSpacing: ".12em",
             color: "var(--gold)",
             textTransform: "uppercase",
             marginBottom: "16px",
@@ -89,7 +89,7 @@ function InnerCircleContent() {
               padding: "16px 24px",
               maxWidth: "600px",
               margin: "0 auto 36px",
-              fontSize: ".8rem",
+              fontSize: "15px",
               letterSpacing: ".06em",
               textAlign: "center",
             }}
@@ -107,7 +107,7 @@ function InnerCircleContent() {
               padding: "14px 18px",
               maxWidth: "600px",
               margin: "0 auto 36px",
-              fontSize: ".75rem",
+              fontSize: "15px",
               textAlign: "center",
             }}
           >
@@ -133,8 +133,8 @@ function InnerCircleContent() {
                 display: "inline-block",
                 background: "var(--gold)",
                 color: "var(--black)",
-                fontSize: ".55rem",
-                letterSpacing: ".25em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 fontWeight: 700,
                 textTransform: "uppercase",
                 padding: "6px 16px",
@@ -156,7 +156,7 @@ function InnerCircleContent() {
             </h2>
             <p
               style={{
-                fontSize: ".75rem",
+                fontSize: "15px",
                 color: "var(--gold)",
                 letterSpacing: ".1em",
                 marginBottom: "24px",
@@ -166,7 +166,7 @@ function InnerCircleContent() {
             </p>
             <p
               style={{
-                fontSize: ".72rem",
+                fontSize: "15px",
                 color: "var(--muted)",
                 lineHeight: 2,
                 maxWidth: "520px",
@@ -186,7 +186,7 @@ function InnerCircleContent() {
                   border: "1px solid var(--dark3)",
                   color: "var(--white)",
                   padding: "14px 28px",
-                  fontSize: ".65rem",
+                  fontSize: "14px",
                   letterSpacing: ".2em",
                   textTransform: "uppercase",
                 }}
@@ -209,8 +209,8 @@ function InnerCircleContent() {
           >
             <div
               style={{
-                fontSize: ".55rem",
-                letterSpacing: ".3em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 color: "var(--gold)",
                 textTransform: "uppercase",
                 marginBottom: "12px",
@@ -231,7 +231,7 @@ function InnerCircleContent() {
             </h2>
             <p
               style={{
-                fontSize: ".72rem",
+                fontSize: "15px",
                 color: "var(--muted)",
                 lineHeight: 1.9,
                 marginBottom: "32px",
@@ -246,7 +246,7 @@ function InnerCircleContent() {
                   className="btn-primary"
                   style={{
                     padding: "16px 36px",
-                    fontSize: ".72rem",
+                    fontSize: "15px",
                     letterSpacing: ".2em",
                     textDecoration: "none",
                     display: "inline-block",
@@ -260,7 +260,7 @@ function InnerCircleContent() {
                     border: "1px solid var(--gold-dk)",
                     color: "var(--gold)",
                     padding: "16px 36px",
-                    fontSize: ".72rem",
+                    fontSize: "15px",
                     letterSpacing: ".2em",
                     textTransform: "uppercase",
                     textDecoration: "none",
@@ -277,8 +277,8 @@ function InnerCircleContent() {
                 className="btn-primary"
                 style={{
                   padding: "18px 48px",
-                  fontSize: ".75rem",
-                  letterSpacing: ".25em",
+                  fontSize: "15px",
+                  letterSpacing: ".12em",
                   cursor: enlisting ? "not-allowed" : "pointer",
                   opacity: enlisting ? 0.7 : 1,
                 }}
@@ -293,7 +293,7 @@ function InnerCircleContent() {
       {/* Privileges Matrix */}
       <section style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px 100px" }}>
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <div style={{ fontSize: ".5rem", letterSpacing: ".35em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px" }}>
             MEMBER PRIVILEGES
           </div>
           <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.9rem", color: "var(--white)", fontWeight: 300 }}>
@@ -307,7 +307,7 @@ function InnerCircleContent() {
             <h4 style={{ fontFamily: "Playfair Display, serif", color: "var(--white)", fontSize: "1.1rem", marginBottom: "10px" }}>
               Private Allocations
             </h4>
-            <p style={{ fontSize: ".72rem", color: "var(--muted)", lineHeight: 1.8 }}>
+            <p style={{ fontSize: "15px", color: "var(--muted)", lineHeight: 1.8 }}>
               Guaranteed priority reservation on ultra-limited 25-piece batch drops before general public release.
             </p>
           </div>
@@ -317,7 +317,7 @@ function InnerCircleContent() {
             <h4 style={{ fontFamily: "Playfair Display, serif", color: "var(--white)", fontSize: "1.1rem", marginBottom: "10px" }}>
               Complimentary Caseback Engraving
             </h4>
-            <p style={{ fontSize: ".72rem", color: "var(--muted)", lineHeight: 1.8 }}>
+            <p style={{ fontSize: "15px", color: "var(--muted)", lineHeight: 1.8 }}>
               Personalize every timepiece order with custom royal monogramming crafted in our Lagos workshop.
             </p>
           </div>
@@ -327,7 +327,7 @@ function InnerCircleContent() {
             <h4 style={{ fontFamily: "Playfair Display, serif", color: "var(--white)", fontSize: "1.1rem", marginBottom: "10px" }}>
               White-Glove Concierge
             </h4>
-            <p style={{ fontSize: ".72rem", color: "var(--muted)", lineHeight: 1.8 }}>
+            <p style={{ fontSize: "15px", color: "var(--muted)", lineHeight: 1.8 }}>
               Direct line to our master watchmakers for strap adjustments, servicing, and bespoke design consultation.
             </p>
           </div>

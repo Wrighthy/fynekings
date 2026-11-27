@@ -59,7 +59,7 @@ function LoadingShield() {
       </div>
       <div
         style={{
-          fontSize: ".65rem",
+          fontSize: "14px",
           letterSpacing: ".2em",
           color: "var(--muted)",
           marginTop: "8px",

@@ -83,7 +83,7 @@ export default function OrderTrackPage({ searchParams }: { searchParams: Promise
 
       {/* Header */}
       <div style={{ padding: "160px 24px 60px", maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
-        <div style={{ fontSize: ".52rem", letterSpacing: ".45em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
+        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
           Insured Courier & Order Tracking
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.8rem, 6vw, 4.5rem)", fontWeight: 300, color: "var(--white)", marginBottom: "20px" }}>
@@ -103,7 +103,7 @@ export default function OrderTrackPage({ searchParams }: { searchParams: Promise
               background: "var(--dark2)",
               border: "1px solid var(--gold-dk)",
               color: "var(--white)",
-              fontSize: ".9rem",
+              fontSize: "15px",
               outline: "none",
             }}
           />
@@ -115,8 +115,8 @@ export default function OrderTrackPage({ searchParams }: { searchParams: Promise
               background: "var(--gold)",
               color: "var(--black)",
               border: "none",
-              fontSize: ".58rem",
-              letterSpacing: ".25em",
+              fontSize: "14px",
+              letterSpacing: ".12em",
               textTransform: "uppercase",
               fontWeight: 600,
               cursor: "pointer",
@@ -130,7 +130,7 @@ export default function OrderTrackPage({ searchParams }: { searchParams: Promise
       {/* Results */}
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "0 24px 100px" }}>
         {error && (
-          <div style={{ padding: "20px", background: "rgba(139, 32, 32, 0.2)", border: "1px solid var(--crimson)", color: "#ff6b6b", fontSize: ".7rem", textAlign: "center" }}>
+          <div style={{ padding: "20px", background: "rgba(139, 32, 32, 0.2)", border: "1px solid var(--crimson)", color: "#ff6b6b", fontSize: "15px", textAlign: "center" }}>
             {error}
           </div>
         )}
@@ -140,26 +140,26 @@ export default function OrderTrackPage({ searchParams }: { searchParams: Promise
             {/* Header info */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px", borderBottom: "1px solid var(--dark3)", paddingBottom: "24px", marginBottom: "36px" }}>
               <div>
-                <div style={{ fontSize: ".48rem", color: "var(--gold-dk)", textTransform: "uppercase", letterSpacing: ".3em" }}>Official Order Reference</div>
+                <div style={{ fontSize: "14px", color: "var(--gold-dk)", textTransform: "uppercase", letterSpacing: ".12em" }}>Official Order Reference</div>
                 <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", color: "var(--white)" }}>#{order.id.slice(-8).toUpperCase()}</div>
                 {order.customerName && (
-                  <div style={{ fontSize: ".6rem", color: "var(--muted)", marginTop: "4px" }}>Customer: {order.customerName}{order.customerEmail ? ` (${order.customerEmail})` : ""}</div>
+                  <div style={{ fontSize: "14px", color: "var(--muted)", marginTop: "4px" }}>Customer: {order.customerName}{order.customerEmail ? ` (${order.customerEmail})` : ""}</div>
                 )}
                 {!order.customerName && (
-                  <div style={{ fontSize: ".6rem", color: "var(--muted)", marginTop: "4px" }}>Tracking by email — full details are shown when tracking with your order ID</div>
+                  <div style={{ fontSize: "14px", color: "var(--muted)", marginTop: "4px" }}>Tracking by email — full details are shown when tracking with your order ID</div>
                 )}
               </div>
               <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: ".48rem", color: "var(--gold-dk)", textTransform: "uppercase", letterSpacing: ".3em" }}>Acquisition Value</div>
+                <div style={{ fontSize: "14px", color: "var(--gold-dk)", textTransform: "uppercase", letterSpacing: ".12em" }}>Acquisition Value</div>
                 <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", color: "var(--gold)" }}>{fmt(order.totalAmount)}</div>
                 {order.shippingAddress && (
-                  <div style={{ fontSize: ".6rem", color: "var(--muted)", marginTop: "4px" }}>{order.shippingAddress}{order.city ? `, ${order.city}` : ""}</div>
+                  <div style={{ fontSize: "14px", color: "var(--muted)", marginTop: "4px" }}>{order.shippingAddress}{order.city ? `, ${order.city}` : ""}</div>
                 )}
               </div>
             </div>
 
             {/* Stepper Timeline */}
-            <div style={{ fontSize: ".5rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "28px" }}>
+            <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "28px" }}>
               Live Status Timeline
             </div>
 
@@ -182,7 +182,7 @@ export default function OrderTrackPage({ searchParams }: { searchParams: Promise
                         alignItems: "center",
                         justifyContent: "center",
                         fontWeight: 700,
-                        fontSize: ".75rem",
+                        fontSize: "15px",
                         flexShrink: 0,
                       }}
                     >
@@ -192,7 +192,7 @@ export default function OrderTrackPage({ searchParams }: { searchParams: Promise
                       <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.2rem", color: isCompleted ? "var(--white)" : "var(--muted)" }}>
                         {step.label}
                       </div>
-                      <div style={{ fontSize: ".62rem", color: "var(--muted)", marginTop: "2px" }}>{step.desc}</div>
+                      <div style={{ fontSize: "14px", color: "var(--muted)", marginTop: "2px" }}>{step.desc}</div>
                     </div>
                   </div>
                 );

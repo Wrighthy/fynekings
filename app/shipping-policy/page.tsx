@@ -8,13 +8,13 @@ export default function ShippingPolicyPage() {
     <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
       <Nav />
       <div style={{ padding: "160px 24px 80px", maxWidth: "900px", margin: "0 auto" }}>
-        <div style={{ fontSize: ".52rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px" }}>
+        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px" }}>
           Logistics & Delivery
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "3rem", fontWeight: 300, color: "var(--white)", marginBottom: "32px" }}>
           Shipping & Logistics Policy
         </h1>
-        <div style={{ fontSize: ".7rem", lineHeight: 2.4, color: "var(--text)", display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div style={{ fontSize: "15px", lineHeight: 2.4, color: "var(--text)", display: "flex", flexDirection: "column", gap: "24px" }}>
           <p>
             At Fynekings International, we understand that acquiring a luxury timepiece is a momentous occasion. We ensure that every watch is packed in our signature box and delivered with total security.
           </p>

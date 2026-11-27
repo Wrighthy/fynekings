@@ -61,7 +61,7 @@ function OrdersContent() {
       <div style={{ padding: "160px 24px 100px", maxWidth: "1000px", margin: "0 auto" }}>
         {/* Page Title */}
         <div style={{ marginBottom: "36px" }}>
-          <div style={{ fontSize: ".52rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
             Order Fulfillment & Verification
           </div>
           <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.6rem", color: "var(--white)", fontWeight: 300 }}>
@@ -78,10 +78,10 @@ function OrdersContent() {
             marginBottom: "40px",
           }}
         >
-          <div style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
+          <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>
             Instant Order & Courier Lookup
           </div>
-          <p style={{ fontSize: ".72rem", color: "var(--muted)", marginBottom: "20px", lineHeight: 1.6 }}>
+          <p style={{ fontSize: "15px", color: "var(--muted)", marginBottom: "20px", lineHeight: 1.6 }}>
             Track any acquisition in real time with your Order ID, Payment Reference, or checkout Email address. No account required.
           </p>
 
@@ -97,7 +97,7 @@ function OrdersContent() {
                 background: "var(--black)",
                 border: "1px solid var(--dark4)",
                 color: "var(--white)",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 outline: "none",
               }}
             />
@@ -106,8 +106,8 @@ function OrdersContent() {
               className="btn-primary"
               style={{
                 padding: "14px 28px",
-                fontSize: ".58rem",
-                letterSpacing: ".25em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 cursor: "pointer",
                 whiteSpace: "nowrap",
@@ -121,7 +121,7 @@ function OrdersContent() {
         {/* Authenticated User Orders vs Guest Prompt */}
         {user ? (
           <div>
-            <div style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "20px" }}>
+            <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "20px" }}>
               Your Acquisition History
             </div>
 
@@ -135,7 +135,7 @@ function OrdersContent() {
                 <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", color: "var(--white)", fontWeight: 300, marginBottom: "16px" }}>
                   No Orders Placed Yet
                 </h2>
-                <p style={{ fontSize: ".72rem", color: "var(--muted)", marginBottom: "32px" }}>
+                <p style={{ fontSize: "15px", color: "var(--muted)", marginBottom: "32px" }}>
                   When you acquire a Fynekings timepiece, full delivery tracking and certificate information will appear here.
                 </p>
                 <Link href="/collection" className="btn-primary" style={{ display: "inline-flex" }}>
@@ -148,14 +148,14 @@ function OrdersContent() {
                   <div key={o.id} style={{ background: "var(--dark2)", border: "1px solid var(--dark3)", padding: "28px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--dark4)", paddingBottom: "16px", marginBottom: "20px" }}>
                       <div>
-                        <div style={{ fontSize: ".45rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".2em" }}>Order ID</div>
+                        <div style={{ fontSize: "14px", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".2em" }}>Order ID</div>
                         <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.2rem", color: "var(--white)" }}>#{o.id.toUpperCase()}</div>
                       </div>
                       <div style={{ textAlign: "right" }}>
-                        <span style={{ fontSize: ".5rem", letterSpacing: ".2em", textTransform: "uppercase", padding: "6px 12px", background: "var(--dark3)", border: "1px solid var(--gold)", color: "var(--gold)" }}>
+                        <span style={{ fontSize: "14px", letterSpacing: ".2em", textTransform: "uppercase", padding: "6px 12px", background: "var(--dark3)", border: "1px solid var(--gold)", color: "var(--gold)" }}>
                           {o.status}
                         </span>
-                        <div style={{ fontSize: ".55rem", color: "var(--muted)", marginTop: "6px" }}>
+                        <div style={{ fontSize: "14px", color: "var(--muted)", marginTop: "6px" }}>
                           {new Date(o.createdAt).toLocaleDateString("en-NG", { month: "long", day: "numeric", year: "numeric" })}
                         </div>
                       </div>
@@ -173,7 +173,7 @@ function OrdersContent() {
                         <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.2rem", color: "var(--white)", marginBottom: "4px" }}>
                           {o.product?.name || "Bespoke Timepiece Commission"}
                         </h3>
-                        <div style={{ fontSize: ".6rem", color: "var(--muted)" }}>
+                        <div style={{ fontSize: "14px", color: "var(--muted)" }}>
                           Destination: {o.shippingAddress}, {o.city}, {o.country}
                         </div>
                       </div>
@@ -183,7 +183,7 @@ function OrdersContent() {
                     </div>
 
                     <div style={{ borderTop: "1px solid var(--dark4)", marginTop: "20px", paddingTop: "16px", display: "flex", justifyContent: "flex-end" }}>
-                      <Link href={`/orders/track?id=${o.id}`} style={{ fontSize: ".55rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", textDecoration: "none" }}>
+                      <Link href={`/orders/track?id=${o.id}`} style={{ fontSize: "14px", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", textDecoration: "none" }}>
                         Track Delivery & Verification →
                       </Link>
                     </div>
@@ -205,14 +205,14 @@ function OrdersContent() {
             <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.6rem", color: "var(--white)", fontWeight: 300, marginBottom: "12px" }}>
               FYNEKINGS Collector Account
             </h2>
-            <p style={{ fontSize: ".75rem", color: "var(--muted)", maxWidth: "540px", margin: "0 auto 28px", lineHeight: 1.8 }}>
+            <p style={{ fontSize: "15px", color: "var(--muted)", maxWidth: "540px", margin: "0 auto 28px", lineHeight: 1.8 }}>
               Did you make a purchase under an account or wish to link future acquisitions? Sign in or register to view your comprehensive ledger, digital certificates of authenticity, and private vault access.
             </p>
             <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
               <Link
                 href="/login?redirect=/orders"
                 className="btn-primary"
-                style={{ padding: "14px 28px", fontSize: ".58rem", textDecoration: "none" }}
+                style={{ padding: "14px 28px", fontSize: "14px", textDecoration: "none" }}
               >
                 Sign In to Account
               </Link>
@@ -222,7 +222,7 @@ function OrdersContent() {
                   border: "1px solid var(--gold-dk)",
                   color: "var(--gold)",
                   padding: "14px 28px",
-                  fontSize: ".58rem",
+                  fontSize: "14px",
                   letterSpacing: ".2em",
                   textTransform: "uppercase",
                   textDecoration: "none",

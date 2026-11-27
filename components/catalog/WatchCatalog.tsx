@@ -347,7 +347,7 @@ export default function WatchCatalog({
       >
         <div style={{ maxWidth: "1380px", margin: "0 auto", position: "relative", zIndex: 1 }}>
           {/* Breadcrumb */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px", fontSize: ".52rem", letterSpacing: ".3em", textTransform: "uppercase" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px", fontSize: "13px", letterSpacing: ".12em", textTransform: "uppercase" }}>
             <Link href="/" style={{ color: "var(--muted)", textDecoration: "none" }}>
               Home
             </Link>
@@ -392,7 +392,7 @@ export default function WatchCatalog({
                 padding: "4px 12px",
                 borderRadius: "2px",
                 marginBottom: "16px",
-                fontSize: ".5rem",
+                fontSize: "13px",
                 letterSpacing: ".25em",
                 color: "var(--gold)",
                 textTransform: "uppercase",
@@ -420,7 +420,7 @@ export default function WatchCatalog({
 
           <p
             style={{
-              fontSize: ".7rem",
+              fontSize: "14px",
               letterSpacing: ".1em",
               color: isPremiumOnly ? "rgba(244, 239, 228, 0.75)" : "var(--muted)",
               lineHeight: 2.2,
@@ -447,8 +447,8 @@ export default function WatchCatalog({
                   onClick={() => handleSelectPremiumSub("all")}
                   style={{
                     padding: "10px 18px",
-                    fontSize: ".55rem",
-                    letterSpacing: ".2em",
+                    fontSize: "13px",
+                    letterSpacing: ".12em",
                     textTransform: "uppercase",
                     borderRadius: "30px",
                     border: activePremiumSub === "all" ? "1px solid var(--gold)" : "1px solid var(--dark4)",
@@ -470,8 +470,8 @@ export default function WatchCatalog({
                       onClick={() => handleSelectPremiumSub(sub.slug)}
                       style={{
                         padding: "10px 18px",
-                        fontSize: ".55rem",
-                        letterSpacing: ".2em",
+                        fontSize: "13px",
+                        letterSpacing: ".12em",
                         textTransform: "uppercase",
                         borderRadius: "30px",
                         border: isSelected ? "1px solid var(--gold)" : "1px solid var(--dark4)",
@@ -498,8 +498,8 @@ export default function WatchCatalog({
                   onClick={() => handleSelectCategory("all")}
                   style={{
                     padding: "10px 18px",
-                    fontSize: ".55rem",
-                    letterSpacing: ".2em",
+                    fontSize: "13px",
+                    letterSpacing: ".12em",
                     textTransform: "uppercase",
                     borderRadius: "30px",
                     border: activeCategory === "all" ? "1px solid var(--gold)" : "1px solid var(--dark4)",
@@ -521,8 +521,8 @@ export default function WatchCatalog({
                       onClick={() => handleSelectCategory(cat.slug)}
                       style={{
                         padding: "10px 18px",
-                        fontSize: ".55rem",
-                        letterSpacing: ".2em",
+                        fontSize: "13px",
+                        letterSpacing: ".12em",
                         textTransform: "uppercase",
                         borderRadius: "30px",
                         border: isSelected ? "1px solid var(--gold)" : "1px solid var(--dark4)",
@@ -590,7 +590,7 @@ export default function WatchCatalog({
                 border: "none",
                 outline: "none",
                 color: "var(--white)",
-                fontSize: ".62rem",
+                fontSize: "14px",
                 letterSpacing: ".1em",
                 fontFamily: "Raleway, sans-serif",
                 width: "100%",
@@ -599,7 +599,7 @@ export default function WatchCatalog({
             {search && (
               <button
                 onClick={() => setSearch("")}
-                style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: ".7rem" }}
+                style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: "14px" }}
               >
                 ✕
               </button>
@@ -617,7 +617,7 @@ export default function WatchCatalog({
                 background: "var(--dark2)",
                 border: "1px solid var(--dark4)",
                 color: "var(--gold)",
-                fontSize: ".55rem",
+                fontSize: "13px",
                 letterSpacing: ".15em",
                 textTransform: "uppercase",
                 cursor: "pointer",
@@ -627,13 +627,13 @@ export default function WatchCatalog({
             </button>
 
             {/* Results count */}
-            <span style={{ fontSize: ".55rem", letterSpacing: ".25em", color: "var(--muted)", textTransform: "uppercase" }}>
+            <span style={{ fontSize: "13px", letterSpacing: ".25em", color: "var(--muted)", textTransform: "uppercase" }}>
               {loading ? "Searching atelier..." : `${products.length} Timepiece${products.length !== 1 ? "s" : ""}`}
             </span>
 
             {/* Sort Dropdown */}
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span style={{ fontSize: ".5rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".15em" }}>Sort:</span>
+              <span style={{ fontSize: "13px", color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".15em" }}>Sort:</span>
               <select
                 value={activeSort}
                 onChange={(e) => setActiveSort(e.target.value)}
@@ -642,7 +642,7 @@ export default function WatchCatalog({
                   border: "1px solid var(--dark4)",
                   color: "var(--white)",
                   fontFamily: "Raleway, sans-serif",
-                  fontSize: ".55rem",
+                  fontSize: "13px",
                   letterSpacing: ".15em",
                   padding: "10px 14px",
                   outline: "none",
@@ -662,14 +662,14 @@ export default function WatchCatalog({
         {/* Active Filter Pills */}
         {hasActiveFilters && (
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px", marginBottom: "28px" }}>
-            <span style={{ fontSize: ".65rem", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--muted)", marginRight: "4px", fontWeight: 600 }}>
+            <span style={{ fontSize: "14px", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--muted)", marginRight: "4px", fontWeight: 600 }}>
               Active Filters:
             </span>
 
             {activeGender !== "all" && (
               <span
                 style={{
-                  fontSize: ".65rem",
+                  fontSize: "14px",
                   background: "rgba(196,169,98,.12)",
                   border: "1px solid var(--gold)",
                   color: "var(--gold)",
@@ -695,7 +695,7 @@ export default function WatchCatalog({
             {activeAvailability !== "all" && (
               <span
                 style={{
-                  fontSize: ".65rem",
+                  fontSize: "14px",
                   background: "rgba(46, 213, 115, 0.12)",
                   border: "1px solid rgba(46, 213, 115, 0.5)",
                   color: "#2ed573",
@@ -721,7 +721,7 @@ export default function WatchCatalog({
             {activeMovement !== "all" && (
               <span
                 style={{
-                  fontSize: ".5rem",
+                  fontSize: "13px",
                   background: "rgba(196,169,98,.12)",
                   border: "1px solid var(--gold)",
                   color: "var(--gold)",
@@ -746,7 +746,7 @@ export default function WatchCatalog({
             {activeStrap !== "all" && (
               <span
                 style={{
-                  fontSize: ".5rem",
+                  fontSize: "13px",
                   background: "rgba(196,169,98,.12)",
                   border: "1px solid var(--gold)",
                   color: "var(--gold)",
@@ -771,7 +771,7 @@ export default function WatchCatalog({
             {activeStyle !== "all" && (
               <span
                 style={{
-                  fontSize: ".5rem",
+                  fontSize: "13px",
                   background: "rgba(196,169,98,.12)",
                   border: "1px solid var(--gold)",
                   color: "var(--gold)",
@@ -796,7 +796,7 @@ export default function WatchCatalog({
             {activePrice !== "all" && (
               <span
                 style={{
-                  fontSize: ".5rem",
+                  fontSize: "13px",
                   background: "rgba(196,169,98,.12)",
                   border: "1px solid var(--gold)",
                   color: "var(--gold)",
@@ -821,7 +821,7 @@ export default function WatchCatalog({
             {search && (
               <span
                 style={{
-                  fontSize: ".5rem",
+                  fontSize: "13px",
                   background: "rgba(196,169,98,.12)",
                   border: "1px solid var(--gold)",
                   color: "var(--gold)",
@@ -849,7 +849,7 @@ export default function WatchCatalog({
                 background: "none",
                 border: "none",
                 color: "var(--muted)",
-                fontSize: ".5rem",
+                fontSize: "13px",
                 letterSpacing: ".15em",
                 textTransform: "uppercase",
                 cursor: "pointer",
@@ -867,13 +867,13 @@ export default function WatchCatalog({
           {/* Desktop Filter Sidebar */}
           <aside className="catalog-filter-sidebar" style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--dark3)", paddingBottom: "12px" }}>
-              <span style={{ fontSize: ".58rem", letterSpacing: ".3em", textTransform: "uppercase", color: "var(--gold)" }}>
+              <span style={{ fontSize: "13px", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--gold)" }}>
                 Filter Catalog
               </span>
               {hasActiveFilters && (
                 <button
                   onClick={handleResetFilters}
-                  style={{ background: "none", border: "none", color: "var(--muted)", fontSize: ".48rem", letterSpacing: ".15em", textTransform: "uppercase", cursor: "pointer" }}
+                  style={{ background: "none", border: "none", color: "var(--muted)", fontSize: "13px", letterSpacing: ".15em", textTransform: "uppercase", cursor: "pointer" }}
                 >
                   Reset
                 </button>
@@ -882,7 +882,7 @@ export default function WatchCatalog({
 
             {/* Availability Filter */}
             <div>
-              <div style={{ fontSize: ".68rem", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px", fontWeight: 600 }}>
+              <div style={{ fontSize: "14px", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px", fontWeight: 600 }}>
                 Availability
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -890,7 +890,7 @@ export default function WatchCatalog({
                   { id: "all", label: "All Watches" },
                   { id: "in-stock", label: "In Stock Only" },
                 ].map((av) => (
-                  <label key={av.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeAvailability === av.id ? "var(--gold)" : "#b5b5b5", cursor: "pointer", fontWeight: activeAvailability === av.id ? 600 : 400 }}>
+                  <label key={av.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activeAvailability === av.id ? "var(--gold)" : "#b5b5b5", cursor: "pointer", fontWeight: activeAvailability === av.id ? 600 : 400 }}>
                     <input
                       type="radio"
                       name="availability"
@@ -906,7 +906,7 @@ export default function WatchCatalog({
 
             {/* Gender Filter */}
             <div style={{ borderTop: "1px solid var(--dark3)", paddingTop: "20px" }}>
-              <div style={{ fontSize: ".68rem", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px", fontWeight: 600 }}>
+              <div style={{ fontSize: "14px", letterSpacing: ".15em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px", fontWeight: 600 }}>
                 Gender
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -916,7 +916,7 @@ export default function WatchCatalog({
                   { id: "women", label: "Women's Watches" },
                   { id: "unisex", label: "Unisex Watches" },
                 ].map((g) => (
-                  <label key={g.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeGender === g.id ? "var(--gold)" : "#b5b5b5", cursor: "pointer", fontWeight: activeGender === g.id ? 600 : 400 }}>
+                  <label key={g.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activeGender === g.id ? "var(--gold)" : "#b5b5b5", cursor: "pointer", fontWeight: activeGender === g.id ? 600 : 400 }}>
                     <input
                       type="radio"
                       name="gender"
@@ -932,11 +932,11 @@ export default function WatchCatalog({
 
             {/* Movement Filter */}
             <div style={{ borderTop: "1px solid var(--dark3)", paddingTop: "20px" }}>
-              <div style={{ fontSize: ".5rem", letterSpacing: ".25em", color: "var(--white)", textTransform: "uppercase", marginBottom: "12px" }}>
+              <div style={{ fontSize: "13px", letterSpacing: ".25em", color: "var(--white)", textTransform: "uppercase", marginBottom: "12px" }}>
                 Movement
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".58rem", color: activeMovement === "all" ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: activeMovement === "all" ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
                   <input
                     type="radio"
                     name="movement"
@@ -947,7 +947,7 @@ export default function WatchCatalog({
                   <span>All Movements</span>
                 </label>
                 {MOVEMENT_OPTIONS.map((m) => (
-                  <label key={m.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".58rem", color: activeMovement === m.id ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
+                  <label key={m.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: activeMovement === m.id ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
                     <input
                       type="radio"
                       name="movement"
@@ -963,11 +963,11 @@ export default function WatchCatalog({
 
             {/* Strap Material Filter */}
             <div style={{ borderTop: "1px solid var(--dark3)", paddingTop: "20px" }}>
-              <div style={{ fontSize: ".5rem", letterSpacing: ".25em", color: "var(--white)", textTransform: "uppercase", marginBottom: "12px" }}>
+              <div style={{ fontSize: "13px", letterSpacing: ".25em", color: "var(--white)", textTransform: "uppercase", marginBottom: "12px" }}>
                 Strap Material
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".58rem", color: activeStrap === "all" ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: activeStrap === "all" ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
                   <input
                     type="radio"
                     name="strap"
@@ -978,7 +978,7 @@ export default function WatchCatalog({
                   <span>All Straps</span>
                 </label>
                 {STRAP_OPTIONS.map((s) => (
-                  <label key={s.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".58rem", color: activeStrap === s.id ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
+                  <label key={s.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: activeStrap === s.id ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
                     <input
                       type="radio"
                       name="strap"
@@ -994,11 +994,11 @@ export default function WatchCatalog({
 
             {/* Style Filter */}
             <div style={{ borderTop: "1px solid var(--dark3)", paddingTop: "20px" }}>
-              <div style={{ fontSize: ".5rem", letterSpacing: ".25em", color: "var(--white)", textTransform: "uppercase", marginBottom: "12px" }}>
+              <div style={{ fontSize: "13px", letterSpacing: ".25em", color: "var(--white)", textTransform: "uppercase", marginBottom: "12px" }}>
                 Watch Style
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".58rem", color: activeStyle === "all" ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: activeStyle === "all" ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
                   <input
                     type="radio"
                     name="style"
@@ -1009,7 +1009,7 @@ export default function WatchCatalog({
                   <span>All Styles</span>
                 </label>
                 {STYLE_OPTIONS.map((st) => (
-                  <label key={st.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".58rem", color: activeStyle === st.id ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
+                  <label key={st.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: activeStyle === st.id ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
                     <input
                       type="radio"
                       name="style"
@@ -1025,11 +1025,11 @@ export default function WatchCatalog({
 
             {/* Price Filter */}
             <div style={{ borderTop: "1px solid var(--dark3)", paddingTop: "20px" }}>
-              <div style={{ fontSize: ".5rem", letterSpacing: ".25em", color: "var(--white)", textTransform: "uppercase", marginBottom: "12px" }}>
+              <div style={{ fontSize: "13px", letterSpacing: ".25em", color: "var(--white)", textTransform: "uppercase", marginBottom: "12px" }}>
                 Price Range
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".58rem", color: activePrice === "all" ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: activePrice === "all" ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
                   <input
                     type="radio"
                     name="price"
@@ -1040,7 +1040,7 @@ export default function WatchCatalog({
                   <span>All Prices</span>
                 </label>
                 {PRICE_RANGES.map((pr) => (
-                  <label key={pr.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: ".58rem", color: activePrice === pr.id ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
+                  <label key={pr.id} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: activePrice === pr.id ? "var(--gold)" : "var(--muted)", cursor: "pointer" }}>
                     <input
                       type="radio"
                       name="price"
@@ -1085,7 +1085,7 @@ export default function WatchCatalog({
                 <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.3rem", color: "var(--white)", marginBottom: "8px" }}>
                   {isPremiumOnly ? "No Premium Timepieces Found" : "No Timepieces Found"}
                 </h3>
-                <p style={{ fontSize: ".65rem", color: "var(--muted)", letterSpacing: ".1em", maxWidth: "420px", margin: "0 auto 24px", lineHeight: 2 }}>
+                <p style={{ fontSize: "14px", color: "var(--muted)", letterSpacing: ".1em", maxWidth: "420px", margin: "0 auto 24px", lineHeight: 2 }}>
                   {isPremiumOnly
                     ? "We couldn't find any premium timepieces matching your selected filters. Try resetting the filters or exploring another subcategory."
                     : "We couldn't find any watches matching your selected combination of filters. Try clearing some filters or searching for another series."}
@@ -1097,8 +1097,8 @@ export default function WatchCatalog({
                     background: "var(--gold)",
                     color: "#000",
                     border: "none",
-                    fontSize: ".55rem",
-                    letterSpacing: ".2em",
+                    fontSize: "13px",
+                    letterSpacing: ".12em",
                     textTransform: "uppercase",
                     fontWeight: 600,
                     cursor: "pointer",
@@ -1146,7 +1146,7 @@ export default function WatchCatalog({
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--dark3)", paddingBottom: "16px" }}>
-              <span style={{ fontSize: ".72rem", letterSpacing: ".25em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
+              <span style={{ fontSize: "14px", letterSpacing: ".25em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
                 Filter Watches
               </span>
               <button
@@ -1159,7 +1159,7 @@ export default function WatchCatalog({
 
             {/* Availability */}
             <div>
-              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
+              <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                 Availability
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -1167,7 +1167,7 @@ export default function WatchCatalog({
                   { id: "all", label: "All Watches" },
                   { id: "in-stock", label: "In Stock Only" },
                 ].map((av) => (
-                  <label key={av.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeAvailability === av.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeAvailability === av.id ? 600 : 400 }}>
+                  <label key={av.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activeAvailability === av.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeAvailability === av.id ? 600 : 400 }}>
                     <input type="radio" name="av-mob" checked={activeAvailability === av.id} onChange={() => setActiveAvailability(av.id)} style={{ accentColor: "var(--gold)" }} />
                     {av.label}
                   </label>
@@ -1177,7 +1177,7 @@ export default function WatchCatalog({
 
             {/* Gender */}
             <div>
-              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
+              <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                 Gender
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -1187,7 +1187,7 @@ export default function WatchCatalog({
                   { id: "women", label: "Women's Watches" },
                   { id: "unisex", label: "Unisex Watches" },
                 ].map((g) => (
-                  <label key={g.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeGender === g.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeGender === g.id ? 600 : 400 }}>
+                  <label key={g.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activeGender === g.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeGender === g.id ? 600 : 400 }}>
                     <input type="radio" name="g-mob" checked={activeGender === g.id} onChange={() => setActiveGender(g.id)} style={{ accentColor: "var(--gold)" }} />
                     {g.label}
                   </label>
@@ -1197,16 +1197,16 @@ export default function WatchCatalog({
 
             {/* Movement */}
             <div>
-              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
+              <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                 Movement
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeMovement === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activeMovement === "all" ? 600 : 400 }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activeMovement === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activeMovement === "all" ? 600 : 400 }}>
                   <input type="radio" name="m-mob" checked={activeMovement === "all"} onChange={() => setActiveMovement("all")} style={{ accentColor: "var(--gold)" }} />
                   All Movements
                 </label>
                 {MOVEMENT_OPTIONS.map((m) => (
-                  <label key={m.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeMovement === m.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeMovement === m.id ? 600 : 400 }}>
+                  <label key={m.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activeMovement === m.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeMovement === m.id ? 600 : 400 }}>
                     <input type="radio" name="m-mob" checked={activeMovement === m.id} onChange={() => setActiveMovement(m.id)} style={{ accentColor: "var(--gold)" }} />
                     {m.label}
                   </label>
@@ -1216,16 +1216,16 @@ export default function WatchCatalog({
 
             {/* Strap */}
             <div>
-              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
+              <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                 Strap Material
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeStrap === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activeStrap === "all" ? 600 : 400 }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activeStrap === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activeStrap === "all" ? 600 : 400 }}>
                   <input type="radio" name="s-mob" checked={activeStrap === "all"} onChange={() => setActiveStrap("all")} style={{ accentColor: "var(--gold)" }} />
                   All Straps
                 </label>
                 {STRAP_OPTIONS.map((s) => (
-                  <label key={s.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeStrap === s.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeStrap === s.id ? 600 : 400 }}>
+                  <label key={s.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activeStrap === s.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeStrap === s.id ? 600 : 400 }}>
                     <input type="radio" name="s-mob" checked={activeStrap === s.id} onChange={() => setActiveStrap(s.id)} style={{ accentColor: "var(--gold)" }} />
                     {s.label}
                   </label>
@@ -1235,16 +1235,16 @@ export default function WatchCatalog({
 
             {/* Style */}
             <div>
-              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
+              <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                 Watch Style
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeStyle === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activeStyle === "all" ? 600 : 400 }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activeStyle === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activeStyle === "all" ? 600 : 400 }}>
                   <input type="radio" name="st-mob" checked={activeStyle === "all"} onChange={() => setActiveStyle("all")} style={{ accentColor: "var(--gold)" }} />
                   All Styles
                 </label>
                 {STYLE_OPTIONS.map((st) => (
-                  <label key={st.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activeStyle === st.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeStyle === st.id ? 600 : 400 }}>
+                  <label key={st.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activeStyle === st.id ? "var(--gold)" : "#d0d0d0", fontWeight: activeStyle === st.id ? 600 : 400 }}>
                     <input type="radio" name="st-mob" checked={activeStyle === st.id} onChange={() => setActiveStyle(st.id)} style={{ accentColor: "var(--gold)" }} />
                     {st.label}
                   </label>
@@ -1254,16 +1254,16 @@ export default function WatchCatalog({
 
             {/* Price */}
             <div>
-              <div style={{ fontSize: ".65rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
+              <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "10px", fontWeight: 600 }}>
                 Price Range
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activePrice === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activePrice === "all" ? 600 : 400 }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activePrice === "all" ? "var(--gold)" : "#d0d0d0", fontWeight: activePrice === "all" ? 600 : 400 }}>
                   <input type="radio" name="p-mob" checked={activePrice === "all"} onChange={() => setActivePrice("all")} style={{ accentColor: "var(--gold)" }} />
                   All Prices
                 </label>
                 {PRICE_RANGES.map((pr) => (
-                  <label key={pr.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".76rem", color: activePrice === pr.id ? "var(--gold)" : "#d0d0d0", fontWeight: activePrice === pr.id ? 600 : 400 }}>
+                  <label key={pr.id} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: activePrice === pr.id ? "var(--gold)" : "#d0d0d0", fontWeight: activePrice === pr.id ? 600 : 400 }}>
                     <input type="radio" name="p-mob" checked={activePrice === pr.id} onChange={() => setActivePrice(pr.id)} style={{ accentColor: "var(--gold)" }} />
                     {pr.label}
                   </label>
@@ -1274,13 +1274,13 @@ export default function WatchCatalog({
             <div style={{ marginTop: "auto", display: "flex", gap: "12px", paddingTop: "16px" }}>
               <button
                 onClick={handleResetFilters}
-                style={{ flex: 1, padding: "14px", background: "none", border: "1px solid var(--dark4)", color: "var(--muted)", fontSize: ".7rem", textTransform: "uppercase", letterSpacing: ".1em", cursor: "pointer", fontWeight: 600 }}
+                style={{ flex: 1, padding: "14px", background: "none", border: "1px solid var(--dark4)", color: "var(--muted)", fontSize: "14px", textTransform: "uppercase", letterSpacing: ".1em", cursor: "pointer", fontWeight: 600 }}
               >
                 Reset
               </button>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
-                style={{ flex: 2, padding: "14px", background: "var(--gold)", color: "#000", border: "none", fontSize: ".72rem", textTransform: "uppercase", fontWeight: 700, letterSpacing: ".15em", cursor: "pointer" }}
+                style={{ flex: 2, padding: "14px", background: "var(--gold)", color: "#000", border: "none", fontSize: "14px", textTransform: "uppercase", fontWeight: 700, letterSpacing: ".15em", cursor: "pointer" }}
               >
                 Apply Filters
               </button>

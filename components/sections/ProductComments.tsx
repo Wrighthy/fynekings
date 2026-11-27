@@ -109,7 +109,7 @@ export default function ProductComments({ slug }: { slug: string }) {
         background: "var(--dark2)",
         border: "1px solid var(--dark3)",
         color: "var(--white)",
-        fontSize: ".8rem",
+        fontSize: "15px",
         letterSpacing: ".05em",
         outline: "none",
         fontFamily: "Raleway, sans-serif",
@@ -120,7 +120,7 @@ export default function ProductComments({ slug }: { slug: string }) {
             <div style={{ maxWidth: "1300px", margin: "0 auto" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "16px" }}>
                     <span style={{ width: "24px", height: "1px", background: "var(--gold-dk)", display: "inline-block" }}></span>
-                    <span style={{ fontSize: ".52rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase" }}>Collector Voices</span>
+                    <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase" }}>Collector Voices</span>
                 </div>
                 <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(1.8rem, 3vw, 2.6rem)", fontWeight: 300, color: "var(--white)", marginBottom: "48px", letterSpacing: "-.02em" }}>
                     Comments & <em style={{ color: "var(--gold)" }}>Impressions</em>
@@ -131,7 +131,7 @@ export default function ProductComments({ slug }: { slug: string }) {
                     <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                             <div>
-                                <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".25em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Name *</label>
+                                <label style={{ display: "block", fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Name *</label>
                                 <input
                                     type="text"
                                     value={form.name}
@@ -142,7 +142,7 @@ export default function ProductComments({ slug }: { slug: string }) {
                                 />
                             </div>
                             <div>
-                                <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".25em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Email *</label>
+                                <label style={{ display: "block", fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Email *</label>
                                 <input
                                     type="email"
                                     value={form.email}
@@ -154,7 +154,7 @@ export default function ProductComments({ slug }: { slug: string }) {
                             </div>
                         </div>
                         <div>
-                            <label style={{ display: "block", fontSize: ".45rem", letterSpacing: ".25em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Your Comment *</label>
+                            <label style={{ display: "block", fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "6px" }}>Your Comment *</label>
                             <textarea
                                 rows={5}
                                 maxLength={1000}
@@ -165,7 +165,7 @@ export default function ProductComments({ slug }: { slug: string }) {
                             />
                         </div>
 
-                        <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: ".55rem", letterSpacing: ".15em", color: "var(--muted)", textTransform: "uppercase", cursor: "pointer" }}>
+                        <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", letterSpacing: ".15em", color: "var(--muted)", textTransform: "uppercase", cursor: "pointer" }}>
                             <input
                                 type="checkbox"
                                 checked={remember}
@@ -176,7 +176,7 @@ export default function ProductComments({ slug }: { slug: string }) {
                         </label>
 
                         {notice && (
-                            <div style={{ padding: "14px 16px", background: "rgba(196,169,98,.1)", border: "1px solid var(--gold-dk)", color: "var(--gold)", fontSize: ".65rem", letterSpacing: ".1em" }}>
+                            <div style={{ padding: "14px 16px", background: "rgba(196,169,98,.1)", border: "1px solid var(--gold-dk)", color: "var(--gold)", fontSize: "14px", letterSpacing: ".1em" }}>
                                 {notice}
                             </div>
                         )}
@@ -189,8 +189,8 @@ export default function ProductComments({ slug }: { slug: string }) {
                                 background: "var(--gold)",
                                 color: "var(--black)",
                                 border: "none",
-                                fontSize: ".6rem",
-                                letterSpacing: ".32em",
+                                fontSize: "14px",
+                                letterSpacing: ".12em",
                                 textTransform: "uppercase",
                                 fontWeight: 600,
                                 fontFamily: "Raleway, sans-serif",
@@ -203,18 +203,18 @@ export default function ProductComments({ slug }: { slug: string }) {
                         >
                             {submitting ? "Submitting..." : "Submit Comment →"}
                         </button>
-                        <p style={{ fontSize: ".5rem", letterSpacing: ".15em", color: "var(--muted)", textTransform: "uppercase" }}>
+                        <p style={{ fontSize: "14px", letterSpacing: ".15em", color: "var(--muted)", textTransform: "uppercase" }}>
                             Comments are reviewed by our gallery before appearing · Your email is never published
                         </p>
                     </form>
 
                     {/* Approved comments list */}
                     <div>
-                        <div style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "24px" }}>
+                        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "24px" }}>
                             {comments.length > 0 ? `${comments.length} Comment${comments.length > 1 ? "s" : ""}` : "Comments"}
                         </div>
                         {comments.length === 0 ? (
-                            <div style={{ padding: "32px", border: "1px solid var(--dark3)", background: "var(--dark2)", fontSize: ".7rem", letterSpacing: ".1em", color: "var(--muted)", lineHeight: 2 }}>
+                            <div style={{ padding: "32px", border: "1px solid var(--dark3)", background: "var(--dark2)", fontSize: "15px", letterSpacing: ".1em", color: "var(--muted)", lineHeight: 2 }}>
                                 No comments yet — be the first to share your thoughts on this timepiece.
                             </div>
                         ) : (
@@ -223,12 +223,12 @@ export default function ProductComments({ slug }: { slug: string }) {
                                     <div key={c.id} style={{ padding: "24px", border: "1px solid var(--dark3)", background: "var(--dark2)" }}>
                                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "12px", marginBottom: "12px", flexWrap: "wrap" }}>
                                             <span style={{ fontFamily: "Playfair Display, serif", fontSize: "1rem", color: "var(--white)" }}>{c.name}</span>
-                                            <span style={{ fontSize: ".5rem", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase" }}>
+                                            <span style={{ fontSize: "14px", letterSpacing: ".2em", color: "var(--muted)", textTransform: "uppercase" }}>
                                                 {new Date(c.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
                                             </span>
                                         </div>
                                         <div style={{ width: "32px", height: "1px", background: "linear-gradient(to right, var(--gold-dk), transparent)", marginBottom: "14px" }}></div>
-                                        <p style={{ fontSize: ".72rem", letterSpacing: ".05em", lineHeight: 2, color: "var(--text)" }}>{c.body}</p>
+                                        <p style={{ fontSize: "15px", letterSpacing: ".05em", lineHeight: 2, color: "var(--text)" }}>{c.body}</p>
                                     </div>
                                 ))}
                             </div>

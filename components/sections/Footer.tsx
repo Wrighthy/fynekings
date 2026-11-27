@@ -63,7 +63,7 @@ export default function Footer() {
             <ul>
               {c.l.map(li => (
                 <li key={li.label}>
-                  <Link href={li.href} style={{ fontSize: ".6rem", letterSpacing: ".12em", color: "var(--text)", textDecoration: "none", transition: "color .3s, padding-left .3s", display: "block" }}
+                  <Link href={li.href} style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--text)", textDecoration: "none", transition: "color .3s, padding-left .3s", display: "block" }}
                     onMouseEnter={e => { e.currentTarget.style.color = "var(--gold)"; e.currentTarget.style.paddingLeft = "6px"; }}
                     onMouseLeave={e => { e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.paddingLeft = "0"; }}>
                     {li.label}

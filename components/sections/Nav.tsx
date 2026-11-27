@@ -113,8 +113,8 @@ export default function Nav() {
                   >
                     <span
                       style={{
-                        fontSize: ".7rem",
-                        letterSpacing: ".25em",
+                        fontSize: "14px",
+                        letterSpacing: ".12em",
                         textTransform: "uppercase",
                         color: "var(--gold)",
                         fontWeight: 600,
@@ -126,8 +126,8 @@ export default function Nav() {
                       href="/collection"
                       onClick={() => setCollectionOpen(false)}
                       style={{
-                        fontSize: ".68rem",
-                        letterSpacing: ".15em",
+                        fontSize: "14px",
+                        letterSpacing: ".1em",
                         textTransform: "uppercase",
                         color: "var(--muted)",
                         textDecoration: "none",
@@ -166,10 +166,10 @@ export default function Nav() {
                     }}
                   >
                     <div>
-                      <div style={{ fontSize: ".72rem", letterSpacing: ".15em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 700 }}>
+                      <div style={{ fontSize: "14px", letterSpacing: ".1em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 700 }}>
                         ✦ The Premium Collection
                       </div>
-                      <div style={{ fontSize: ".68rem", color: "rgba(244,239,228,.8)", letterSpacing: ".02em", marginTop: "2px" }}>
+                      <div style={{ fontSize: "14px", color: "rgba(244,239,228,.8)", letterSpacing: ".02em", marginTop: "2px" }}>
                         Curated Haute Horlogerie, numbered references & collector editions
                       </div>
                     </div>
@@ -188,8 +188,8 @@ export default function Nav() {
                     <div>
                       <div
                         style={{
-                          fontSize: ".65rem",
-                          letterSpacing: ".2em",
+                          fontSize: "13px",
+                          letterSpacing: ".12em",
                           textTransform: "uppercase",
                           color: "var(--gold)",
                           marginBottom: "12px",
@@ -223,7 +223,7 @@ export default function Nav() {
                             <div style={{ fontSize: ".78rem", color: "var(--white)", fontWeight: 500 }}>
                               {cat.label}
                             </div>
-                            <div style={{ fontSize: ".65rem", color: "#a5a5a5", marginTop: "2px" }}>
+                            <div style={{ fontSize: "13px", color: "#a5a5a5", marginTop: "2px" }}>
                               {cat.desc}
                             </div>
                           </Link>
@@ -235,8 +235,8 @@ export default function Nav() {
                     <div>
                       <div
                         style={{
-                          fontSize: ".65rem",
-                          letterSpacing: ".2em",
+                          fontSize: "13px",
+                          letterSpacing: ".12em",
                           textTransform: "uppercase",
                           color: "var(--gold)",
                           marginBottom: "12px",
@@ -270,7 +270,7 @@ export default function Nav() {
                             <div style={{ fontSize: ".78rem", color: "var(--white)", fontWeight: 500 }}>
                               {cat.label}
                             </div>
-                            <div style={{ fontSize: ".65rem", color: "#a5a5a5", marginTop: "2px" }}>
+                            <div style={{ fontSize: "13px", color: "#a5a5a5", marginTop: "2px" }}>
                               {cat.desc}
                             </div>
                           </Link>
@@ -282,8 +282,8 @@ export default function Nav() {
                     <div>
                       <div
                         style={{
-                          fontSize: ".65rem",
-                          letterSpacing: ".2em",
+                          fontSize: "13px",
+                          letterSpacing: ".12em",
                           textTransform: "uppercase",
                           color: "var(--gold)",
                           marginBottom: "12px",
@@ -318,7 +318,7 @@ export default function Nav() {
                             <div style={{ fontSize: ".78rem", color: "var(--white)", fontWeight: 500 }}>
                               {cat.label}
                             </div>
-                            <div style={{ fontSize: ".65rem", color: "#a5a5a5", marginTop: "2px" }}>
+                            <div style={{ fontSize: "13px", color: "#a5a5a5", marginTop: "2px" }}>
                               {cat.desc}
                             </div>
                           </Link>
@@ -342,8 +342,8 @@ export default function Nav() {
                       href="/customize"
                       onClick={() => setCollectionOpen(false)}
                       style={{
-                        fontSize: ".68rem",
-                        letterSpacing: ".15em",
+                        fontSize: "14px",
+                        letterSpacing: ".1em",
                         textTransform: "uppercase",
                         color: "var(--gold)",
                         textDecoration: "none",
@@ -359,8 +359,8 @@ export default function Nav() {
                       href="/virtual-try-on"
                       onClick={() => setCollectionOpen(false)}
                       style={{
-                        fontSize: ".68rem",
-                        letterSpacing: ".15em",
+                        fontSize: "14px",
+                        letterSpacing: ".1em",
                         textTransform: "uppercase",
                         color: "var(--white)",
                         textDecoration: "none",
@@ -387,7 +387,7 @@ export default function Nav() {
                 gap: "4px",
               }}
             >
-              <span style={{ fontSize: ".6rem" }}>✦</span> Premium
+              <span style={{ fontSize: "13px" }}>✦</span> Premium
             </Link>
           </li>
           <li><Link href="/inner-circle">Inner Circle</Link></li>
@@ -431,8 +431,8 @@ export default function Nav() {
               color: "var(--muted)",
               padding: "0 10px",
               height: "36px",
-              fontSize: ".48rem",
-              letterSpacing: ".2em",
+              fontSize: "13px",
+              letterSpacing: ".12em",
               textTransform: "uppercase",
               cursor: "pointer",
             }}
@@ -470,7 +470,7 @@ export default function Nav() {
                   right: "-4px",
                   background: "var(--gold)",
                   color: "var(--black)",
-                  fontSize: ".45rem",
+                  fontSize: "13px",
                   fontWeight: 700,
                   width: "14px",
                   height: "14px",
@@ -513,7 +513,7 @@ export default function Nav() {
                   right: "-4px",
                   background: "var(--gold)",
                   color: "var(--black)",
-                  fontSize: ".45rem",
+                  fontSize: "13px",
                   fontWeight: 700,
                   width: "14px",
                   height: "14px",
@@ -537,8 +537,8 @@ export default function Nav() {
                 border: "1px solid var(--gold-dk)",
                 color: "var(--gold)",
                 padding: "8px 12px",
-                fontSize: ".5rem",
-                letterSpacing: ".2em",
+                fontSize: "13px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 textDecoration: "none",
                 alignItems: "center",
@@ -559,8 +559,8 @@ export default function Nav() {
                 border: "1px solid var(--dark4)",
                 color: "var(--muted)",
                 padding: "8px 12px",
-                fontSize: ".5rem",
-                letterSpacing: ".2em",
+                fontSize: "13px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 cursor: "pointer",
               }}
@@ -608,7 +608,7 @@ export default function Nav() {
                   right: "-4px",
                   background: "var(--gold)",
                   color: "var(--black)",
-                  fontSize: ".45rem",
+                  fontSize: "13px",
                   fontWeight: 700,
                   width: "14px",
                   height: "14px",

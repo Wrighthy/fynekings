@@ -68,8 +68,8 @@ function LoginForm() {
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
           <div
             style={{
-              fontSize: ".52rem",
-              letterSpacing: ".45em",
+              fontSize: "14px",
+              letterSpacing: ".12em",
               color: "var(--gold)",
               textTransform: "uppercase",
               marginBottom: "12px",
@@ -88,7 +88,7 @@ function LoginForm() {
           >
             Sign <em style={{ fontStyle: "italic", color: "var(--gold)" }}>In</em>
           </h1>
-          <p style={{ fontSize: ".72rem", letterSpacing: ".08em", color: "var(--muted)", lineHeight: 1.8 }}>
+          <p style={{ fontSize: "15px", letterSpacing: ".08em", color: "var(--muted)", lineHeight: 1.8 }}>
             Access your private timepiece acquisitions, curated wishlist, and order status.
           </p>
         </div>
@@ -100,7 +100,7 @@ function LoginForm() {
               border: "1px solid rgba(220, 53, 69, 0.4)",
               color: "#ff6b6b",
               padding: "14px 18px",
-              fontSize: ".75rem",
+              fontSize: "15px",
               marginBottom: "24px",
               textAlign: "center",
               letterSpacing: ".04em",
@@ -123,8 +123,8 @@ function LoginForm() {
             <label
               style={{
                 display: "block",
-                fontSize: ".55rem",
-                letterSpacing: ".25em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 color: "var(--gold)",
                 marginBottom: "8px",
@@ -144,7 +144,7 @@ function LoginForm() {
                 border: "1px solid var(--dark3)",
                 color: "var(--white)",
                 padding: "14px 16px",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 outline: "none",
                 transition: "border-color .2s",
                 fontFamily: "inherit",
@@ -158,8 +158,8 @@ function LoginForm() {
             <label
               style={{
                 display: "block",
-                fontSize: ".55rem",
-                letterSpacing: ".25em",
+                fontSize: "14px",
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
                 color: "var(--gold)",
                 marginBottom: "8px",
@@ -179,7 +179,7 @@ function LoginForm() {
                 border: "1px solid var(--dark3)",
                 color: "var(--white)",
                 padding: "14px 16px",
-                fontSize: ".85rem",
+                fontSize: "15px",
                 outline: "none",
                 transition: "border-color .2s",
                 fontFamily: "inherit",
@@ -197,7 +197,7 @@ function LoginForm() {
               width: "100%",
               justifyContent: "center",
               padding: "16px",
-              fontSize: ".75rem",
+              fontSize: "15px",
               letterSpacing: ".2em",
               cursor: loading ? "not-allowed" : "pointer",
               opacity: loading ? 0.7 : 1,
@@ -207,7 +207,7 @@ function LoginForm() {
           </button>
         </form>
 
-        <div style={{ textAlign: "center", marginTop: "32px", fontSize: ".75rem", color: "var(--muted)" }}>
+        <div style={{ textAlign: "center", marginTop: "32px", fontSize: "15px", color: "var(--muted)" }}>
           New to FYNEKINGS?{" "}
           <Link
             href={`/signup${rawRedirect ? `?redirect=${encodeURIComponent(rawRedirect)}` : ""}`}

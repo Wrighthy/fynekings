@@ -8,13 +8,13 @@ export default function PrivacyPage() {
     <div style={{ background: "var(--black)", minHeight: "100vh", fontFamily: "Raleway, sans-serif" }}>
       <Nav />
       <div style={{ padding: "160px 24px 80px", maxWidth: "900px", margin: "0 auto" }}>
-        <div style={{ fontSize: ".52rem", letterSpacing: ".4em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px" }}>
+        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "12px" }}>
           Legal & Compliance
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "3rem", fontWeight: 300, color: "var(--white)", marginBottom: "32px" }}>
           Privacy Policy
         </h1>
-        <div style={{ fontSize: ".7rem", lineHeight: 2.4, color: "var(--text)", display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div style={{ fontSize: "15px", lineHeight: 2.4, color: "var(--text)", display: "flex", flexDirection: "column", gap: "24px" }}>
           <p>Effective Date: August 20, 2026</p>
           <p>
             Fynekings International Ltd (&ldquo;Fynekings&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;) is committed to protecting the privacy and security of our clients&rsquo; personal information. This Privacy Policy details how we collect, use, and protect data provided across our digital platforms and Victoria Island gallery.

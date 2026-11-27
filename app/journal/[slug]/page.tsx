@@ -38,19 +38,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 <div style={{ maxWidth: "860px", margin: "0 auto", position: "relative", zIndex: 1 }}>
                     {/* Breadcrumb */}
                     <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "32px" }}>
-                        <Link href="/" style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--muted)", textDecoration: "none", textTransform: "uppercase" }}>Home</Link>
+                        <Link href="/" style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textDecoration: "none", textTransform: "uppercase" }}>Home</Link>
                         <span style={{ color: "var(--dark4)" }}>→</span>
-                        <Link href="/journal" style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--muted)", textDecoration: "none", textTransform: "uppercase" }}>Journal</Link>
+                        <Link href="/journal" style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textDecoration: "none", textTransform: "uppercase" }}>Journal</Link>
                         <span style={{ color: "var(--dark4)" }}>→</span>
-                        <span style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase" }}>{article.title}</span>
+                        <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase" }}>{article.title}</span>
                     </div>
 
                     {/* Meta */}
                     <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "24px", flexWrap: "wrap" }}>
-                        <span style={{ padding: "5px 14px", border: "1px solid var(--gold-dk)", fontSize: ".45rem", letterSpacing: ".3em", color: "var(--gold-dk)", textTransform: "uppercase" }}>Vol. {article.vol}</span>
-                        <span style={{ fontSize: ".45rem", letterSpacing: ".25em", color: "var(--muted)", textTransform: "uppercase" }}>{article.category}</span>
+                        <span style={{ padding: "5px 14px", border: "1px solid var(--gold-dk)", fontSize: "14px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase" }}>Vol. {article.vol}</span>
+                        <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textTransform: "uppercase" }}>{article.category}</span>
                         <span style={{ width: "3px", height: "3px", borderRadius: "50%", background: "var(--dark4)", display: "inline-block" }}></span>
-                        <span style={{ fontSize: ".45rem", letterSpacing: ".25em", color: "var(--muted)", textTransform: "uppercase" }}>{article.readTime}</span>
+                        <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textTransform: "uppercase" }}>{article.readTime}</span>
                     </div>
 
                     {/* Title */}
@@ -59,7 +59,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     </h1>
 
                     {/* Subtitle */}
-                    <p style={{ fontSize: ".8rem", letterSpacing: ".1em", lineHeight: 2.2, color: "var(--text)", maxWidth: "680px" }}>
+                    <p style={{ fontSize: "15px", letterSpacing: ".1em", lineHeight: 2.2, color: "var(--text)", maxWidth: "680px" }}>
                         {article.subtitle}
                     </p>
                 </div>
@@ -75,14 +75,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             </h2>
                         )}
 
-                        <p style={{ fontSize: ".75rem", letterSpacing: ".08em", lineHeight: 2.6, color: "var(--text)", marginBottom: section.list || section.tip ? "24px" : 0 }}>
+                        <p style={{ fontSize: "15px", letterSpacing: ".08em", lineHeight: 2.6, color: "var(--text)", marginBottom: section.list || section.tip ? "24px" : 0 }}>
                             {section.body}
                         </p>
 
                         {section.list && (
                             <ul style={{ listStyle: "none", padding: 0, marginBottom: section.tip ? "24px" : 0 }}>
                                 {section.list.map((item, j) => (
-                                    <li key={j} style={{ display: "flex", gap: "16px", padding: "14px 0", borderBottom: "1px solid var(--dark3)", fontSize: ".65rem", letterSpacing: ".08em", color: "var(--text)", lineHeight: 1.8 }}>
+                                    <li key={j} style={{ display: "flex", gap: "16px", padding: "14px 0", borderBottom: "1px solid var(--dark3)", fontSize: "14px", letterSpacing: ".08em", color: "var(--text)", lineHeight: 1.8 }}>
                                         <span style={{ color: "var(--gold)", flexShrink: 0, marginTop: "2px" }}>—</span>
                                         <span>{item}</span>
                                     </li>
@@ -92,8 +92,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
                         {section.tip && (
                             <div style={{ margin: "24px 0 0", padding: "20px 24px", borderLeft: "2px solid var(--gold)", background: "var(--dark2)" }}>
-                                <div style={{ fontSize: ".45rem", letterSpacing: ".35em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Horological Note</div>
-                                <p style={{ fontSize: ".65rem", letterSpacing: ".06em", lineHeight: 2, color: "var(--text)", fontStyle: "italic" }}>{section.tip}</p>
+                                <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "8px" }}>Horological Note</div>
+                                <p style={{ fontSize: "14px", letterSpacing: ".06em", lineHeight: 2, color: "var(--text)", fontStyle: "italic" }}>{section.tip}</p>
                             </div>
                         )}
                     </div>
@@ -103,9 +103,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 <div style={{ marginTop: "80px", padding: "40px", border: "1px solid var(--dark3)", background: "var(--dark2)", display: "flex", gap: "24px", alignItems: "flex-start" }}>
                     <div style={{ width: "48px", height: "48px", border: "1px solid var(--gold-dk)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontFamily: "Playfair Display, serif", fontSize: "1.2rem", color: "var(--gold)", fontStyle: "italic" }}>A</div>
                     <div>
-                        <div style={{ fontSize: ".55rem", letterSpacing: ".28em", color: "var(--white)", textTransform: "uppercase", marginBottom: "6px" }}>Onukwuri Kingsley</div>
-                        <div style={{ fontSize: ".48rem", letterSpacing: ".22em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "12px" }}>Master Curator · Founder, Fynekings International</div>
-                        <p style={{ fontSize: ".6rem", letterSpacing: ".06em", lineHeight: 2, color: "var(--muted)" }}>
+                        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--white)", textTransform: "uppercase", marginBottom: "6px" }}>Onukwuri Kingsley</div>
+                        <div style={{ fontSize: "14px", letterSpacing: ".22em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "12px" }}>Master Curator · Founder, Fynekings International</div>
+                        <p style={{ fontSize: "14px", letterSpacing: ".06em", lineHeight: 2, color: "var(--muted)" }}>
                             With over two decades of curating experience across Lagos, China, and Dubai, Mr Kingsley founded Fynekings International to bring world-class curating craftsmanship to the African collector.
                         </p>
                     </div>
@@ -115,14 +115,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 <div style={{ marginTop: "60px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                     {prevArticle ? (
                         <Link href={`/journal/${prevArticle.slug}`} className="journal-nav-card">
-                            <div style={{ fontSize: ".45rem", letterSpacing: ".3em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>← Previous</div>
+                            <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>← Previous</div>
                             <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.1rem", color: "var(--white)" }}>Vol. {prevArticle.vol} · {prevArticle.title}</div>
                         </Link>
                     ) : <div></div>}
 
                     {nextArticle ? (
                         <Link href={`/journal/${nextArticle.slug}`} className="journal-nav-card" style={{ textAlign: "right" }}>
-                            <div style={{ fontSize: ".45rem", letterSpacing: ".3em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Next →</div>
+                            <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--muted)", textTransform: "uppercase", marginBottom: "8px" }}>Next →</div>
                             <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.1rem", color: "var(--white)" }}>Vol. {nextArticle.vol} · {nextArticle.title}</div>
                         </Link>
                     ) : <div></div>}
@@ -130,7 +130,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
                 {/* Back to journal */}
                 <div style={{ marginTop: "40px", textAlign: "center" }}>
-                    <Link href="/journal" style={{ fontSize: ".52rem", letterSpacing: ".3em", color: "var(--gold)", textTransform: "uppercase", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "10px", paddingBottom: "4px", borderBottom: "1px solid var(--gold-dk)" }}>
+                    <Link href="/journal" style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "10px", paddingBottom: "4px", borderBottom: "1px solid var(--gold-dk)" }}>
                         ← Back to Journal
                     </Link>
                 </div>
@@ -139,14 +139,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             {/* Related watches CTA */}
             <div style={{ borderTop: "1px solid var(--dark3)", background: "var(--dark)", padding: "60px 64px", textAlign: "center" }}>
                 <div style={{ maxWidth: "600px", margin: "0 auto" }}>
-                    <p style={{ fontSize: ".5rem", letterSpacing: ".4em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "16px" }}>Apply What You've Learned</p>
+                    <p style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase", marginBottom: "16px" }}>Apply What You've Learned</p>
                     <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "var(--white)", fontWeight: 300, marginBottom: "24px" }}>
                         Explore the <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Collection</em>
                     </h3>
-                    <p style={{ fontSize: ".65rem", letterSpacing: ".08em", lineHeight: 2, color: "var(--text)", marginBottom: "32px" }}>
+                    <p style={{ fontSize: "14px", letterSpacing: ".08em", lineHeight: 2, color: "var(--text)", marginBottom: "32px" }}>
                         Every Fynekings piece embodies the principles discussed in this article. See them in detail.
                     </p>
-                    <Link href="/collection" style={{ display: "inline-flex", alignItems: "center", gap: "12px", padding: "16px 40px", background: "var(--gold)", color: "var(--black)", textDecoration: "none", fontSize: ".55rem", letterSpacing: ".3em", textTransform: "uppercase", fontWeight: 600, transition: "background .3s" }}>
+                    <Link href="/collection" style={{ display: "inline-flex", alignItems: "center", gap: "12px", padding: "16px 40px", background: "var(--gold)", color: "var(--black)", textDecoration: "none", fontSize: "14px", letterSpacing: ".12em", textTransform: "uppercase", fontWeight: 600, transition: "background .3s" }}>
                         View Collection
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
                     </Link>

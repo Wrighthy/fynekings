@@ -43,12 +43,12 @@ export default function CookieConsent() {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
-        <span style={{ color: "var(--gold)", fontSize: ".8rem" }}>✦</span>
-        <span style={{ fontSize: ".5rem", letterSpacing: ".35em", color: "var(--gold)", textTransform: "uppercase" }}>
+        <span style={{ color: "var(--gold)", fontSize: "15px" }}>✦</span>
+        <span style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase" }}>
           Cookie & Privacy Preferences
         </span>
       </div>
-      <p style={{ fontSize: ".62rem", letterSpacing: ".08em", lineHeight: 1.8, color: "var(--text)", marginBottom: "20px" }}>
+      <p style={{ fontSize: "14px", letterSpacing: ".08em", lineHeight: 1.8, color: "var(--text)", marginBottom: "20px" }}>
         We use essential cookies to deliver a seamless horological experience, analyze site traffic, and personalize luxury concierge services. Read our{" "}
         <Link href="/privacy" style={{ color: "var(--gold)", textDecoration: "underline" }}>
           Privacy Policy
@@ -63,8 +63,8 @@ export default function CookieConsent() {
             background: "transparent",
             border: "1px solid var(--dark4)",
             color: "var(--muted)",
-            fontSize: ".52rem",
-            letterSpacing: ".25em",
+            fontSize: "14px",
+            letterSpacing: ".12em",
             textTransform: "uppercase",
             cursor: "pointer",
           }}
@@ -78,8 +78,8 @@ export default function CookieConsent() {
             background: "var(--gold)",
             border: "none",
             color: "var(--black)",
-            fontSize: ".52rem",
-            letterSpacing: ".25em",
+            fontSize: "14px",
+            letterSpacing: ".12em",
             textTransform: "uppercase",
             fontWeight: 600,
             cursor: "pointer",

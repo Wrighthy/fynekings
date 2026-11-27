@@ -18,13 +18,13 @@ export default function ComparePage() {
 
       {/* Header */}
       <div style={{ padding: "160px 24px 60px", maxWidth: "1200px", margin: "0 auto", textAlign: "center" }}>
-        <div style={{ fontSize: ".52rem", letterSpacing: ".45em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
+        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold)", textTransform: "uppercase", marginBottom: "16px" }}>
           Horological Comparison Matrix
         </div>
         <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(2.8rem, 6vw, 4.5rem)", fontWeight: 300, color: "var(--white)", marginBottom: "20px" }}>
           Timepiece <em style={{ fontStyle: "italic", color: "var(--gold)" }}>Comparison</em>
         </h1>
-        <p style={{ fontSize: ".7rem", letterSpacing: ".1em", color: "var(--muted)" }}>
+        <p style={{ fontSize: "15px", letterSpacing: ".1em", color: "var(--muted)" }}>
           Comparing {items.length} {items.length === 1 ? "model" : "models"} side by side
         </p>
       </div>
@@ -37,7 +37,7 @@ export default function ComparePage() {
             <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.8rem", color: "var(--white)", fontWeight: 300, marginBottom: "16px" }}>
               No Timepieces Selected for Comparison
             </h2>
-            <p style={{ fontSize: ".7rem", color: "var(--muted)", marginBottom: "32px", lineHeight: 2 }}>
+            <p style={{ fontSize: "15px", color: "var(--muted)", marginBottom: "32px", lineHeight: 2 }}>
               Visit our collection page and click &ldquo;Compare&rdquo; on up to 4 models to view technical side-by-side specifications.
             </p>
             <Link href="/collection" className="btn-primary" style={{ display: "inline-flex" }}>
@@ -49,7 +49,7 @@ export default function ComparePage() {
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "24px" }}>
               <button
                 onClick={clearCompare}
-                style={{ background: "none", border: "1px solid var(--dark4)", color: "var(--muted)", padding: "8px 16px", fontSize: ".5rem", letterSpacing: ".2em", textTransform: "uppercase", cursor: "pointer" }}
+                style={{ background: "none", border: "1px solid var(--dark4)", color: "var(--muted)", padding: "8px 16px", fontSize: "14px", letterSpacing: ".2em", textTransform: "uppercase", cursor: "pointer" }}
               >
                 Clear Comparison Matrix
               </button>
@@ -59,7 +59,7 @@ export default function ComparePage() {
             <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid var(--dark3)" }}>
               <thead>
                 <tr>
-                  <th style={{ padding: "24px", background: "var(--dark)", borderRight: "1px solid var(--dark3)", borderBottom: "1px solid var(--dark3)", width: "200px", textAlign: "left", fontSize: ".55rem", letterSpacing: ".3em", color: "var(--gold-dk)", textTransform: "uppercase" }}>
+                  <th style={{ padding: "24px", background: "var(--dark)", borderRight: "1px solid var(--dark3)", borderBottom: "1px solid var(--dark3)", width: "200px", textAlign: "left", fontSize: "14px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase" }}>
                     Feature / Spec
                   </th>
                   {items.map((item) => (
@@ -67,7 +67,7 @@ export default function ComparePage() {
                       <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <button
                           onClick={() => removeFromCompare(item.id)}
-                          style={{ position: "absolute", top: "-12px", right: "-12px", background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: ".9rem" }}
+                          style={{ position: "absolute", top: "-12px", right: "-12px", background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: "15px" }}
                           title="Remove model"
                         >
                           ✕
@@ -79,12 +79,12 @@ export default function ComparePage() {
                             <span style={{ fontSize: "2rem", color: "var(--gold)" }}>⌚</span>
                           )}
                         </div>
-                        <div style={{ fontSize: ".45rem", letterSpacing: ".3em", color: "var(--gold-dk)", textTransform: "uppercase" }}>{item.series}</div>
+                        <div style={{ fontSize: "14px", letterSpacing: ".12em", color: "var(--gold-dk)", textTransform: "uppercase" }}>{item.series}</div>
                         <h3 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.2rem", color: "var(--white)", fontWeight: 300, margin: "4px 0 12px" }}>{item.name}</h3>
                         <div style={{ fontFamily: "Playfair Display, serif", fontSize: "1.3rem", color: "var(--gold)", marginBottom: "16px" }}>{fmt(item.price)}</div>
                         <button
                           onClick={() => addToCart(item.name, item.series, item.price)}
-                          style={{ width: "100%", padding: "10px", background: "var(--gold)", color: "var(--black)", border: "none", fontSize: ".5rem", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}
+                          style={{ width: "100%", padding: "10px", background: "var(--gold)", color: "var(--black)", border: "none", fontSize: "14px", letterSpacing: ".2em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer" }}
                         >
                           Add to Cart
                         </button>
@@ -96,11 +96,11 @@ export default function ComparePage() {
               <tbody>
                 {specKeys.map((key) => (
                   <tr key={key} style={{ borderBottom: "1px solid var(--dark3)" }}>
-                    <td style={{ padding: "18px 24px", background: "var(--dark)", borderRight: "1px solid var(--dark3)", fontSize: ".55rem", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase" }}>
+                    <td style={{ padding: "18px 24px", background: "var(--dark)", borderRight: "1px solid var(--dark3)", fontSize: "14px", letterSpacing: ".2em", color: "var(--gold)", textTransform: "uppercase" }}>
                       {key.replace(/([A-Z])/g, " $1").trim()}
                     </td>
                     {items.map((item) => (
-                      <td key={item.id} style={{ padding: "18px 24px", background: "var(--dark2)", borderRight: "1px solid var(--dark3)", textAlign: "center", fontSize: ".7rem", color: "var(--white)" }}>
+                      <td key={item.id} style={{ padding: "18px 24px", background: "var(--dark2)", borderRight: "1px solid var(--dark3)", textAlign: "center", fontSize: "15px", color: "var(--white)" }}>
                         {item.specs?.[key] || "Automatic 25 Jewels"}
                       </td>
                     ))}

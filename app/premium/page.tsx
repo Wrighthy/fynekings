@@ -29,8 +29,8 @@ export default function PremiumCollectionPage() {
           <p
             style={{
               color: "var(--gold)",
-              fontSize: ".7rem",
-              letterSpacing: ".3em",
+              fontSize: "15px",
+              letterSpacing: ".12em",
               textTransform: "uppercase",
             }}
           >
