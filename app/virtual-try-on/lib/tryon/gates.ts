@@ -12,6 +12,7 @@ import {
 } from "./constants";
 import {
   crownRotation,
+  facingFromCurl,
   insideFrame,
   isBackFacing,
   isPalmFacing,
@@ -113,7 +114,13 @@ export function evaluateGates(
   // G3: Not showing the palm. The back of the hand OR an upright, edge-on
   // hand (thumb or pinky side toward the camera) both pass; only a palm
   // clearly turned toward the camera is rejected.
-  const g3 = isBackFacing(hand, mirrored) || !isPalmFacing(hand, mirrored);
+  //
+  // The thumb-side test depends on the chosen wrist, and a palm of the OTHER
+  // hand has exactly the same outline as the back of the chosen one. Finger
+  // curl does not depend on left/right, so when it clearly says "palm" the
+  // gate fails no matter what the outline test thinks.
+  const outlineOk = isBackFacing(hand, mirrored) || !isPalmFacing(hand, mirrored);
+  const g3 = outlineOk && facingFromCurl(hand) !== "palm";
 
   // G4: Flatness no longer blocks a capture. An upright hand must be
   // capturable without tilting it to face the wrist to the camera; the

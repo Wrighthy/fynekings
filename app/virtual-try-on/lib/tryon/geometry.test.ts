@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { evaluateGates } from "./gates";
-import { crownRotation, handTiltDeg, isBackFacing, placementOf, resolveHandedness } from "./geometry";
+import { crownRotation, facingFromCurl, handTiltDeg, isBackFacing, placementOf, resolveHandedness } from "./geometry";
 import { depthFlatness } from "./depthFlatness";
 import { measureWrist } from "./measure";
 import { HAND_BREADTH_MM, WATCH_LATERAL_OFFSET_MM, WATCH_OFFSET_MM } from "./constants";
@@ -106,6 +106,35 @@ describe("snapshot geometry", () => {
     // The same right-hand back, mirrored for a front camera, still passes.
     const mirroredBack = pose(0.6, 0.4);
     assert.equal(isBackFacing(hand({ handedness: "right", ...mirroredBack }), true), true);
+  });
+
+  it("rejects the other hand's palm even though its outline matches the chosen wrist's back", () => {
+    const width = 1000;
+    const height = 1000;
+    // Same outline as a passing right-hand back; only the finger depth differs.
+    const withCurl = (fingerZ: number) => {
+      const world = worldFor(0, "right", false);
+      world[9] = { x: 0, y: 1, z: 0 };
+      for (const i of [6, 7, 8, 10, 11, 12, 14, 15, 16, 18, 19, 20]) {
+        world[i] = { x: 0.5, y: 1.3, z: fingerZ };
+      }
+      return hand({ handedness: "right", worldLandmarks: world });
+    };
+    // Fingers bend away from the camera: back of the hand.
+    const back = withCurl(0.2);
+    assert.equal(facingFromCurl(back), "back");
+    const ok = evaluateGates([back], Array.from({ length: 8 }, () => back), width, height, { luminance: 120, sharpness: 80 });
+    assert.equal(ok.allPassed, true);
+
+    // Fingers bend toward the camera: a palm (the left hand, mislabelled as right).
+    const palm = withCurl(-0.2);
+    assert.equal(facingFromCurl(palm), "palm");
+    const bad = evaluateGates([palm], Array.from({ length: 8 }, () => palm), width, height, { luminance: 120, sharpness: 80 });
+    assert.equal(bad.allPassed, false);
+    assert.equal(bad.messageId, "backOfHand");
+
+    // A flat hand gives no curl cue and falls back to the outline test.
+    assert.equal(facingFromCurl(withCurl(0)), null);
   });
 
   it("names the hand from the mirrored bitmap", () => {

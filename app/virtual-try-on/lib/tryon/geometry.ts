@@ -122,6 +122,55 @@ export function isPalmFacing(hand: HandObservation, mirrored = true): boolean {
  */
 const PALM_FACING_MIN = 0.5;
 
+const PALM_POINTS = [0, 5, 9, 13, 17] as const;
+// PIP, DIP and tip of the four fingers (thumb excluded: it bends sideways).
+const FINGER_JOINTS = [6, 7, 8, 10, 11, 12, 14, 15, 16, 18, 19, 20] as const;
+/** Finger bend toward the palm must exceed this fraction of the palm length. */
+const CURL_MIN_FRACTION = 0.05;
+/** Below this |n.z| the hand is edge-on and palm vs back has no meaning. */
+const CURL_MIN_FACING = 0.3;
+
+/**
+ * Which side of the hand faces the camera, judged from 3D finger curl alone,
+ * with no use of left/right.
+ *
+ * The 2D thumb-side test in isBackFacing cannot tell a right PALM from a left
+ * BACK: they are mirror images with the same outline. Fingers, though, always
+ * bend toward the palm. MediaPipe world z grows away from the camera, so if
+ * the finger joints sit nearer the camera than the palm plane, the palm faces
+ * the camera, whichever hand it is.
+ *
+ * Returns null when the cue is too weak to trust (hand nearly flat, or
+ * edge-on).
+ */
+export function facingFromCurl(hand: HandObservation): "palm" | "back" | null {
+  const world = hand.worldLandmarks;
+  if (!world || world.length < 21) return null;
+  const n = palmNormal(world);
+  if (!n) return null;
+  const nLen = len3(n);
+  const unit = { x: n.x / nLen, y: n.y / nLen, z: n.z / nLen };
+  if (Math.abs(unit.z) < CURL_MIN_FACING) return null;
+
+  const centroid = (indices: readonly number[]) => {
+    const sum = { x: 0, y: 0, z: 0 };
+    for (const i of indices) {
+      sum.x += world[i].x;
+      sum.y += world[i].y;
+      sum.z += world[i].z;
+    }
+    return { x: sum.x / indices.length, y: sum.y / indices.length, z: sum.z / indices.length };
+  };
+  const offset = sub3(centroid(FINGER_JOINTS), centroid(PALM_POINTS));
+  // Distance of the fingers off the palm plane, signed along the normal.
+  const along = offset.x * unit.x + offset.y * unit.y + offset.z * unit.z;
+  const palmLength = len3(sub3(world[9], world[0]));
+  if (palmLength < 1e-6 || Math.abs(along) < CURL_MIN_FRACTION * palmLength) return null;
+  // Depth change of the curl as seen by the camera: negative is toward it.
+  const curlZ = along * unit.z;
+  return curlZ < 0 ? "palm" : "back";
+}
+
 /** Degrees between the palm normal and the camera axis. 0 is flat to the screen. */
 export function handTiltDeg(hand: HandObservation): number | null {
   const n = palmNormal(hand.worldLandmarks);
