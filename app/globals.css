@@ -3599,6 +3599,8 @@ footer {
 }
 
 .tryon-experience {
+  /* Height of the bottom controls bar, so overlays can sit clear of it. */
+  --tryon-bar-h: calc(84px + env(safe-area-inset-bottom, 0px));
   position: absolute;
   inset: 0;
   width: 100%;
@@ -3848,10 +3850,13 @@ footer {
 }
 
 .tryon-wrist-toggle button {
-  padding: 9px 12px;
-  font-size: .5rem;
-  letter-spacing: .15em;
-  text-transform: uppercase;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   color: var(--muted);
   background: transparent;
   border: none;
@@ -3859,9 +3864,35 @@ footer {
   transition: color .3s, background .3s;
 }
 
+.tryon-wrist-toggle button + button {
+  border-left: 1px solid var(--dark4);
+}
+
+.tryon-wrist-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Small L / R tag so the two mirrored hands are never ambiguous. */
+.tryon-wrist-letter {
+  position: absolute;
+  right: 4px;
+  bottom: 3px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
 .tryon-wrist-toggle button.active {
   color: var(--dark);
   background: var(--gold);
+}
+
+.tryon-wrist-toggle button:focus-visible {
+  outline: 2px solid var(--gold-lt);
+  outline-offset: -2px;
 }
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Controls bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -3881,6 +3912,33 @@ footer {
   display: flex;
   align-items: center;
   gap: 20px;
+}
+
+.tryon-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Watch name / price, shown inside the bottom bar rather than over the camera. */
+.tryon-controls .tryon-watch-info {
+  flex: 0 1 220px;
+  min-width: 0;
+  gap: 3px;
+  padding: 0;
+  background: none;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.tryon-controls .tryon-watch-info-name,
+.tryon-controls .tryon-watch-info-price {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tryon-watch-picker {
@@ -4333,6 +4391,9 @@ footer {
 }
 
 .tryon-guide-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-top: 10px;
   padding: 6px 10px;
   border: 1px solid var(--dark4);
@@ -4357,7 +4418,7 @@ footer {
   position: absolute;
   left: 16px;
   right: 16px;
-  bottom: 108px;
+  bottom: calc(var(--tryon-bar-h) + 12px);
   z-index: 12;
   text-align: center;
   pointer-events: none;
@@ -4381,7 +4442,7 @@ footer {
 .tryon-inline-error {
   position: absolute;
   left: 50%;
-  bottom: 120px;
+  bottom: calc(var(--tryon-bar-h) + 12px);
   transform: translateX(-50%);
   z-index: 18;
   width: min(92vw, 420px);
@@ -4400,18 +4461,28 @@ footer {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 84px 16px 120px;
+  gap: 14px;
+  padding: calc(76px + env(safe-area-inset-top, 0px)) 16px calc(var(--tryon-bar-h) + 16px);
   background: var(--black);
-  overflow: auto;
+  overflow-y: auto;
+}
+
+.tryon-result-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  min-height: 0;
 }
 
 .tryon-result-canvas {
+  display: block;
   max-width: 100%;
-  max-height: 52dvh;
+  max-height: 54dvh;
   width: auto;
   height: auto;
   border: 1px solid var(--dark4);
+  border-radius: 4px;
   touch-action: none;
   cursor: grab;
 }
@@ -4420,35 +4491,140 @@ footer {
   cursor: grabbing;
 }
 
+.tryon-result-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(5, 5, 5, .72);
+  color: var(--text);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 .tryon-result-warn {
+  margin: 0;
   color: var(--gold);
   font-size: .72rem;
   text-align: center;
   max-width: 420px;
 }
 
-.tryon-result-sliders {
+.tryon-result-panel {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  width: min(520px, 100%);
+  flex-direction: column;
+  gap: 14px;
+  width: min(480px, 100%);
+  padding: 14px 16px;
+  background: var(--dark2);
+  border: 1px solid var(--dark3);
+  border-radius: 4px;
+}
+
+.tryon-result-sliders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
 
 .tryon-result-sliders label {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  flex: 1 1 180px;
-  font-size: .55rem;
+  gap: 8px;
+  min-width: 0;
+  font-size: 10px;
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
+.tryon-result-slider-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.tryon-result-slider-value {
+  color: var(--gold);
+  letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+}
+
 .tryon-result-sliders input {
   width: 100%;
+  margin: 0;
   accent-color: var(--gold);
+}
+
+.tryon-result-panel .tryon-result-note {
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.tryon-result-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.tryon-result-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 10px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--dark4);
+  border-radius: 3px;
+  cursor: none;
+  transition: border-color .3s, color .3s, background .3s;
+}
+
+.tryon-result-btn svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tryon-result-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.tryon-result-btn.primary {
+  color: var(--black);
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.tryon-result-btn.primary:hover {
+  color: var(--black);
+  background: var(--gold-lt);
+}
+
+.tryon-result-btn:focus-visible {
+  outline: 2px solid var(--gold-lt);
+  outline-offset: 2px;
 }
 
 .tryon-watch-picker img {
@@ -4515,51 +4691,161 @@ footer {
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @media (max-width: 768px) {
-  .tryon-controls {
-    flex-wrap: wrap;
-    gap: 14px;
-    padding: 12px 16px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  .tryon-experience {
+    /* Two rows: watch name, then picker + capture. */
+    --tryon-bar-h: calc(108px + env(safe-area-inset-bottom, 0px));
   }
 
-  .tryon-watch-picker {
-    order: 1;
-    flex: 1 1 100%;
-    max-width: 100%;
-  }
-
-  .tryon-size-control {
-    order: 2;
-    width: auto;
-    flex: 1;
-  }
-
-  .tryon-capture-btn {
-    order: 3;
-    width: 46px;
-    height: 46px;
-  }
-
+  /* Top row: Back on the left, wrist toggle on the right, nothing stacked. */
   .tryon-hud-tl,
   .tryon-hud-tr {
-    gap: 10px;
+    top: calc(12px + env(safe-area-inset-top, 0px));
+    gap: 8px;
   }
 
   .tryon-hud-tl {
-    left: 14px;
+    left: 16px;
   }
 
-/* <<<<<<< HEAD */
-  .tryon-watch-info-name { font-size: 14px; }
-/* ======= */
   .tryon-hud-tr {
-    right: 14px;
+    right: 16px;
+  }
+
+  .tryon-back-btn {
+    height: 36px;
+    gap: 6px;
+    padding: 0 12px;
+    font-size: 11px;
+    letter-spacing: .18em;
+  }
+
+  .tryon-wrist-toggle button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .tryon-wrist-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Guidance starts below the 36px top row, so it can never overlap it. */
+  .tryon-guide-banner {
+    margin-top: calc(60px + env(safe-area-inset-top, 0px));
+    max-width: calc(100vw - 32px);
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .tryon-guide-banner p {
+    font-size: .7rem;
+  }
+
+  .tryon-guide-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .tryon-guide-ring {
+    width: 24px;
+    height: 24px;
+  }
+
+  .tryon-guide-chip {
+    margin-top: 8px;
+    padding: 5px 9px;
+  }
+
+  .tryon-wrist-outline {
+    top: 47%;
+    width: min(54vw, 220px);
+  }
+
+  /* Bottom bar: watch name on top, picker and capture on one row below. */
+  .tryon-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 16px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .tryon-controls .tryon-watch-info {
+    flex: none;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
   }
 
   .tryon-watch-info-name {
-    font-size: .65rem;
+    font-size: 14px;
   }
-/* >>>>>>> 693dbbc1ec5f0d03e25cb44541f474a117a00619 */
+
+  .tryon-watch-info-price {
+    font-size: 12px;
+    letter-spacing: .12em;
+    flex-shrink: 0;
+  }
+
+  .tryon-controls-row {
+    gap: 12px;
+  }
+
+  .tryon-watch-picker {
+    gap: 8px;
+  }
+
+  .tryon-watch-thumb {
+    width: 44px;
+    height: 44px;
+  }
+
+  .tryon-watch-thumb.active {
+    transform: none;
+  }
+
+  .tryon-capture-btn {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Preview */
+  .tryon-result {
+    justify-content: flex-start;
+    gap: 12px;
+    padding: calc(60px + env(safe-area-inset-top, 0px)) 16px calc(var(--tryon-bar-h) + 12px);
+  }
+
+  .tryon-result-canvas {
+    max-height: 48dvh;
+  }
+
+  .tryon-result-panel {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .tryon-result-sliders {
+    gap: 14px;
+  }
+
+  .tryon-result-btn {
+    min-height: 38px;
+    padding: 0 6px;
+    font-size: 10px;
+    letter-spacing: .1em;
+  }
+
+  .tryon-camera-error {
+    padding: 24px 16px;
+  }
+
+  .tryon-retry-btn {
+    padding: 12px 22px;
+    font-size: 11px;
+    letter-spacing: .2em;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

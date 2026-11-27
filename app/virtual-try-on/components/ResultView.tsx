@@ -69,70 +69,98 @@ export default function ResultView({
     });
   };
 
+  const endDrag = () => {
+    dragRef.current = null;
+  };
+
   return (
     <div className="tryon-result">
-      <canvas
-        ref={canvasRef}
-        className="tryon-result-canvas"
-        aria-label="Watch fitted on your wrist"
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={() => {
-          dragRef.current = null;
-        }}
-      />
-      <p className="tryon-result-note">{GUIDANCE.approximation}</p>
-      <p className="tryon-result-note">
-        Estimated wrist width {Math.round(measurements.wristWidthMm)} mm. This can be off by about 10 to 15 percent.
-      </p>
-      <p className="tryon-result-note">
-        Drag the watch on your wrist to adjust its position.
-      </p>
+      <div className="tryon-result-stage">
+        <canvas
+          ref={canvasRef}
+          className="tryon-result-canvas"
+          aria-label="Watch fitted on your wrist. Drag the watch to adjust its position."
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+        />
+        <span className="tryon-result-hint" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3" />
+          </svg>
+          Drag to adjust
+        </span>
+      </div>
+
       {lowConfidence && (
         <p className="tryon-result-warn" role="status">
           {GUIDANCE.lowConfidence}
         </p>
       )}
-      <div className="tryon-result-sliders">
-        <label>
-          Rotate
-          <input
-            type="range"
-            min={-ADJUST_ROTATION_DEG}
-            max={ADJUST_ROTATION_DEG}
-            step={1}
-            value={adjustments.rotationDeg}
-            aria-label="Rotate the watch"
-            onChange={(event) =>
-              onAdjust({ ...adjustments, rotationDeg: Number(event.target.value) })
-            }
-          />
-        </label>
-        <label>
-          Size
-          <input
-            type="range"
-            min={ADJUST_SCALE_MIN}
-            max={ADJUST_SCALE_MAX}
-            step={0.01}
-            value={adjustments.scale}
-            aria-label="Resize the watch"
-            onChange={(event) =>
-              onAdjust({ ...adjustments, scale: Number(event.target.value) })
-            }
-          />
-        </label>
-      </div>
-      <div className="tryon-shot-actions">
-        <button type="button" className="tryon-shot-btn" onClick={onRetake}>
-          Retake
-        </button>
-        <button type="button" className="tryon-shot-btn" onClick={onReset}>
-          Reset
-        </button>
-        <button type="button" className="tryon-shot-btn primary" onClick={onSave}>
-          Save image
-        </button>
+
+      <div className="tryon-result-panel">
+        <div className="tryon-result-sliders">
+          <label>
+            <span className="tryon-result-slider-head">
+              <span>Rotate</span>
+              <span className="tryon-result-slider-value">{adjustments.rotationDeg}°</span>
+            </span>
+            <input
+              type="range"
+              min={-ADJUST_ROTATION_DEG}
+              max={ADJUST_ROTATION_DEG}
+              step={1}
+              value={adjustments.rotationDeg}
+              aria-label="Rotate the watch"
+              onChange={(event) =>
+                onAdjust({ ...adjustments, rotationDeg: Number(event.target.value) })
+              }
+            />
+          </label>
+          <label>
+            <span className="tryon-result-slider-head">
+              <span>Size</span>
+              <span className="tryon-result-slider-value">{Math.round(adjustments.scale * 100)}%</span>
+            </span>
+            <input
+              type="range"
+              min={ADJUST_SCALE_MIN}
+              max={ADJUST_SCALE_MAX}
+              step={0.01}
+              value={adjustments.scale}
+              aria-label="Resize the watch"
+              onChange={(event) =>
+                onAdjust({ ...adjustments, scale: Number(event.target.value) })
+              }
+            />
+          </label>
+        </div>
+
+        <p className="tryon-result-note">
+          Wrist ≈ {Math.round(measurements.wristWidthMm)} mm (±10–15%). {GUIDANCE.approximation}
+        </p>
+
+        <div className="tryon-result-actions">
+          <button type="button" className="tryon-result-btn" onClick={onRetake}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" />
+            </svg>
+            Retake
+          </button>
+          <button type="button" className="tryon-result-btn" onClick={onReset}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 12h4M17 12h4M12 3v4M12 17v4M12 12h.01" />
+            </svg>
+            Reset
+          </button>
+          <button type="button" className="tryon-result-btn primary" onClick={onSave}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+            </svg>
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );

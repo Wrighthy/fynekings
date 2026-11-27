@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fmt } from "@/lib/store";
 import GuidanceOverlay from "./GuidanceOverlay";
+import { LEFT_HAND_ICON, RIGHT_HAND_ICON } from "./handIcons";
 import ResultView from "./ResultView";
 import { useHandTracking } from "../hooks/useHandTracking";
 import { downscaleCanvas, getCameraErrorMessage, openCamera } from "../lib/tryon/camera";
@@ -303,6 +304,7 @@ export default function SnapshotTryOn({ products }: Props) {
           ready={ready && !forcedId}
           progress={progress}
           hand={hand}
+          wrist={wrist}
           hint={hint}
         />
       )}
@@ -343,72 +345,86 @@ export default function SnapshotTryOn({ products }: Props) {
             className="tryon-back-btn"
             onClick={() => (window.history.length > 1 ? router.back() : router.push("/"))}
           >
-            Back
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+            <span>Back</span>
           </button>
         </div>
         <div className="tryon-hud-tr">
-          {selectedWatch && (
-            <div className="tryon-watch-info">
-              <span className="tryon-watch-info-name">{selectedWatch.name}</span>
-              <span className="tryon-watch-info-price">{fmt(selectedWatch.price)}</span>
-            </div>
-          )}
           {showLive && (
             <div className="tryon-wrist-toggle" role="radiogroup" aria-label="Which wrist are you trying the watch on?">
-              {(["left", "right"] as const).map((side) => (
-                <button
-                  key={side}
-                  type="button"
-                  role="radio"
-                  aria-checked={wrist === side}
-                  className={wrist === side ? "active" : ""}
-                  onClick={() => setWrist(side)}
-                >
-                  {side === "left" ? "Left wrist" : "Right wrist"}
-                </button>
-              ))}
+              {(["left", "right"] as const).map((side) => {
+                const label = side === "left" ? "Left wrist" : "Right wrist";
+                return (
+                  <button
+                    key={side}
+                    type="button"
+                    role="radio"
+                    aria-checked={wrist === side}
+                    aria-label={label}
+                    title={label}
+                    className={wrist === side ? "active" : ""}
+                    onClick={() => setWrist(side)}
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d={side === "left" ? LEFT_HAND_ICON : RIGHT_HAND_ICON}
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <span className="tryon-wrist-letter" aria-hidden="true">{side === "left" ? "L" : "R"}</span>
+                  </button>
+                );
+              })}
             </div>
           )}
-
         </div>
       </div>
 
       <div className="tryon-controls">
-        <div ref={pickerRef} className="tryon-watch-picker" role="radiogroup" aria-label="Choose a watch to try on">
-          {products.map((product) => {
-            const active = selectedWatch?.id === product.id;
-            return (
-              <button
-                key={product.id}
-                type="button"
-                role="radio"
-                aria-checked={active}
-                className={`tryon-watch-thumb ${active ? "active" : ""}`}
-                onClick={() => selectWatch(product)}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={product.thumbnailUrl ?? product.overlayUrl} alt={product.name} />
-              </button>
-            );
-          })}
-        </div>
-        {phase === "RESULT" ? (
-          <button type="button" className="tryon-shot-btn" onClick={() => pickerRef.current?.querySelector("button")?.focus()}>
-            Change watch
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="tryon-capture-btn"
-            disabled={!ready || Boolean(forcedId)}
-            aria-label="Capture snapshot"
-            onClick={() => void capture(true)}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="12" cy="13" r="4" />
-            </svg>
-          </button>
+        {selectedWatch && (
+          <div className="tryon-watch-info">
+            <span className="tryon-watch-info-name">{selectedWatch.name}</span>
+            <span className="tryon-watch-info-price">{fmt(selectedWatch.price)}</span>
+          </div>
         )}
+        <div className="tryon-controls-row">
+          <div ref={pickerRef} className="tryon-watch-picker" role="radiogroup" aria-label="Choose a watch to try on">
+            {products.map((product) => {
+              const active = selectedWatch?.id === product.id;
+              return (
+                <button
+                  key={product.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  className={`tryon-watch-thumb ${active ? "active" : ""}`}
+                  onClick={() => selectWatch(product)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={product.thumbnailUrl ?? product.overlayUrl} alt={product.name} />
+                </button>
+              );
+            })}
+          </div>
+          {phase !== "RESULT" && (
+            <button
+              type="button"
+              className="tryon-capture-btn"
+              disabled={!ready || Boolean(forcedId)}
+              aria-label="Capture snapshot"
+              onClick={() => void capture(true)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
