@@ -99,8 +99,15 @@ export const WATCH_SCALE_CALIBRATION = {
   left: 0.95,
 } as const;
 
+/**
+ * Default size boost for the rendered watch. The preview used to look best
+ * with the Size slider at 115%, so that size is now the baseline: the slider
+ * reads 100% there and still allows ±15% (ADJUST_SCALE_MIN / MAX) around it.
+ */
+export const WATCH_DEFAULT_SIZE_BOOST = 1.15;
+
 export function getWatchScaleCalibration(handedness: "left" | "right"): number {
-  return WATCH_SCALE_CALIBRATION[handedness] ?? 0.95;
+  return (WATCH_SCALE_CALIBRATION[handedness] ?? 0.95) * WATCH_DEFAULT_SIZE_BOOST;
 }
 
 /**
