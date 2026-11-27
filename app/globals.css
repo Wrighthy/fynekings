@@ -4549,9 +4549,9 @@ footer {
     left: 14px;
   }
 
-<<<<<<< HEAD
+/* <<<<<<< HEAD */
   .tryon-watch-info-name { font-size: 14px; }
-=======
+/* ======= */
   .tryon-hud-tr {
     right: 14px;
   }
@@ -4559,7 +4559,7 @@ footer {
   .tryon-watch-info-name {
     font-size: .65rem;
   }
->>>>>>> 693dbbc1ec5f0d03e25cb44541f474a117a00619
+/* >>>>>>> 693dbbc1ec5f0d03e25cb44541f474a117a00619 */
 }
 
 @media (prefers-reduced-motion: reduce) {

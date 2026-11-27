@@ -1,4 +1,5 @@
 import {
+  FRAME_MARGIN,
   BACK_FACING_SIGN_LEFT,
   BACK_FACING_SIGN_RIGHT,
   HAND_BREADTH_MM,
@@ -182,6 +183,36 @@ export type Placement = {
   estimatedWristPx: number;
 };
 
+/** Inset kept between a clamped watch placement and the frame edge. */
+// Slightly inside the G2 margin so a clamped point never fails that check on rounding.
+const PLACEMENT_EDGE_INSET = FRAME_MARGIN + 0.005;
+
+/**
+ * Largest t in [0, desired] such that origin + axis * t stays inside the frame
+ * (inset by PLACEMENT_EDGE_INSET). If the origin itself is outside, returns 0.
+ */
+export function clampOffsetToFrame(
+  origin: Vec2,
+  axis: Vec2,
+  desired: number,
+  width: number,
+  height: number
+): number {
+  if (width <= 0 || height <= 0) return desired;
+  const minX = PLACEMENT_EDGE_INSET * width;
+  const maxX = width * (1 - PLACEMENT_EDGE_INSET);
+  const minY = PLACEMENT_EDGE_INSET * height;
+  const maxY = height * (1 - PLACEMENT_EDGE_INSET);
+  let t = desired;
+  const limit = (p: number, d: number, lo: number, hi: number) => {
+    if (d > 1e-9) t = Math.min(t, (hi - p) / d);
+    else if (d < -1e-9) t = Math.min(t, (lo - p) / d);
+  };
+  limit(origin.x, axis.x, minX, maxX);
+  limit(origin.y, axis.y, minY, maxY);
+  return Math.max(0, t);
+}
+
 export function placementOf(hand: HandObservation, width: number, height: number): Placement {
   const wrist = denorm(hand.landmarks[0], width, height);
   const breadthPx = handBreadthPx(hand, width, height);
@@ -190,9 +221,20 @@ export function placementOf(hand: HandObservation, width: number, height: number
   const finger = scale2(axis, -1);
   const perp = rot90(axis);
   const lateralMm = getWatchLateralOffsetMm(hand.handedness);
-  const basePlacement = add2(wrist, scale2(axis, WATCH_OFFSET_MM * pxPerMm));
+  const lateralPx = lateralMm * pxPerMm;
+  // Shorten the wrist→watch offset when it would leave the frame. With the arm
+  // upright the offset points down the forearm toward the bottom edge, where
+  // the arm enters the picture, and the full 39mm often lands off-screen.
+  const offsetPx = clampOffsetToFrame(
+    { x: wrist.x + lateralPx, y: wrist.y },
+    axis,
+    WATCH_OFFSET_MM * pxPerMm,
+    width,
+    height
+  );
+  const basePlacement = add2(wrist, scale2(axis, offsetPx));
   const placement = {
-    x: basePlacement.x + lateralMm * pxPerMm,
+    x: basePlacement.x + lateralPx,
     y: basePlacement.y,
   };
   const trigWidth = trigonometricWristWidthPx(hand, width, height);

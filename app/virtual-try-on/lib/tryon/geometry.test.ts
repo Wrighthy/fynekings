@@ -122,6 +122,38 @@ describe("snapshot geometry", () => {
     assert.ok(Math.abs(Math.cos(rightTurn) - 1) < 1e-6);
   });
 
+  it("passes an upright arm whose wrist sits near the bottom of the frame", () => {
+    // Fingers up, forearm running down out of the picture (portrait phone).
+    const width = 720;
+    const height = 1280;
+    const landmarks = Array.from({ length: 21 }, () => ({ x: 0.5, y: 0.7 }));
+    landmarks[0] = { x: 0.5, y: 0.9 };
+    landmarks[5] = { x: 0.38, y: 0.72 };
+    landmarks[9] = { x: 0.5, y: 0.7 };
+    landmarks[13] = { x: 0.56, y: 0.71 };
+    landmarks[17] = { x: 0.62, y: 0.72 };
+    const upright = hand({
+      handedness: "right",
+      landmarks,
+      poseWrist: null,
+      poseElbow: null,
+      poseElbowVisibility: 0,
+      poseWristWorld: null,
+      poseElbowWorld: null,
+    });
+    const place = placementOf(upright, width, height);
+    assert.ok(place.placement.y > place.wrist.y, "watch sits on the forearm side of the wrist");
+    assert.ok(place.placement.y <= height * 0.95, "watch stays inside the frame");
+    const result = evaluateGates(
+      [upright],
+      Array.from({ length: 8 }, () => upright),
+      width,
+      height,
+      { luminance: 120, sharpness: 80 }
+    );
+    assert.equal(result.gates.find((g) => g.id === "G2")?.passed, true);
+  });
+
   it("uses the mask width when the ratio is sane", () => {
     const sample = hand({ handedness: "right" });
     const place = placementOf(sample, 1000, 1000);
