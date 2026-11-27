@@ -189,40 +189,49 @@ export function capsuleMask(
   return data;
 }
 
+/**
+ * One box-blur pass along a line of `length` samples spaced `stride` apart,
+ * using a running sum so the cost does not depend on the radius. Samples
+ * outside the image are skipped (the average uses only in-bounds samples).
+ */
+function boxLine(
+  input: Uint8Array,
+  output: Uint8Array,
+  start: number,
+  stride: number,
+  length: number,
+  r: number,
+  lift: boolean
+) {
+  const read = (i: number) => {
+    const value = input[start + i * stride];
+    return lift && value <= 1 ? value * 255 : value;
+  };
+  let sum = 0;
+  const firstEnd = Math.min(length - 1, r);
+  for (let i = 0; i <= firstEnd; i++) sum += read(i);
+  for (let i = 0; i < length; i++) {
+    const lo = Math.max(0, i - r);
+    const hi = Math.min(length - 1, i + r);
+    output[start + i * stride] = Math.round(sum / (hi - lo + 1));
+    const enter = i + r + 1;
+    if (enter < length) sum += read(enter);
+    const leave = i - r;
+    if (leave >= 0) sum -= read(leave);
+  }
+}
+
 /** Box blur, three passes, approximating a gaussian. Radius is in pixels. */
 export function blurMask(src: Uint8Array, width: number, height: number, radius: number): Uint8Array {
   const r = Math.max(1, Math.round(radius));
   let current = src;
   for (let pass = 0; pass < 3; pass++) {
+    // The source mask may hold 0/1; lift it to 0/255 on the first pass.
+    const lift = pass === 0;
     const horizontal = new Uint8Array(src.length);
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        let sum = 0;
-        let count = 0;
-        for (let k = -r; k <= r; k++) {
-          const xx = x + k;
-          if (xx < 0 || xx >= width) continue;
-          const value = current[y * width + xx];
-          sum += value > 1 ? value : value * 255;
-          count += 1;
-        }
-        horizontal[y * width + x] = count ? Math.round(sum / count) : 0;
-      }
-    }
+    for (let y = 0; y < height; y++) boxLine(current, horizontal, y * width, 1, width, r, lift);
     const vertical = new Uint8Array(src.length);
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        let sum = 0;
-        let count = 0;
-        for (let k = -r; k <= r; k++) {
-          const yy = y + k;
-          if (yy < 0 || yy >= height) continue;
-          sum += horizontal[yy * width + x];
-          count += 1;
-        }
-        vertical[y * width + x] = count ? Math.round(sum / count) : 0;
-      }
-    }
+    for (let x = 0; x < width; x++) boxLine(horizontal, vertical, x, width, height, r, false);
     current = vertical;
   }
   return current;

@@ -8,7 +8,7 @@ import ResultView from "./ResultView";
 import { useHandTracking } from "../hooks/useHandTracking";
 import { downscaleCanvas, getCameraErrorMessage, openCamera } from "../lib/tryon/camera";
 import { GUIDANCE, HOLD_MS, MAX_SNAPSHOT_EDGE, type GuidanceId } from "../lib/tryon/constants";
-import { warmupDepth } from "../lib/tryon/depthClient";
+import { resetDepthWorker, warmupDepth } from "../lib/tryon/depthClient";
 import { evaluateGates } from "../lib/tryon/gates";
 import { repaintSnapshot, runSnapshotPipeline } from "../lib/tryon/pipeline";
 import { releaseSnapshotSession, snapshotSession } from "../lib/tryon/snapshotSession";
@@ -158,6 +158,10 @@ export default function SnapshotTryOn({ products }: Props) {
       setAdjustments(DEFAULT_ADJUSTMENTS);
       setPaintKey((value) => value + 1);
       setPhase("RESULT");
+      // The depth model is only needed while capturing. Free its memory
+      // (often hundreds of MB on a phone) while the user views the preview;
+      // it warms up again when the camera restarts on Retake.
+      resetDepthWorker();
     } catch (err) {
       setProcessError(err instanceof Error ? err.message : GUIDANCE.genericProcessing);
       setPhase("DETECTING");
@@ -223,11 +227,24 @@ export default function SnapshotTryOn({ products }: Props) {
     };
   }, [phase, selectedWatch]);
 
+  // Coalesce repaints: pointer/slider events can fire far faster than the
+  // screen refreshes, and each repaint is full-frame canvas work.
+  const pendingAdjustRef = useRef<ManualAdjustments | null>(null);
+  const repaintFrameRef = useRef(0);
   const updateAdjustments = (next: ManualAdjustments) => {
     setAdjustments(next);
-    repaintSnapshot(next);
-    setPaintKey((value) => value + 1);
+    pendingAdjustRef.current = next;
+    if (repaintFrameRef.current) return;
+    repaintFrameRef.current = requestAnimationFrame(() => {
+      repaintFrameRef.current = 0;
+      const latest = pendingAdjustRef.current;
+      pendingAdjustRef.current = null;
+      if (!latest) return;
+      repaintSnapshot(latest);
+      setPaintKey((value) => value + 1);
+    });
   };
+  useEffect(() => () => cancelAnimationFrame(repaintFrameRef.current), []);
 
   const retake = () => {
     releaseSnapshotSession();

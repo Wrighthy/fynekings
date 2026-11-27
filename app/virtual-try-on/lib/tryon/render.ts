@@ -40,18 +40,96 @@ function drawLayer(
   ctx.restore();
 }
 
+/** Pixel rectangle the watch (and its shadow) can touch on this paint. */
+type Box = { x: number; y: number; w: number; h: number };
+
+/**
+ * Blurred skin masks depend only on the snapshot mask and the wrist width,
+ * never on the user's drag/rotate/resize adjustments, so blur them once per
+ * snapshot and reuse them for every repaint.
+ */
+const blurCache = new WeakMap<Uint8Array, Map<string, Uint8Array>>();
+
+function cachedBlur(mask: Uint8Array, width: number, height: number, radius: number): Uint8Array {
+  let byRadius = blurCache.get(mask);
+  if (!byRadius) {
+    byRadius = new Map();
+    blurCache.set(mask, byRadius);
+  }
+  const key = `${width}x${height}:${Math.max(1, Math.round(radius))}`;
+  let blurred = byRadius.get(key);
+  if (!blurred) {
+    blurred = blurMask(mask, width, height, radius);
+    byRadius.set(key, blurred);
+  }
+  return blurred;
+}
+
+/** One scratch canvas reused across repaints instead of a new full-size one each time. */
+let scratch: HTMLCanvasElement | null = null;
+
+function scratchLayer(width: number, height: number): CanvasRenderingContext2D | null {
+  if (!scratch) scratch = document.createElement("canvas");
+  if (scratch.width !== width || scratch.height !== height) {
+    scratch.width = width;
+    scratch.height = height;
+  }
+  return scratch.getContext("2d", { willReadFrequently: true });
+}
+
+function sourceSize(image: CanvasImageSource): { w: number; h: number } {
+  const sized = image as { naturalWidth?: number; naturalHeight?: number; width?: unknown; height?: unknown };
+  const w = sized.naturalWidth || (typeof sized.width === "number" ? sized.width : 0);
+  const h = sized.naturalHeight || (typeof sized.height === "number" ? sized.height : 0);
+  return { w, h };
+}
+
+/** Bounding box of an image drawn by drawLayer, padded for its blurred shadow. */
+function layerBox(
+  images: CanvasImageSource[],
+  anchorX: number,
+  anchorY: number,
+  px: number,
+  py: number,
+  scale: number,
+  pad: number,
+  width: number,
+  height: number
+): Box {
+  let reach = 0;
+  for (const image of images) {
+    const { w, h } = sourceSize(image);
+    for (const [cx, cy] of [[0, 0], [w, 0], [0, h], [w, h]]) {
+      reach = Math.max(reach, Math.hypot(cx - anchorX, cy - anchorY));
+    }
+  }
+  // Unknown image size: fall back to the whole frame.
+  if (reach === 0) return { x: 0, y: 0, w: width, h: height };
+  const r = reach * Math.abs(scale) + pad;
+  const x = Math.max(0, Math.floor(px - r));
+  const y = Math.max(0, Math.floor(py - r));
+  const right = Math.min(width, Math.ceil(px + r));
+  const bottom = Math.min(height, Math.ceil(py + r));
+  return { x, y, w: Math.max(0, right - x), h: Math.max(0, bottom - y) };
+}
+
 function punchClothes(
   ctx: CanvasRenderingContext2D,
   clothes: Uint8Array,
   width: number,
-  height: number
+  box: Box
 ) {
-  const image = ctx.getImageData(0, 0, width, height);
+  if (box.w === 0 || box.h === 0) return;
+  const image = ctx.getImageData(box.x, box.y, box.w, box.h);
   const data = image.data;
-  for (let i = 0; i < clothes.length; i++) {
-    if (clothes[i]) data[i * 4 + 3] = 0;
+  for (let row = 0; row < box.h; row++) {
+    const src = (box.y + row) * width + box.x;
+    const dst = row * box.w;
+    for (let col = 0; col < box.w; col++) {
+      if (clothes[src + col]) data[(dst + col) * 4 + 3] = 0;
+    }
   }
-  ctx.putImageData(image, 0, 0);
+  ctx.putImageData(image, box.x, box.y);
 }
 
 function clipAndShadeStrap(
@@ -59,34 +137,46 @@ function clipAndShadeStrap(
   skin: Uint8Array,
   width: number,
   height: number,
-  wristWidthPx: number
+  wristWidthPx: number,
+  box: Box
 ) {
+  if (box.w === 0 || box.h === 0) return;
   const featherRadius = Math.max(1, FEATHER_SIGMA_FRAC * wristWidthPx);
   const shadeRadius = Math.max(1, EDGE_SHADE_BAND_FRAC * wristWidthPx);
-  const feather = blurMask(skin, width, height, featherRadius);
-  const shade = blurMask(skin, width, height, shadeRadius);
-  const image = ctx.getImageData(0, 0, width, height);
+  const feather = cachedBlur(skin, width, height, featherRadius);
+  const shade = cachedBlur(skin, width, height, shadeRadius);
+  // The layer is transparent outside the watch box, so only that box needs work.
+  const image = ctx.getImageData(box.x, box.y, box.w, box.h);
   const data = image.data;
-  for (let i = 0; i < skin.length; i++) {
-    const alpha = feather[i] / 255;
-    if (alpha <= 0) {
-      data[i * 4 + 3] = 0;
-      continue;
+  for (let row = 0; row < box.h; row++) {
+    const src = (box.y + row) * width + box.x;
+    const dst = row * box.w;
+    for (let col = 0; col < box.w; col++) {
+      const i = src + col;
+      const p = (dst + col) * 4;
+      if (data[p + 3] === 0) continue;
+      const alpha = feather[i] / 255;
+      if (alpha <= 0) {
+        data[p + 3] = 0;
+        continue;
+      }
+      const keep = 1 - (1 - shade[i] / 255) * EDGE_SHADE_MAX;
+      data[p] = Math.round(data[p] * keep);
+      data[p + 1] = Math.round(data[p + 1] * keep);
+      data[p + 2] = Math.round(data[p + 2] * keep);
+      data[p + 3] = Math.round(data[p + 3] * alpha);
     }
-    const darkness = (1 - shade[i] / 255) * EDGE_SHADE_MAX;
-    const keep = 1 - darkness;
-    data[i * 4] = Math.round(data[i * 4] * keep);
-    data[i * 4 + 1] = Math.round(data[i * 4 + 1] * keep);
-    data[i * 4 + 2] = Math.round(data[i * 4 + 2] * keep);
-    data[i * 4 + 3] = Math.round(data[i * 4 + 3] * alpha);
   }
-  ctx.putImageData(image, 0, 0);
+  ctx.putImageData(image, box.x, box.y);
 }
 
 export function renderComposite(target: HTMLCanvasElement, input: RenderInput): void {
   const { width, height, measurements, adjustments, watch, mask } = input;
-  target.width = width;
-  target.height = height;
+  // Resizing a canvas reallocates its backing store, so only do it when needed.
+  if (target.width !== width || target.height !== height) {
+    target.width = width;
+    target.height = height;
+  }
   const ctx = target.getContext("2d");
   if (!ctx) return;
 
@@ -110,11 +200,21 @@ export function renderComposite(target: HTMLCanvasElement, input: RenderInput): 
   const shadowOff = SHADOW_OFFSET_FRAC * casePx;
   const shadowBlur = Math.max(1, SHADOW_BLUR_FRAC * casePx);
 
-  const layer = document.createElement("canvas");
-  layer.width = width;
-  layer.height = height;
-  const layerCtx = layer.getContext("2d");
+  const layerCtx = scratchLayer(width, height);
   if (!layerCtx) return;
+  const layer = layerCtx.canvas;
+  // Everything the watch or its shadow can reach; pixel work stays inside it.
+  const box = layerBox(
+    watch.strapImage ? [watch.caseImage, watch.strapImage] : [watch.caseImage],
+    watch.asset.anchor.x,
+    watch.asset.anchor.y,
+    placement.x,
+    placement.y,
+    scale,
+    Math.abs(shadowOff) * 1.5 + shadowBlur * 3 + 2,
+    width,
+    height
+  );
 
   if (watch.strapImage && mask) {
     layerCtx.clearRect(0, 0, width, height);
@@ -142,8 +242,8 @@ export function renderComposite(target: HTMLCanvasElement, input: RenderInput): 
       rotation,
       scale
     );
-    clipAndShadeStrap(layerCtx, mask.skin, width, height, measurements.wristWidthPx);
-    if (mask.clothes) punchClothes(layerCtx, mask.clothes, width, height);
+    clipAndShadeStrap(layerCtx, mask.skin, width, height, measurements.wristWidthPx, box);
+    if (mask.clothes) punchClothes(layerCtx, mask.clothes, width, box);
     ctx.drawImage(layer, 0, 0);
   }
 
@@ -191,6 +291,6 @@ export function renderComposite(target: HTMLCanvasElement, input: RenderInput): 
   layerCtx.fill();
   layerCtx.restore();
 
-  if (mask?.clothes) punchClothes(layerCtx, mask.clothes, width, height);
+  if (mask?.clothes) punchClothes(layerCtx, mask.clothes, width, box);
   ctx.drawImage(layer, 0, 0);
 }
