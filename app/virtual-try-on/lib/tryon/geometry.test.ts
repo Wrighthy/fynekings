@@ -46,7 +46,7 @@ function hand(partial: Partial<HandObservation> & Pick<HandObservation, "handedn
 }
 
 describe("snapshot geometry", () => {
-  it("keeps a flat back-of-hand pose and rejects a palm and a 30 degree tilt", () => {
+  it("keeps a flat or tilted back-of-hand pose and rejects a palm", () => {
     const width = 1000;
     const height = 1000;
     const right = hand({ handedness: "right" });
@@ -61,8 +61,13 @@ describe("snapshot geometry", () => {
 
     const tilt45 = hand({ handedness: "right", worldLandmarks: worldFor(45, "right", false) });
     const tilted = evaluateGates([tilt45], history, width, height, { luminance: 120, sharpness: 80 });
-    assert.equal(tilted.messageId, "flat");
+    // Tilt no longer blocks a capture.
+    assert.equal(tilted.allPassed, true);
     assert.ok((handTiltDeg(tilt45) ?? 0) > 35);
+
+    const palmUp = hand({ handedness: "right", worldLandmarks: worldFor(0, "right", true) });
+    const rejected = evaluateGates([palmUp], history, width, height, { luminance: 120, sharpness: 80 });
+    assert.equal(rejected.messageId, "backOfHand");
 
     const tilt15 = hand({ handedness: "left", worldLandmarks: worldFor(15, "left", false) });
     assert.equal(isBackFacing(tilt15), true);
@@ -152,6 +157,43 @@ describe("snapshot geometry", () => {
       { luminance: 120, sharpness: 80 }
     );
     assert.equal(result.gates.find((g) => g.id === "G2")?.passed, true);
+  });
+
+  it("captures an upright, edge-on hand without tilting it", () => {
+    const width = 1000;
+    const height = 1000;
+    // Thumb toward the camera: the knuckle line is almost a point on screen.
+    const landmarks = Array.from({ length: 21 }, () => ({ x: 0.5, y: 0.45 }));
+    landmarks[0] = { x: 0.5, y: 0.6 };
+    landmarks[5] = { x: 0.48, y: 0.42 };
+    landmarks[9] = { x: 0.5, y: 0.4 };
+    landmarks[13] = { x: 0.51, y: 0.41 };
+    landmarks[17] = { x: 0.52, y: 0.42 };
+    const world = worldFor(88, "right", false);
+    world[9] = { x: 0, y: 1.6, z: 0 };
+    const edgeOn = hand({
+      handedness: "right",
+      landmarks,
+      worldLandmarks: world,
+      poseWrist: null,
+      poseElbow: null,
+      poseElbowVisibility: 0,
+      poseWristWorld: null,
+      poseElbowWorld: null,
+    });
+    assert.ok((handTiltDeg(edgeOn) ?? 0) > 80);
+    const result = evaluateGates(
+      [edgeOn],
+      Array.from({ length: 8 }, () => edgeOn),
+      width,
+      height,
+      { luminance: 120, sharpness: 80 }
+    );
+    assert.equal(result.messageId, "perfect");
+    assert.equal(result.allPassed, true);
+    // Breadth is rebuilt from the hand length, so the watch is not shrunk.
+    const place = placementOf(edgeOn, width, height);
+    assert.ok(place.breadthPx > 150);
   });
 
   it("uses the mask width when the ratio is sane", () => {
