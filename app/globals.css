@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700;800&display=swap');
-
 @import "tailwindcss";
 
 *,
@@ -4551,9 +4549,9 @@ footer {
     left: 14px;
   }
 
-<<<<<<< HEAD
+/* <<<<<<< HEAD */
   .tryon-watch-info-name { font-size: 14px; }
-=======
+/* ======= */
   .tryon-hud-tr {
     right: 14px;
   }
@@ -4561,7 +4559,7 @@ footer {
   .tryon-watch-info-name {
     font-size: .65rem;
   }
->>>>>>> 693dbbc1ec5f0d03e25cb44541f474a117a00619
+/* >>>>>>> 693dbbc1ec5f0d03e25cb44541f474a117a00619 */
 }
 
 @media (prefers-reduced-motion: reduce) {
