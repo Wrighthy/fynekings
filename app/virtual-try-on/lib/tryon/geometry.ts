@@ -88,6 +88,40 @@ export function isBackFacing(hand: HandObservation, mirrored = true): boolean {
   return false;
 }
 
+/**
+ * True only when the PALM clearly faces the camera. An edge-on (upright) hand
+ * sits in the dead-zone and is not treated as palm-facing, so it may be captured.
+ */
+export function isPalmFacing(hand: HandObservation, mirrored = true): boolean {
+  const signMultiplier = mirrored ? 1 : -1;
+  const n = palmNormal(hand.worldLandmarks);
+  if (n) {
+    const l = len3(n);
+    if (l > 1e-8) {
+      const signed = (n.z / l) * backFacingSign(hand.handedness) * signMultiplier;
+      return signed < -PALM_FACING_MIN;
+    }
+  }
+  if (hand.landmarks && hand.landmarks.length >= 18) {
+    const v1x = hand.landmarks[5].x - hand.landmarks[0].x;
+    const v1y = hand.landmarks[5].y - hand.landmarks[0].y;
+    const v2x = hand.landmarks[17].x - hand.landmarks[0].x;
+    const v2y = hand.landmarks[17].y - hand.landmarks[0].y;
+    const mag = Math.hypot(v1x, v1y) * Math.hypot(v2x, v2y);
+    if (mag > 1e-6) {
+      const signed = ((v1x * v2y - v1y * v2x) / mag) * backFacingSign(hand.handedness) * signMultiplier;
+      return signed < -PALM_FACING_MIN;
+    }
+  }
+  return false;
+}
+
+/**
+ * Only reject as "palm" when the palm is turned well toward the camera
+ * (more than ~60° from edge-on). Edge-on noise must not flip this.
+ */
+const PALM_FACING_MIN = 0.5;
+
 /** Degrees between the palm normal and the camera axis. 0 is flat to the screen. */
 export function handTiltDeg(hand: HandObservation): number | null {
   const n = palmNormal(hand.worldLandmarks);
@@ -106,10 +140,28 @@ export function forearmPitchDeg(hand: HandObservation): number | null {
   return (pitch * 180) / Math.PI;
 }
 
+/**
+ * Knuckle breadth (index MCP → pinky MCP) in pixels.
+ *
+ * Seen edge-on (hand upright, thumb or pinky toward the camera) the knuckle
+ * line shrinks toward zero on screen. The wrist → middle-MCP line runs along
+ * the hand and does not shrink when the hand rolls, so we rebuild the breadth
+ * from it using the hand's own 3D proportions (world landmarks), and take the
+ * larger of the two.
+ */
 export function handBreadthPx(hand: HandObservation, width: number, height: number): number {
   const a = denorm(hand.landmarks[5], width, height);
   const b = denorm(hand.landmarks[17], width, height);
-  return len2(sub2(a, b));
+  const projected = len2(sub2(a, b));
+  const world = hand.worldLandmarks;
+  if (!world || world.length < 18) return projected;
+  const worldBreadth = len3(sub3(world[17], world[5]));
+  const worldLength = len3(sub3(world[9], world[0]));
+  if (worldBreadth < 1e-6 || worldLength < 1e-6) return projected;
+  const wrist = denorm(hand.landmarks[0], width, height);
+  const middle = denorm(hand.landmarks[9], width, height);
+  const fromLength = len2(sub2(middle, wrist)) * (worldBreadth / worldLength);
+  return Math.max(projected, fromLength);
 }
 
 export function forearmAxis(hand: HandObservation, width: number, height: number): Vec2 {

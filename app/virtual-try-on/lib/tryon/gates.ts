@@ -3,8 +3,6 @@ import {
   GUIDANCE,
   HAND_BREADTH_FRAC_MAX,
   HAND_BREADTH_FRAC_MIN,
-  MAX_FOREARM_PITCH_DEG,
-  MAX_HAND_TILT_DEG,
   MAX_LUMINANCE,
   MIN_LUMINANCE,
   MIN_SHARPNESS,
@@ -14,10 +12,9 @@ import {
 } from "./constants";
 import {
   crownRotation,
-  forearmPitchDeg,
-  handTiltDeg,
   insideFrame,
   isBackFacing,
+  isPalmFacing,
   placementOf,
 } from "./geometry";
 import type { GateResult, GuidanceId, HandObservation, QualitySample } from "./types";
@@ -113,15 +110,15 @@ export function evaluateGates(
   const placementInFrame = insideFrame(place.placement, width, height, FRAME_MARGIN);
   const g2 = wristInFrame && placementInFrame;
 
-  // G3: Back of hand facing the camera
-  const g3 = isBackFacing(hand, mirrored);
+  // G3: Not showing the palm. The back of the hand OR an upright, edge-on
+  // hand (thumb or pinky side toward the camera) both pass; only a palm
+  // clearly turned toward the camera is rejected.
+  const g3 = isBackFacing(hand, mirrored) || !isPalmFacing(hand, mirrored);
 
-  const tilt = handTiltDeg(hand);
-  const pitch = forearmPitchDeg(hand);
-  const g4 =
-    tilt !== null &&
-    tilt <= MAX_HAND_TILT_DEG &&
-    (pitch === null || pitch <= MAX_FOREARM_PITCH_DEG);
+  // G4: Flatness no longer blocks a capture. An upright hand must be
+  // capturable without tilting it to face the wrist to the camera; the
+  // measurement step compensates for an edge-on hand instead.
+  const g4 = true;
 
   // G5: Distance / Hand size.
   // Use the shorter dimension (width in portrait, height in landscape/desktop)
@@ -156,7 +153,6 @@ export function evaluateGates(
   if (!g1) messageId = "inFrame";
   else if (!g2) messageId = "inFrame";
   else if (!g3) messageId = "backOfHand";
-  else if (!g4) messageId = "flat";
   else if (!g5) messageId = tooSmall ? "closer" : "farther";
   else if (mode === "live" && quality !== null && !lumaOk) messageId = "lighting";
   else if (mode === "live" && (!g6 || (quality !== null && !sharpOk))) messageId = "still";

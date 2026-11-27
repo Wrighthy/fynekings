@@ -1,10 +1,11 @@
 import {
   ENABLE_DEPTH_SCALE_CORRECTION,
   LANDMARK_WRIST_TO_BREADTH,
+  MAX_HAND_TILT_DEG,
   WRIST_RATIO_MAX,
   WRIST_RATIO_MIN,
 } from "./constants";
-import { crownRotation, placementOf, trigonometricWristWidthPx } from "./geometry";
+import { crownRotation, handTiltDeg, placementOf, trigonometricWristWidthPx } from "./geometry";
 import { maskAt, scanWidth } from "./mask";
 import type { HandObservation, SnapshotMeasurements } from "./types";
 import { add2, median, scale2 } from "./vec";
@@ -26,7 +27,13 @@ export function measureWrist(
   mask: Uint8Array | null
 ): SnapshotMeasurements {
   const place = placementOf(hand, width, height);
-  const trigWidth = trigonometricWristWidthPx(hand, width, height);
+  let trigWidth = trigonometricWristWidthPx(hand, width, height);
+  // Upright / edge-on hand: the landmark-based wrist width collapses on
+  // screen, so floor it with the roll-corrected knuckle breadth.
+  const tilt = handTiltDeg(hand);
+  if (tilt !== null && tilt > MAX_HAND_TILT_DEG) {
+    trigWidth = Math.max(trigWidth, LANDMARK_WRIST_TO_BREADTH * place.breadthPx);
+  }
   let lowConfidence = false;
   let wristWidthPx = trigWidth > 0 ? trigWidth : place.estimatedWristPx;
 
