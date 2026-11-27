@@ -10,7 +10,7 @@ import { LEFT_HAND_ICON, RIGHT_HAND_ICON } from "./handIcons";
  * phone with the back of the wrist toward the camera. The left hand is a
  * mirror image, so it points the other way.
  */
-const GUIDE_TILT_DEG = -70;
+const GUIDE_TILT_DEG = -80;
 
 type Props = {
   messageId: GuidanceId;
